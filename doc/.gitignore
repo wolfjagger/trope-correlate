@@ -1,0 +1,11 @@
+# to exclude Obsidian workspace settings (including plugin and hotkey configurations)
+.obsidian/*
+
+# OR Exclude workspace cache
+# .obsidian/workspace/*
+
+# OR Exclude plugins
+# .obsidian/plugins/*
+
+# This file is used to keep track of last auto backup/pull
+.obsidian-git-data
