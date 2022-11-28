@@ -14,6 +14,9 @@ https://arxiv.org/abs/2101.07632
 TrUMAn: Trope Understanding in Movies and Animations
 https://arxiv.org/abs/2108.04542
 
+Situation and Behavior Understanding by Trope Detection on Films
+https://arxiv.org/abs/2101.07632
+
 
 Sites
 ===
