@@ -36,7 +36,7 @@ Control with hyperparameters.
 Start as simple as possible: predict a number.
 Save parameters for agent in db with metadata (e.g. hyperparameters).
 
-Lense (rust or python)
+Lens (rust or python)
 ---
 
 Transform cleaned scrape into summarized data.
