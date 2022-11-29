@@ -2,7 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 
-#[derive(Clone, Routable, PartialEq)]
+#[derive(Routable, Clone, PartialEq, Eq, Debug)]
 pub enum Route {
     #[at("/")]
     Home,

@@ -19,19 +19,19 @@ fn Counter() -> Html {
   };
 
   html! {
-    <div>
+    <BrowserRouter>
+      <div>
 
-      <tab::Tab name="home" title="Home"/>
-      <tab::Tab name="about" title="About"/>
+        <tab::Tab route={route::Route::Home} title="Home"/>
+        <tab::Tab route={route::Route::About} title="About"/>
 
-      <button { onclick }>{ "+1" }</button>
-      <p>{ *counter }</p>
+        <button { onclick }>{ "+1" }</button>
+        <p>{ *counter }</p>
 
-      <BrowserRouter>
         <Switch<route::Route> render={route::switch} />
-      </BrowserRouter>
 
-    </div>
+      </div>
+    </BrowserRouter>
   }
 
 }
