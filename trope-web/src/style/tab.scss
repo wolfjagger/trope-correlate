@@ -7,6 +7,12 @@
   cursor: pointer;
 }
 
+.active-button-style {
+  background-color: $color-color-2;
+  color: $color-dark;
+  box-shadow: inset 0px 0px 0px 3px $color-color-1;
+}
+
 .inactive-button-style {
   background-color: $color-dark;
   color: $color-light-1;
@@ -15,8 +21,8 @@
 
 .mouseover-button-style {
   background-color: $color-color-1;
-  color: $color-dark;
-  box-shadow: inset 0px 0px 0px 3px $color-light-1;
+  color: $color-light-1;
+  box-shadow: inset 0px 0px 0px 3px $color-light-2;
 }
 
 .horiz {
