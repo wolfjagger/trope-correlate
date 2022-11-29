@@ -15,6 +15,8 @@ pub fn Tab(props: &TabProps) -> Html {
 
   // Mouse events
 
+  // TODO: Move is_mouseover and is_active to calculated values.
+  //  But keep the mouse events.
   let is_mouseover = use_state_eq(|| false);
   let is_active = use_state_eq(|| false);
 
