@@ -14,8 +14,8 @@ pub struct TabProps {
 pub fn Tab(props: &TabProps) -> Html {
 
   html! {
-    <Link<route::Route> classes={classes!("tablinks")} to={props.route.clone()}>
-      { &props.title }
+    <Link<route::Route> classes={classes!("tab-link")} to={props.route.clone()}>
+      <button class="tab-button">{ &props.title }</button>
     </Link<route::Route>>
   }
 

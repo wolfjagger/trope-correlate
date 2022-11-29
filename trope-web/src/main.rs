@@ -20,17 +20,19 @@ fn Counter() -> Html {
 
   html! {
     <BrowserRouter>
-      <div>
 
+      <nav>
         <tab::Tab route={route::Route::Home} title="Home"/>
         <tab::Tab route={route::Route::About} title="About"/>
+      </nav>
 
+      <div>
         <button { onclick }>{ "+1" }</button>
         <p>{ *counter }</p>
-
-        <Switch<route::Route> render={route::switch} />
-
       </div>
+
+      <Switch<route::Route> render={route::switch} />
+
     </BrowserRouter>
   }
 
