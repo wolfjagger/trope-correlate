@@ -1,14 +1,5 @@
-/* Colors for a "complementary" color scheme that look good */
-/*#E38902 #ADDDF0 #2F6F89 #3E21C0 #0F082F*/
-/*#DEE9ED #526F7A #8E4866 #B9A560 #27161D*/
-/*#A4C0CC #425962 #713A52 #9C8945 #1F1218*/
-$color-light-1: #A4C0CC;
-$color-light-2: #425962;
-$color-color-1: #713A52;
-$color-color-2: #9C8945;
-$color-dark: #1F1218;
-$color-back: $color-dark;
-$color-font: $color-light-1;
+@use 'var' as *;
+@use 'tab';
 
 :root {
   background-color: $color-back;

@@ -15,7 +15,7 @@ pub fn Tab(props: &TabProps) -> Html {
 
   html! {
     <Link<route::Route> classes={classes!("tab-link")} to={props.route.clone()}>
-      <button class="tab-button">{ &props.title }</button>
+      <label class="label-button inactive-button-style horiz">{ &props.title }</label>
     </Link<route::Route>>
   }
 
