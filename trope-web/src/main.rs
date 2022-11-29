@@ -1,8 +1,10 @@
 use yew::prelude::*;
 
+mod tab;
+
 
 #[function_component]
-fn App() -> Html {
+fn Counter() -> Html {
 
   let counter = use_state(|| 0);
 
@@ -16,9 +18,23 @@ fn App() -> Html {
 
   html! {
     <div>
+
+      <tab::Tab name="home" title="Home"/>
+      <tab::Tab name="about" title="About"/>
+
       <button { onclick }>{ "+1" }</button>
       <p>{ *counter }</p>
+
     </div>
+  }
+
+}
+
+#[function_component]
+fn App() -> Html {
+
+  html! {
+    <Counter/>
   }
 
 }
