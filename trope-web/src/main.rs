@@ -1,6 +1,8 @@
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 mod tab;
+mod route;
 
 
 #[function_component]
@@ -24,6 +26,10 @@ fn Counter() -> Html {
 
       <button { onclick }>{ "+1" }</button>
       <p>{ *counter }</p>
+
+      <BrowserRouter>
+        <Switch<route::Route> render={route::switch} />
+      </BrowserRouter>
 
     </div>
   }
