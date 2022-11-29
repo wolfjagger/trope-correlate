@@ -13,6 +13,12 @@
   box-shadow: inset 0px 0px 0px 3px $color-color-1;
 }
 
+.mouseover-button-style {
+  background-color: $color-color-1;
+  color: $color-dark;
+  box-shadow: inset 0px 0px 0px 3px $color-light-1;
+}
+
 .horiz {
   display: inline-block;
   padding: 6px;
