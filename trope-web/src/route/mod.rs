@@ -3,7 +3,6 @@ mod home;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use home::home_html;
 
 #[derive(Routable, Clone, PartialEq, Eq, Debug)]
 pub enum Route {
@@ -18,7 +17,7 @@ pub enum Route {
 
 pub fn switch(route: Route) -> Html {
   match route {
-    Route::Home => home_html(),
+    Route::Home => html! { <home::Home/> },
     Route::About => html! { <h1>{ "About" }</h1> },
     Route::NotFound => html! { <h1>{ "404" }</h1> },
   }
