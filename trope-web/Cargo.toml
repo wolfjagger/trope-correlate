@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 plotters = "0.3.4"
+web-sys = { version = "0.3.60", features = ["SvgElement"] }
 yew = { version = "0.20.0", features = ["csr"] }
 yew-router = "0.17.0"
