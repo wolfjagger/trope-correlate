@@ -1,0 +1,39 @@
+@use 'var' as *;
+@use 'tab';
+
+:root {
+  background-color: $color-back;
+  color: $color-font;
+  font-family: 'Source Sans Pro', sans-serif;
+  text-align: center;
+}
+
+/* Set height of body and the document to 100% to enable "full page tabs" */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-size: 24px;
+}
+
+p, ol, ul {
+  text-align: left;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 10px;
+  border-radius: 10px;
+}
+
+p {
+  max-width: 1600px;
+}
+
+ol, ul {
+  /*list-style-position: inside;*/
+  max-width: 1200px;
+}
+
+li {
+  margin: 15px 0;
+}
