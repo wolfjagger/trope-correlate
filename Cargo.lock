@@ -1304,6 +1304,7 @@ version = "0.1.0"
 name = "trope-web"
 version = "0.1.0"
 dependencies = [
+ "js-sys",
  "plotters",
  "web-sys",
  "yew",
