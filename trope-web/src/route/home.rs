@@ -1,29 +1,28 @@
 use plotters::prelude::*;
-use web_sys::SvgElement;
+use web_sys::Element;
 use yew::prelude::*;
 
 
 #[function_component]
 pub fn Home() -> Html {
 
-  // svg_str the calculated svg string to draw
-  let svg_str = use_state_eq(|| create_plot_svg_str(1));
-  // svg_ref a NodeRef to the svg element in html
-  let svg_ref = use_node_ref();
+  // div_svg_ref a NodeRef to the element in html that will contain the svg
+  let div_svg_ref = use_node_ref();
 
-  // Replace svg_ref content with svg_str
-  {
-    let svg_str = svg_str.clone();
-    let svg_ref = svg_ref.clone();
-    use_effect_with_deps(
-      |(svg_str, svg_ref)| {
-        let svg = svg_ref.cast::<SvgElement>()
-          .expect("svg_ref not attached to svg element");
-        svg.set_outer_html(svg_str);
-      },
-      (svg_str, svg_ref),
-    );
-  }
+  // Fill div_svg_ref content with calculated svg
+  use_effect_with_deps(
+    |div_svg_ref| {
+
+      let div_svg = div_svg_ref.cast::<Element>()
+        .expect("svg_ref not attached to svg element");
+
+      // svg_str the calculated svg string to draw
+      let svg_str = create_plot_svg_str(1);
+      div_svg.set_inner_html(&svg_str);
+
+    },
+    div_svg_ref.clone()
+  );
 
   html! {
     <>
@@ -32,7 +31,7 @@ pub fn Home() -> Html {
 
       <h2>{ "Plot" }</h2>
 
-      <svg ref={svg_ref}/>
+      <div ref={div_svg_ref}/>
 
     </>
   }
