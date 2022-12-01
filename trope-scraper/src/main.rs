@@ -42,22 +42,10 @@ fn main() {
     let path = Path::new("../test_data/trope_page.html");
     let display = path.display();
 
-    // Open the file
-    let mut file = match File::open(&path) {
-        Err(why) => panic!("Couldn't open {}: {}", display, why),
-        Ok(file) => file,
+    let document: Html = match read_html_file(path) {
+        Ok(document) => document,
+        Err(e) => panic!("Error reading {}: {}", display, e),
     };
-
-    // Read the file
-    let mut html = String::new();
-    match file.read_to_string(&mut html) {
-        Err(why) => panic!("Couldn't read {}: {}", display, why),
-        Ok(_) => {}
-    };
-
-    // Turn the whole article into an Html struct
-    // Should be mut in real implementation
-    let document = Html::parse_document(&html);
 
     // Create a selector for the element we want
     // For the tropes page, every link in a table cell should get us what we want
@@ -101,4 +89,18 @@ fn main() {
             .write_all(s.as_bytes())
             .expect("Unable to write string");
     }
+}
+
+fn read_html_file(filename: &Path) -> Result<Html, std::io::Error> {
+    // Open the file
+    let mut file = File::open(&filename)?;
+
+    // Read the file
+    let mut html = String::new();
+    file.read_to_string(&mut html)?;
+
+    // Convert to Html
+    let document = Html::parse_document(&html);
+
+    Ok(document)
 }
