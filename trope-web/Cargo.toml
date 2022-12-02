@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 js-sys = "0.3.60"
+petgraph = "0.6.2"
 plotters = "0.3.4"
 web-sys = { version = "0.3.60", features = ["Element", "SvgElement"] }
 yew = { version = "0.20.0", features = ["csr"] }
