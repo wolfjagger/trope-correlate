@@ -4,6 +4,7 @@ use yew_router::prelude::*;
 mod plot;
 mod route;
 mod tab;
+mod graph;
 
 
 #[function_component]
