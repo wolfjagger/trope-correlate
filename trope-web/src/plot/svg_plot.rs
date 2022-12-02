@@ -1,10 +1,16 @@
 use plotters::prelude::*;
 
+use crate::graph::{DirectedTropeGraph, UndirectedTropeGraph};
 
+
+#[derive(PartialEq)]
 pub enum PlotType {
   PowerFn(i32),
+  DirectedPetGraph(DirectedTropeGraph),
+  UndirectedPetGraph(UndirectedTropeGraph),
 }
 
+#[derive(PartialEq)]
 pub struct SvgPlot {
   pub size: (u32, u32),
   pub plot_type: PlotType,
@@ -18,6 +24,34 @@ impl SvgPlot {
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
     let plot_type = PlotType::PowerFn(power);
+
+    Self {
+      size,
+      plot_type
+    }
+
+  }
+
+  /// Create a svg string for a plot of a directed graph
+  pub fn directed_graph() -> Self {
+
+    // TODO: Figure out where to move the size handling
+    let size = (480, 480);
+    let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new());
+
+    Self {
+      size,
+      plot_type
+    }
+
+  }
+
+  /// Create a svg string for a plot of an undirected graph
+  pub fn undirected_graph() -> Self {
+
+    // TODO: Figure out where to move the size handling
+    let size = (480, 480);
+    let plot_type = PlotType::UndirectedPetGraph(UndirectedTropeGraph::new());
 
     Self {
       size,
@@ -41,7 +75,7 @@ impl SvgPlot {
   fn draw_on_backend<Backend>(&self, backend: Backend) -> Result<(), DrawingAreaErrorKind<Backend::ErrorType>>
   where Backend: plotters::prelude::DrawingBackend {
 
-    match self.plot_type {
+    match &self.plot_type {
       PlotType::PowerFn(power) => {
 
         // Get drawing area, set font and background
@@ -64,7 +98,7 @@ impl SvgPlot {
         chart.draw_series(LineSeries::new(
           (-50..=50)
             .map(|x| x as f32 / 50.0)
-            .map(|x| (x, x.powf(power as f32))),
+            .map(|x| (x, x.powf(*power as f32))),
           &RED,
         ))?;
 
@@ -73,6 +107,12 @@ impl SvgPlot {
 
         Ok(())
 
+      },
+      PlotType::DirectedPetGraph(_g) => {
+        todo!("Implement DirectedPetGraph plotting")
+      },
+      PlotType::UndirectedPetGraph(_g) => {
+        todo!("Implement UndirectedPetGraph plotting")
       }
     }
 
