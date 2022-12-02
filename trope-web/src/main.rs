@@ -1,8 +1,9 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-mod tab;
+mod plot;
 mod route;
+mod tab;
 
 
 #[function_component]
