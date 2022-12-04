@@ -5,10 +5,10 @@ use petgraph::{
 
 
 /// Data/weight for each node
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct TropeNode { }
 /// Data/weight for each edge
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct TropeEdge { }
 
 
