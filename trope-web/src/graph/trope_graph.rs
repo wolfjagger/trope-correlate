@@ -1,3 +1,5 @@
+use derive_more::Display;
+
 use petgraph::{
   Directed, Graph, Undirected,
   algo::is_isomorphic_matching
@@ -5,10 +7,10 @@ use petgraph::{
 
 
 /// Data/weight for each node
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Display, PartialEq)]
 pub struct TropeNode { }
 /// Data/weight for each edge
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Display, PartialEq)]
 pub struct TropeEdge { }
 
 
