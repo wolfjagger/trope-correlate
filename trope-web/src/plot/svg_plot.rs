@@ -1,6 +1,10 @@
 use plotters::prelude::*;
+use petgraph::dot::{Config, Dot};
 
-use crate::graph::{DirectedTropeGraph, UndirectedTropeGraph};
+use crate::graph::{
+  DirectedTropeGraph, UndirectedTropeGraph,
+  TropeNode, TropeEdge,
+};
 
 
 #[derive(PartialEq)]
@@ -51,7 +55,16 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
-    let plot_type = PlotType::UndirectedPetGraph(UndirectedTropeGraph::new());
+    let mut graph = UndirectedTropeGraph::new();
+
+    // TODO: Replace this example plot
+    let n1 = graph.graph.add_node(TropeNode{});
+    let n2 = graph.graph.add_node(TropeNode{});
+    let n3 = graph.graph.add_node(TropeNode{});
+    graph.graph.add_edge(n1, n2, TropeEdge{});
+    graph.graph.add_edge(n1, n3, TropeEdge{});
+
+    let plot_type = PlotType::UndirectedPetGraph(graph);
 
     Self {
       size,
@@ -63,16 +76,33 @@ impl SvgPlot {
   pub fn print_to_string(&self) -> String {
 
     let mut svg_str = String::new();
-    // Get svg backend and associate it with svg_str
-    let backend = SVGBackend::with_string(&mut svg_str, self.size);
 
-    self.draw_on_backend(backend).expect("draw_on_backend error");
+    match &self.plot_type {
+      // Send any plotters-drawn plats through SVGBackend
+      PlotType::PowerFn(_) => {
+        // Get svg backend and associate it with svg_str
+        let backend = SVGBackend::with_string(&mut svg_str, self.size);
+        self.draw_on_backend(backend).expect("draw_on_backend error");
+      },
+      PlotType::DirectedPetGraph(_g) => {
+        todo!("Implement DirectedPetGraph plotting")
+      },
+      PlotType::UndirectedPetGraph(g) => {
+
+        let _dot = Dot::with_config(&g.graph, &[Config::EdgeNoLabel]);
+        // web_sys::console::log_1(&format!("{:?}", dot).into());
+        todo!("Print dot to svg using fdg or something")
+
+      }
+    }
+
     svg_str
 
   }
 
   /// Draw power function on the given backend
-  fn draw_on_backend<Backend>(&self, backend: Backend) -> Result<(), DrawingAreaErrorKind<Backend::ErrorType>>
+  fn draw_on_backend<Backend>(&self, backend: Backend)
+  -> Result<(), DrawingAreaErrorKind<Backend::ErrorType>>
   where Backend: plotters::prelude::DrawingBackend {
 
     match &self.plot_type {
@@ -108,12 +138,7 @@ impl SvgPlot {
         Ok(())
 
       },
-      PlotType::DirectedPetGraph(_g) => {
-        todo!("Implement DirectedPetGraph plotting")
-      },
-      PlotType::UndirectedPetGraph(_g) => {
-        todo!("Implement UndirectedPetGraph plotting")
-      }
+      _ => panic!("This plot type should not be drawn through the backend")
     }
 
 
