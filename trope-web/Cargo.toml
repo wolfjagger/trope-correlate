@@ -6,5 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+js-sys = "0.3.60"
+plotters = "0.3.4"
+web-sys = { version = "0.3.60", features = ["Element", "SvgElement"] }
 yew = { version = "0.20.0", features = ["csr"] }
 yew-router = "0.17.0"
