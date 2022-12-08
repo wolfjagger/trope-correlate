@@ -25,8 +25,8 @@ fn Counter() -> Html {
     <BrowserRouter>
 
       <nav>
-        <tab::Tab route={route::Route::Home} title="Home"/>
-        <tab::Tab route={route::Route::About} title="About"/>
+        <tab::Tab route={route::Route::Home}>{ "Home" }</tab::Tab>
+        <tab::Tab route={route::Route::About}>{ "About" }</tab::Tab>
       </nav>
 
       <div>
