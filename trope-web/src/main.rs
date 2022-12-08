@@ -1,6 +1,7 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
+mod button;
 mod plot;
 mod route;
 mod tab;
