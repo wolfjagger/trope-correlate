@@ -1,7 +1,7 @@
 use web_sys::Element;
 use yew::prelude::*;
 
-use crate::plot::SvgPlot;
+use crate::{button::Button, plot::SvgPlot};
 
 
 #[function_component]
@@ -26,6 +26,8 @@ pub fn Home() -> Html {
     (svg_plot.clone(), div_svg_ref.clone())
   );
 
+  // Mouse events
+
   let svg_plot_clone = svg_plot.clone();
   let onclick_line = move |_| {
     svg_plot_clone.set(SvgPlot::power_fn_plot(1))
@@ -43,6 +45,7 @@ pub fn Home() -> Html {
     svg_plot_clone.set(SvgPlot::undirected_graph())
   };
 
+  // HTML
   html! {
     <>
 
@@ -50,10 +53,10 @@ pub fn Home() -> Html {
 
       <h2>{ "Plot" }</h2>
 
-      <label onclick={ onclick_line }>{ "Click to plot line" }</label>
-      <label onclick={ onclick_para }>{ "Click to plot parabola" }</label>
-      <label onclick={ onclick_dir_graph }>{ "Click to plot directed graph" }</label>
-      <label onclick={ onclick_und_graph }>{ "Click to plot undirected graph" }</label>
+      <Button onmousedown={ onclick_line }>{ "Click to plot line" }</Button>
+      <Button onmousedown={ onclick_para }>{ "Click to plot parabola" }</Button>
+      <Button onmousedown={ onclick_dir_graph }>{ "Click to plot directed graph" }</Button>
+      <Button onmousedown={ onclick_und_graph }>{ "Click to plot undirected graph" }</Button>
 
       <div ref={div_svg_ref}/>
 
