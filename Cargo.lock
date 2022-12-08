@@ -315,33 +315,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fdg-img"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04a5aeb98ec0da99e6a73632357898e226eeded79894af930a231c3718b564fd"
-dependencies = [
- "fdg-sim 0.8.0",
- "plotters",
- "serde",
- "serde_json",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "fdg-sim"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e46e5d37395da18a3ab9f45537386d092bea677e3e98e7c0705c2173a37c6ad"
-dependencies = [
- "glam",
- "hashlink",
- "petgraph",
- "quad-rand",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "fdg-sim"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -554,9 +527,6 @@ name = "glam"
 version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "518faa5064866338b013ff9b2350dc318e14cc4fcd6cb8206d7e7c9886c98815"
-dependencies = [
- "serde",
-]
 
 [[package]]
 name = "gloo"
@@ -976,8 +946,6 @@ checksum = "e6d5014253a1331579ce62aa67443b4a658c5e7dd03d4bc6d302b94474888143"
 dependencies = [
  "fixedbitset",
  "indexmap",
- "serde",
- "serde_derive",
 ]
 
 [[package]]
@@ -1434,8 +1402,7 @@ name = "trope-web"
 version = "0.1.0"
 dependencies = [
  "derive_more",
- "fdg-img",
- "fdg-sim 0.9.0",
+ "fdg-sim",
  "js-sys",
  "petgraph",
  "plotters",
