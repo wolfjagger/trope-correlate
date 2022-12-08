@@ -51,7 +51,7 @@ impl SvgPlot {
     graph.graph.add_edge(n1, n2, TropeEdge{});
     graph.graph.add_edge(n1, n3, TropeEdge{});
 
-    let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new());
+    let plot_type = PlotType::DirectedPetGraph(graph);
 
     Self {
       size,
