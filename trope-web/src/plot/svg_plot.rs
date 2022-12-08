@@ -201,43 +201,43 @@ impl SvgPlot {
 
 /// Parameters for drawing the SVG image.
 pub struct Settings<N, E, Ty = Undirected> {
-    /// Simulation Parameters
-    pub sim_parameters: SimulationParameters<N, E, Ty>,
-    /// Number of times to run the simulation
-    pub iterations: usize,
-    /// "Granularity of simulation updates"
-    pub dt: f32,
-    /// The radius of the nodes
-    pub node_size: u32,
-    /// RGBA color of the nodes
-    pub node_color: RGBAColor,
-    /// Width of the edge lines
-    pub edge_size: u32,
-    /// RGBA color of the edge lines
-    pub edge_color: RGBAColor,
-    /// RGBA background color
-    pub background_color: RGBAColor,
-    /// If true, the simulation will be printed on each
-    pub print_progress: bool,
-    /// If supplied, the names of nodes will be written
-    pub text_style: Option<TextStyle<'static>>,
+  /// Simulation Parameters
+  pub sim_parameters: SimulationParameters<N, E, Ty>,
+  /// Number of times to run the simulation
+  pub iterations: usize,
+  /// "Granularity of simulation updates"
+  pub dt: f32,
+  /// The radius of the nodes
+  pub node_size: u32,
+  /// RGBA color of the nodes
+  pub node_color: RGBAColor,
+  /// Width of the edge lines
+  pub edge_size: u32,
+  /// RGBA color of the edge lines
+  pub edge_color: RGBAColor,
+  /// RGBA background color
+  pub background_color: RGBAColor,
+  /// If true, the simulation will be printed on each
+  pub print_progress: bool,
+  /// If supplied, the names of nodes will be written
+  pub text_style: Option<TextStyle<'static>>,
 }
 
 impl<N, E, Ty: EdgeType> Default for Settings<N, E, Ty> {
-    fn default() -> Self {
-        Self {
-            sim_parameters: SimulationParameters::default(),
-            iterations: 2000,
-            dt: 0.035,
-            node_size: 10,
-            node_color: RGBAColor(0, 0, 0, 1.0),
-            edge_size: 3,
-            edge_color: RGBAColor(255, 0, 0, 1.0),
-            background_color: RGBAColor(255, 255, 255, 1.0),
-            print_progress: false,
-            text_style: None,
-        }
+  fn default() -> Self {
+    Self {
+      sim_parameters: SimulationParameters::default(),
+      iterations: 2000,
+      dt: 0.035,
+      node_size: 10,
+      node_color: RGBAColor(0, 0, 0, 1.0),
+      edge_size: 3,
+      edge_color: RGBAColor(255, 0, 0, 1.0),
+      background_color: RGBAColor(255, 255, 255, 1.0),
+      print_progress: false,
+      text_style: None,
     }
+  }
 }
 
 
