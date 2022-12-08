@@ -1,5 +1,5 @@
 use derive_more::Display;
-
+use fdg_sim::{ForceGraph, Node as fdg_Node};
 use petgraph::{
   Directed, Graph, Undirected,
   algo::is_isomorphic_matching
@@ -7,10 +7,10 @@ use petgraph::{
 
 
 /// Data/weight for each node
-#[derive(Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, PartialEq)]
 pub struct TropeNode { }
 /// Data/weight for each edge
-#[derive(Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, PartialEq)]
 pub struct TropeEdge { }
 
 
@@ -20,11 +20,17 @@ pub struct DirectedTropeGraph {
 }
 
 impl DirectedTropeGraph {
+
   pub fn new() -> Self {
     Self {
       graph: Graph::new(),
     }
   }
+
+  pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Directed> {
+    self.graph.map(|idx, n| fdg_Node::new(format!("node_{:?}", idx), n.clone()), |_idx, e| e.clone()).into()
+  }
+
 }
 
 /// Undirected trope-related graph that can be plotted
@@ -33,11 +39,17 @@ pub struct UndirectedTropeGraph {
 }
 
 impl UndirectedTropeGraph {
+
   pub fn new() -> Self {
     Self {
       graph: Graph::new_undirected(),
     }
   }
+
+  pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Undirected> {
+    self.graph.map(|idx, n| fdg_Node::new(format!("node_{:?}", idx), n.clone()), |_idx, e| e.clone()).into()
+  }
+
 }
 
 
