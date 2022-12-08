@@ -49,6 +49,15 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
+    let mut graph = DirectedTropeGraph::new();
+
+    // TODO: Replace this example plot
+    let n1 = graph.graph.add_node(TropeNode{});
+    let n2 = graph.graph.add_node(TropeNode{});
+    let n3 = graph.graph.add_node(TropeNode{});
+    graph.graph.add_edge(n1, n2, TropeEdge{});
+    graph.graph.add_edge(n1, n3, TropeEdge{});
+
     let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new());
 
     Self {
@@ -84,23 +93,15 @@ impl SvgPlot {
   pub fn print_to_string(&self) -> String {
 
     let mut svg_str = String::new();
+    let backend = SVGBackend::with_string(&mut svg_str, self.size);
 
     match &self.plot_type {
       // Send any plotters-drawn plats through SVGBackend
-      PlotType::PowerFn(_) => {
+      PlotType::PowerFn(_) |
+      PlotType::DirectedPetGraph(_) |
+      PlotType::UndirectedPetGraph(_) => {
         // Get svg backend and associate it with svg_str
-        let backend = SVGBackend::with_string(&mut svg_str, self.size);
         self.draw_on_backend(backend).expect("draw_on_backend error");
-      },
-      PlotType::DirectedPetGraph(_g) => {
-        todo!("Implement DirectedPetGraph plotting")
-      },
-      PlotType::UndirectedPetGraph(g) => {
-
-        let _dot = Dot::with_config(&g.graph, &[Config::EdgeNoLabel]);
-        // web_sys::console::log_1(&format!("{:?}", dot).into());
-        todo!("Print dot to svg using fdg or something")
-
       }
     }
 
@@ -146,7 +147,47 @@ impl SvgPlot {
         Ok(())
 
       },
-      _ => panic!("This plot type should not be drawn through the backend")
+      PlotType::DirectedPetGraph(g) => {
+
+        let root = backend.into_drawing_area();
+        let text_style = Some(("sans-serif", 20.).into_text_style(&root));
+        root.fill(&WHITE)?;
+
+        // generate svg text for your graph
+        let force_graph = g.force_graph();
+        let settings = Some(Settings{
+          text_style,
+          ..Settings::default()
+        });
+        gen_image(force_graph, &root, settings).unwrap();
+
+        // Present changes to the backend
+        root.present()?;
+
+        Ok(())
+
+      },
+      PlotType::UndirectedPetGraph(g) => {
+
+        let root = backend.into_drawing_area();
+        let text_style = Some(("sans-serif", 20.).into_text_style(&root));
+        root.fill(&WHITE)?;
+
+        // generate svg text for your graph
+        let force_graph = g.force_graph();
+        let settings = Some(Settings{
+          text_style,
+          ..Settings::default()
+        });
+        gen_image(force_graph, &root, settings).unwrap();
+
+        // Present changes to the backend
+        root.present()?;
+
+        Ok(())
+
+      },
+      // _ => panic!("This plot type should not be drawn through the backend")
     }
 
 
