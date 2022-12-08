@@ -1406,6 +1406,7 @@ dependencies = [
  "js-sys",
  "petgraph",
  "plotters",
+ "wasm-bindgen",
  "web-sys",
  "yew",
  "yew-router",
