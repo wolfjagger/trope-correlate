@@ -1,3 +1,4 @@
+mod about;
 mod home;
 
 use yew::prelude::*;
@@ -18,7 +19,7 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
   match route {
     Route::Home => html! { <home::Home/> },
-    Route::About => html! { <h1>{ "About" }</h1> },
+    Route::About => html! { <about::About/> },
     Route::NotFound => html! { <h1>{ "404" }</h1> },
   }
 }
