@@ -16,6 +16,8 @@ fn App() -> Html {
 
       <nav>
         <tab::Tab route={route::Route::Home}>{ "Home" }</tab::Tab>
+        <tab::Tab route={route::Route::TropeRelationship}>{ "Trope Relationships" }</tab::Tab>
+        <tab::Tab route={route::Route::Method}>{ "Methods" }</tab::Tab>
         <tab::Tab route={route::Route::About}>{ "About" }</tab::Tab>
       </nav>
 
