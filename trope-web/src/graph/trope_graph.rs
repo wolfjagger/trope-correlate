@@ -8,7 +8,9 @@ use petgraph::{
 
 /// Data/weight for each node
 #[derive(Clone, Debug, Display, PartialEq)]
-pub struct TropeNode { }
+pub struct TropeNode {
+  pub name: String,
+}
 /// Data/weight for each edge
 #[derive(Clone, Debug, Display, PartialEq)]
 pub struct TropeEdge { }
@@ -28,7 +30,10 @@ impl DirectedTropeGraph {
   }
 
   pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Directed> {
-    self.graph.map(|idx, n| fdg_Node::new(format!("node_{:?}", idx), n.clone()), |_idx, e| e.clone()).into()
+    self.graph.map(
+      |_idx, n| fdg_Node::new(&n.name, n.clone()),
+      |_idx, e| e.clone()
+    ).into()
   }
 
 }
@@ -47,7 +52,10 @@ impl UndirectedTropeGraph {
   }
 
   pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Undirected> {
-    self.graph.map(|idx, n| fdg_Node::new(format!("node_{:?}", idx), n.clone()), |_idx, e| e.clone()).into()
+    self.graph.map(
+      |_idx, n| fdg_Node::new(&n.name, n.clone()),
+      |_idx, e| e.clone()
+    ).into()
   }
 
 }

@@ -45,9 +45,9 @@ impl SvgPlot {
     let mut graph = DirectedTropeGraph::new();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{});
-    let n2 = graph.graph.add_node(TropeNode{});
-    let n3 = graph.graph.add_node(TropeNode{});
+    let n1 = graph.graph.add_node(TropeNode{ name: "n1".to_string() });
+    let n2 = graph.graph.add_node(TropeNode{ name: "n2".to_string() });
+    let n3 = graph.graph.add_node(TropeNode{ name: "n3".to_string() });
     graph.graph.add_edge(n1, n2, TropeEdge{});
     graph.graph.add_edge(n1, n3, TropeEdge{});
 
@@ -68,9 +68,9 @@ impl SvgPlot {
     let mut graph = UndirectedTropeGraph::new();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{});
-    let n2 = graph.graph.add_node(TropeNode{});
-    let n3 = graph.graph.add_node(TropeNode{});
+    let n1 = graph.graph.add_node(TropeNode{ name: "n1".to_string() });
+    let n2 = graph.graph.add_node(TropeNode{ name: "n2".to_string() });
+    let n3 = graph.graph.add_node(TropeNode{ name: "n3".to_string() });
     graph.graph.add_edge(n1, n2, TropeEdge{});
     graph.graph.add_edge(n1, n3, TropeEdge{});
 
