@@ -1,13 +1,13 @@
 use web_sys::Element;
 use yew::prelude::*;
 
-use crate::{button::Button, plot::SvgPlot};
+use crate::plot::SvgPlot;
 
 
 #[function_component]
 pub fn Home() -> Html {
 
-  let svg_plot = use_state(|| SvgPlot::power_fn_plot(1));
+  let svg_plot = use_state(|| SvgPlot::undirected_graph());
   // div_svg_ref a NodeRef to the element in html that will contain the svg
   let div_svg_ref = use_node_ref();
 
@@ -28,35 +28,13 @@ pub fn Home() -> Html {
 
   // Mouse events
 
-  let svg_plot_clone = svg_plot.clone();
-  let onclick_line = move |_| {
-    svg_plot_clone.set(SvgPlot::power_fn_plot(1))
-  };
-  let svg_plot_clone = svg_plot.clone();
-  let onclick_para = move |_| {
-    svg_plot_clone.set(SvgPlot::power_fn_plot(2))
-  };
-  let svg_plot_clone = svg_plot.clone();
-  let onclick_dir_graph = move |_| {
-    svg_plot_clone.set(SvgPlot::directed_graph())
-  };
-  let svg_plot_clone = svg_plot.clone();
-  let onclick_und_graph = move |_| {
-    svg_plot_clone.set(SvgPlot::undirected_graph())
-  };
-
   // HTML
   html! {
     <>
 
       <h1>{ "Home" }</h1>
 
-      <h2>{ "Plot" }</h2>
-
-      <Button onmousedown={ onclick_line }>{ "Click to plot line" }</Button>
-      <Button onmousedown={ onclick_para }>{ "Click to plot parabola" }</Button>
-      <Button onmousedown={ onclick_dir_graph }>{ "Click to plot directed graph" }</Button>
-      <Button onmousedown={ onclick_und_graph }>{ "Click to plot undirected graph" }</Button>
+      <h2>{ "Woah, incredible splash graph!" }</h2>
 
       <div ref={div_svg_ref}/>
 
