@@ -152,7 +152,7 @@ impl SvgPlot {
           text_style,
           ..Settings::default()
         });
-        gen_image(g.force_graph.clone(), &root, settings).unwrap();
+        gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;
@@ -171,7 +171,7 @@ impl SvgPlot {
           text_style,
           ..Settings::default()
         });
-        gen_image(g.force_graph.clone(), &root, settings).unwrap();
+        gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;
