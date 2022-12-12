@@ -1,29 +1,48 @@
+use gloo_timers::callback::Interval;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
 mod button;
+mod message;
 mod plot;
 mod route;
 mod tab;
 mod graph;
 
 
-#[function_component]
-fn App() -> Html {
+struct App {
+  _interval: Interval
+}
 
-  html! {
-    <BrowserRouter>
+impl Component for App {
 
-      <nav>
-        <tab::Tab route={route::Route::Home}>{ "Home" }</tab::Tab>
-        <tab::Tab route={route::Route::TropeRelationship}>{ "Trope Relationships" }</tab::Tab>
-        <tab::Tab route={route::Route::Method}>{ "Methods" }</tab::Tab>
-        <tab::Tab route={route::Route::About}>{ "About" }</tab::Tab>
-      </nav>
+  type Message = message::Message;
+  type Properties = ();
 
-      <Switch<route::Route> render={route::switch} />
+  fn create(ctx: &Context<Self>) -> Self {
+    let callback = ctx.link().callback(|_| message::Message::Tick);
+    let interval = Interval::new(200, move || callback.emit(()));
+    Self {
+      _interval: interval
+    }
+  }
 
-    </BrowserRouter>
+  fn view(&self, _ctx: &Context<Self>) -> Html {
+
+    html! {
+      <BrowserRouter>
+
+        <nav>
+          <tab::Tab route={route::Route::Home}>{ "Home" }</tab::Tab>
+          <tab::Tab route={route::Route::TropeRelationship}>{ "Trope Relationships" }</tab::Tab>
+          <tab::Tab route={route::Route::Method}>{ "Methods" }</tab::Tab>
+          <tab::Tab route={route::Route::About}>{ "About" }</tab::Tab>
+        </nav>
+
+        <Switch<route::Route> render={route::switch} />
+
+      </BrowserRouter>
+    }
   }
 
 }
