@@ -1,3 +1,4 @@
+use petgraph::Graph;
 use plotters::prelude::*;
 
 use super::fdg_img_custom::{Settings, gen_image};
@@ -42,16 +43,16 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
-    let mut graph = DirectedTropeGraph::new();
+    let mut graph = Graph::new();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{ name: "n1".to_string() });
-    let n2 = graph.graph.add_node(TropeNode{ name: "n2".to_string() });
-    let n3 = graph.graph.add_node(TropeNode{ name: "n3".to_string() });
-    graph.graph.add_edge(n1, n2, TropeEdge{});
-    graph.graph.add_edge(n1, n3, TropeEdge{});
+    let n1 = graph.add_node(TropeNode{ name: "n1".to_string() });
+    let n2 = graph.add_node(TropeNode{ name: "n2".to_string() });
+    let n3 = graph.add_node(TropeNode{ name: "n3".to_string() });
+    graph.add_edge(n1, n2, TropeEdge{});
+    graph.add_edge(n1, n3, TropeEdge{});
 
-    let plot_type = PlotType::DirectedPetGraph(graph);
+    let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new(graph));
 
     Self {
       size,
@@ -65,16 +66,16 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
-    let mut graph = UndirectedTropeGraph::new();
+    let mut graph = Graph::new_undirected();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{ name: "n1".to_string() });
-    let n2 = graph.graph.add_node(TropeNode{ name: "n2".to_string() });
-    let n3 = graph.graph.add_node(TropeNode{ name: "n3".to_string() });
-    graph.graph.add_edge(n1, n2, TropeEdge{});
-    graph.graph.add_edge(n1, n3, TropeEdge{});
+    let n1 = graph.add_node(TropeNode{ name: "n1".to_string() });
+    let n2 = graph.add_node(TropeNode{ name: "n2".to_string() });
+    let n3 = graph.add_node(TropeNode{ name: "n3".to_string() });
+    graph.add_edge(n1, n2, TropeEdge{});
+    graph.add_edge(n1, n3, TropeEdge{});
 
-    let plot_type = PlotType::UndirectedPetGraph(graph);
+    let plot_type = PlotType::UndirectedPetGraph(UndirectedTropeGraph::new(graph));
 
     Self {
       size,
@@ -147,12 +148,11 @@ impl SvgPlot {
         root.fill(&WHITE)?;
 
         // generate svg text for your graph
-        let force_graph = g.force_graph();
         let settings = Some(Settings{
           text_style,
           ..Settings::default()
         });
-        gen_image(force_graph, &root, settings).unwrap();
+        gen_image(g.force_graph.clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;
@@ -167,12 +167,11 @@ impl SvgPlot {
         root.fill(&WHITE)?;
 
         // generate svg text for your graph
-        let force_graph = g.force_graph();
         let settings = Some(Settings{
           text_style,
           ..Settings::default()
         });
-        gen_image(force_graph, &root, settings).unwrap();
+        gen_image(g.force_graph.clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;

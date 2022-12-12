@@ -1,7 +1,7 @@
 use derive_more::Display;
 use fdg_sim::{ForceGraph, Node as fdg_Node};
 use petgraph::{
-  Directed, Graph, Undirected,
+  Directed, EdgeType, Graph, Undirected,
   algo::is_isomorphic_matching
 };
 
@@ -19,21 +19,17 @@ pub struct TropeEdge { }
 /// Directed trope-related graph that can be plotted
 pub struct DirectedTropeGraph {
   pub graph: Graph<TropeNode, TropeEdge, Directed>,
+  pub force_graph: ForceGraph<TropeNode, TropeEdge, Directed>,
 }
 
 impl DirectedTropeGraph {
 
-  pub fn new() -> Self {
+  pub fn new(g: Graph<TropeNode, TropeEdge, Directed>) -> Self {
+    let force_graph = begin_force_graph(&g);
     Self {
-      graph: Graph::new(),
+      graph: g,
+      force_graph
     }
-  }
-
-  pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Directed> {
-    self.graph.map(
-      |_idx, n| fdg_Node::new(&n.name, n.clone()),
-      |_idx, e| e.clone()
-    ).into()
   }
 
 }
@@ -41,23 +37,33 @@ impl DirectedTropeGraph {
 /// Undirected trope-related graph that can be plotted
 pub struct UndirectedTropeGraph {
   pub graph: Graph<TropeNode, TropeEdge, Undirected>,
+  pub force_graph: ForceGraph<TropeNode, TropeEdge, Undirected>,
 }
 
 impl UndirectedTropeGraph {
 
-  pub fn new() -> Self {
+  pub fn new(g: Graph<TropeNode, TropeEdge, Undirected>) -> Self {
+    let force_graph = begin_force_graph(&g);
     Self {
-      graph: Graph::new_undirected(),
+      graph: g,
+      force_graph
     }
   }
 
-  pub fn force_graph(&self) -> ForceGraph<TropeNode, TropeEdge, Undirected> {
-    self.graph.map(
-      |_idx, n| fdg_Node::new(&n.name, n.clone()),
-      |_idx, e| e.clone()
-    ).into()
-  }
+}
 
+
+fn begin_force_graph<Ty>(graph: &Graph<TropeNode, TropeEdge, Ty>)
+-> ForceGraph<TropeNode, TropeEdge, Ty>
+where Ty: EdgeType {
+  graph.map(
+    |_idx, n| {
+      let new_node = n.clone();
+      let name = n.name.clone();
+      fdg_Node::new(&name, new_node)
+    },
+    |_idx, e| e.clone()
+  ).into()
 }
 
 
