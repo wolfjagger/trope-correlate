@@ -7,6 +7,7 @@ use crate::{message::Message, plot::{SvgPlot, PlotType}};
 
 const SIM_TIME_MILLI: u32 = 500;
 const SIM_SPEED: f64 = 0.035;
+const SIM_PER_TICK: f64 = SIM_SPEED * (SIM_TIME_MILLI as f64) / 1000.;
 
 
 pub struct Home {
@@ -53,11 +54,11 @@ impl Component for Home {
         match &mut self.svg_anim.plot_type {
           PlotType::PowerFn(_) => false,
           PlotType::DirectedPetGraph(g) => {
-            g.update_simulation(SIM_SPEED);
+            g.update_simulation(SIM_PER_TICK);
             true
           },
           PlotType::UndirectedPetGraph(g) => {
-            g.update_simulation(SIM_SPEED);
+            g.update_simulation(SIM_PER_TICK);
             true
           }
         }
