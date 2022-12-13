@@ -46,11 +46,18 @@ impl SvgPlot {
     let mut graph = Graph::new();
 
     // TODO: Replace this example plot
-    let n1 = graph.add_node(TropeNode{ name: "n1".to_string() });
-    let n2 = graph.add_node(TropeNode{ name: "n2".to_string() });
-    let n3 = graph.add_node(TropeNode{ name: "n3".to_string() });
-    graph.add_edge(n1, n2, TropeEdge{});
-    graph.add_edge(n1, n3, TropeEdge{});
+    // K 3-3
+    let n00 = graph.add_node(TropeNode{ name: "n00".to_string() });
+    let n01 = graph.add_node(TropeNode{ name: "n01".to_string() });
+    let n02 = graph.add_node(TropeNode{ name: "n02".to_string() });
+    let n10 = graph.add_node(TropeNode{ name: "n10".to_string() });
+    let n11 = graph.add_node(TropeNode{ name: "n11".to_string() });
+    let n12 = graph.add_node(TropeNode{ name: "n12".to_string() });
+    for (n0, n1) in [n00, n01, n02].iter().cloned().flat_map(
+      |n0| [n10, n11, n12].iter().cloned().map(|n1| (n0, n1)).collect::<Vec<_>>()
+    ) {
+      graph.add_edge(n0, n1, TropeEdge{});
+    }
 
     let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new(graph));
 
@@ -69,11 +76,18 @@ impl SvgPlot {
     let mut graph = Graph::new_undirected();
 
     // TODO: Replace this example plot
-    let n1 = graph.add_node(TropeNode{ name: "n1".to_string() });
-    let n2 = graph.add_node(TropeNode{ name: "n2".to_string() });
-    let n3 = graph.add_node(TropeNode{ name: "n3".to_string() });
-    graph.add_edge(n1, n2, TropeEdge{});
-    graph.add_edge(n1, n3, TropeEdge{});
+    // K 3-3
+    let n00 = graph.add_node(TropeNode{ name: "n00".to_string() });
+    let n01 = graph.add_node(TropeNode{ name: "n01".to_string() });
+    let n02 = graph.add_node(TropeNode{ name: "n02".to_string() });
+    let n10 = graph.add_node(TropeNode{ name: "n10".to_string() });
+    let n11 = graph.add_node(TropeNode{ name: "n11".to_string() });
+    let n12 = graph.add_node(TropeNode{ name: "n12".to_string() });
+    for (n0, n1) in [n00, n01, n02].iter().cloned().flat_map(
+      |n0| [n10, n11, n12].iter().cloned().map(|n1| (n0, n1)).collect::<Vec<_>>()
+    ) {
+      graph.add_edge(n0, n1, TropeEdge{});
+    }
 
     let plot_type = PlotType::UndirectedPetGraph(UndirectedTropeGraph::new(graph));
 
