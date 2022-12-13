@@ -157,6 +157,7 @@ impl SvgPlot {
       },
       PlotType::DirectedPetGraph(g) => {
 
+        let size = backend.get_size();
         let root = backend.into_drawing_area();
         let text_style = Some(("sans-serif", 20.).into_text_style(&root));
         root.fill(&WHITE)?;
@@ -164,6 +165,7 @@ impl SvgPlot {
         // generate svg text for your graph
         let settings = Some(Settings{
           text_style,
+          size,
           ..Settings::default()
         });
         gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
@@ -176,6 +178,7 @@ impl SvgPlot {
       },
       PlotType::UndirectedPetGraph(g) => {
 
+        let size = backend.get_size();
         let root = backend.into_drawing_area();
         let text_style = Some(("sans-serif", 20.).into_text_style(&root));
         root.fill(&WHITE)?;
@@ -183,6 +186,7 @@ impl SvgPlot {
         // generate svg text for your graph
         let settings = Some(Settings{
           text_style,
+          size,
           ..Settings::default()
         });
         gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
