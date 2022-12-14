@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+  "trope-download",
   "trope-scraper",
   "trope-web",
 ]
