@@ -1,4 +1,1 @@
-Epic/story setup
-Trello backlog fill
-Documentation
-In-depth scraper planning
+Captcha check-in

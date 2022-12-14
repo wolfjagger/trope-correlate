@@ -1,0 +1,14 @@
+@use 'sass:list';
+
+/* Colors for a "complementary" color scheme that look good */
+// $scheme: #DEE9ED, #526F7A, #8E4866, #B9A560, #27161D;
+$scheme: #A4C0CC, #425962, #713A52, #9C8945, #1F1218;
+
+$color-light-1: list.nth($scheme, 1);
+$color-light-2: list.nth($scheme, 2);
+$color-color-1: list.nth($scheme, 3);
+$color-color-2: list.nth($scheme, 4);
+$color-dark: list.nth($scheme, 5);
+
+$color-back: $color-dark;
+$color-font: $color-light-1;
