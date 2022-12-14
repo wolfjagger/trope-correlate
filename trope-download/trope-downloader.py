@@ -1,7 +1,8 @@
 """A quick script to help download TvTropes pages with curl."""
 
 import argparse
-import subprocess
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
 from functools import partial
 from os import makedirs
 from os.path import join
@@ -25,35 +26,34 @@ def main() -> None:
 
     page = 1
 
-    page_command = partial(create_curl_command, args.namespace, args.pagetype)
+    page_url = partial(create_url, args.namespace, args.pagetype)
 
     while page <= args.max_pages:
-        curl_command = page_command(str(page))
         filename = path_dir + "page" + str(page) + ".html"
-        print(curl_command)
-        html = subprocess.run(curl_command, check=False, capture_output=True, text=True)
-        with open(filename, "w") as file:
-            file.write(html.stdout)
+        url = page_url(page)
+        if url.startswith("http"):
+            with urlopen(url) as site, open(filename, "w") as file:  # nosec
+                html = site.read().decode()
+                soup = BeautifulSoup(html, "html.parser")
+                file.write(html)
         page += 1
         sleep(1)
 
 
-def create_curl_command(namespace: str, pagetype: str, page: str) -> list[str]:
-    """Create a command for curl to download a tvtropes page."""
-    command: list[str] = [
-        "curl",
-        "--connect-timeout",
-        "60",
-        "-G",
-        "-d",
-        NAMESPACE_PREFIX + namespace,
-        "-d",
-        PAGETYPE_PREFIX + pagetype,
-        "-d",
-        PAGENUM_PREFIX + page,
-        TVTROPES_SEARCH_PAGE,
-    ]
-    return command
+def create_url(namespace: str, pagetype: str, page: int) -> str:
+    """Define the url string from the query arguments."""
+    return (
+        TVTROPES_SEARCH_PAGE
+        + "?"
+        + NAMESPACE_PREFIX
+        + namespace
+        + "&"
+        + PAGETYPE_PREFIX
+        + pagetype
+        + "&"
+        + PAGENUM_PREFIX
+        + str(page)
+    )
 
 
 def create_arg_parser() -> argparse.ArgumentParser:
