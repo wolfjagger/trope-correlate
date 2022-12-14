@@ -1,3 +1,4 @@
+use petgraph::Graph;
 use plotters::prelude::*;
 
 use super::fdg_img_custom::{Settings, gen_image};
@@ -42,16 +43,23 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
-    let mut graph = DirectedTropeGraph::new();
+    let mut graph = Graph::new();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{});
-    let n2 = graph.graph.add_node(TropeNode{});
-    let n3 = graph.graph.add_node(TropeNode{});
-    graph.graph.add_edge(n1, n2, TropeEdge{});
-    graph.graph.add_edge(n1, n3, TropeEdge{});
+    // K 3-3
+    let n00 = graph.add_node(TropeNode{ name: "n00".to_string() });
+    let n01 = graph.add_node(TropeNode{ name: "n01".to_string() });
+    let n02 = graph.add_node(TropeNode{ name: "n02".to_string() });
+    let n10 = graph.add_node(TropeNode{ name: "n10".to_string() });
+    let n11 = graph.add_node(TropeNode{ name: "n11".to_string() });
+    let n12 = graph.add_node(TropeNode{ name: "n12".to_string() });
+    for (n0, n1) in [n00, n01, n02].iter().cloned().flat_map(
+      |n0| [n10, n11, n12].iter().cloned().map(|n1| (n0, n1)).collect::<Vec<_>>()
+    ) {
+      graph.add_edge(n0, n1, TropeEdge{});
+    }
 
-    let plot_type = PlotType::DirectedPetGraph(graph);
+    let plot_type = PlotType::DirectedPetGraph(DirectedTropeGraph::new(graph));
 
     Self {
       size,
@@ -65,16 +73,23 @@ impl SvgPlot {
 
     // TODO: Figure out where to move the size handling
     let size = (480, 480);
-    let mut graph = UndirectedTropeGraph::new();
+    let mut graph = Graph::new_undirected();
 
     // TODO: Replace this example plot
-    let n1 = graph.graph.add_node(TropeNode{});
-    let n2 = graph.graph.add_node(TropeNode{});
-    let n3 = graph.graph.add_node(TropeNode{});
-    graph.graph.add_edge(n1, n2, TropeEdge{});
-    graph.graph.add_edge(n1, n3, TropeEdge{});
+    // K 3-3
+    let n00 = graph.add_node(TropeNode{ name: "n00".to_string() });
+    let n01 = graph.add_node(TropeNode{ name: "n01".to_string() });
+    let n02 = graph.add_node(TropeNode{ name: "n02".to_string() });
+    let n10 = graph.add_node(TropeNode{ name: "n10".to_string() });
+    let n11 = graph.add_node(TropeNode{ name: "n11".to_string() });
+    let n12 = graph.add_node(TropeNode{ name: "n12".to_string() });
+    for (n0, n1) in [n00, n01, n02].iter().cloned().flat_map(
+      |n0| [n10, n11, n12].iter().cloned().map(|n1| (n0, n1)).collect::<Vec<_>>()
+    ) {
+      graph.add_edge(n0, n1, TropeEdge{});
+    }
 
-    let plot_type = PlotType::UndirectedPetGraph(graph);
+    let plot_type = PlotType::UndirectedPetGraph(UndirectedTropeGraph::new(graph));
 
     Self {
       size,
@@ -142,17 +157,18 @@ impl SvgPlot {
       },
       PlotType::DirectedPetGraph(g) => {
 
+        let size = backend.get_size();
         let root = backend.into_drawing_area();
         let text_style = Some(("sans-serif", 20.).into_text_style(&root));
         root.fill(&WHITE)?;
 
         // generate svg text for your graph
-        let force_graph = g.force_graph();
         let settings = Some(Settings{
           text_style,
+          size,
           ..Settings::default()
         });
-        gen_image(force_graph, &root, settings).unwrap();
+        gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;
@@ -162,17 +178,18 @@ impl SvgPlot {
       },
       PlotType::UndirectedPetGraph(g) => {
 
+        let size = backend.get_size();
         let root = backend.into_drawing_area();
         let text_style = Some(("sans-serif", 20.).into_text_style(&root));
         root.fill(&WHITE)?;
 
         // generate svg text for your graph
-        let force_graph = g.force_graph();
         let settings = Some(Settings{
           text_style,
+          size,
           ..Settings::default()
         });
-        gen_image(force_graph, &root, settings).unwrap();
+        gen_image(g.simulation.get_graph().clone(), &root, settings).unwrap();
 
         // Present changes to the backend
         root.present()?;

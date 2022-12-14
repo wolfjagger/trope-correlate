@@ -1,26 +1,21 @@
 use plotters::{prelude::*, coord::Shift};
 
 use fdg_sim::{
-  glam::Vec3,
   petgraph::{
     visit::{EdgeRef, IntoEdgeReferences},
-    EdgeType, Undirected
+    EdgeType
   },
-  Dimensions, ForceGraph, Simulation, SimulationParameters
+  ForceGraph
 };
 
 
 // Note: the following replaces the same-named struct & method from fdg_img
-//  butallows a custom backend
+//  but allows a custom backend
 
 /// Parameters for drawing the SVG image.
-pub struct Settings<N, E, Ty = Undirected> {
-  /// Simulation Parameters
-  pub sim_parameters: SimulationParameters<N, E, Ty>,
-  /// Number of times to run the simulation
-  pub iterations: usize,
-  /// "Granularity of simulation updates"
-  pub dt: f32,
+pub struct Settings {
+  /// Size of the backend
+  pub size: (u32, u32),
   /// The radius of the nodes
   pub node_size: u32,
   /// RGBA color of the nodes
@@ -37,12 +32,10 @@ pub struct Settings<N, E, Ty = Undirected> {
   pub text_style: Option<TextStyle<'static>>,
 }
 
-impl<N, E, Ty: EdgeType> Default for Settings<N, E, Ty> {
+impl Default for Settings {
   fn default() -> Self {
     Self {
-      sim_parameters: SimulationParameters::default(),
-      iterations: 2000,
-      dt: 0.035,
+      size: (480, 480),
       node_size: 10,
       node_color: RGBAColor(0, 0, 0, 1.0),
       edge_size: 3,
@@ -57,93 +50,54 @@ impl<N, E, Ty: EdgeType> Default for Settings<N, E, Ty> {
 
 /// Generate an image from a graph and a force.
 pub fn gen_image<N, E, Ty: EdgeType, Backend: DrawingBackend>(
-  graph: ForceGraph<N, E, Ty>,
+  mut graph: ForceGraph<N, E, Ty>,
   drawing_area: &DrawingArea<Backend, Shift>,
-  settings: Option<Settings<N, E, Ty>>,
+  settings: Option<Settings>,
 ) -> Result<(), DrawingAreaErrorKind<Backend::ErrorType>> {
 
   // set up the simulation and settings
   let settings = settings.unwrap_or_default();
-  let mut sim = Simulation::from_graph(graph, settings.sim_parameters);
-  sim.parameters_mut().dimensions = Dimensions::Two;
-
-  // get the nodes to their x/y positions through the simulation.
-  for i in 0..settings.iterations {
-    if settings.print_progress && i % 10 == 0 {
-      println!("{}/{}", i, settings.iterations);
-    }
-    sim.update(settings.dt);
-  }
 
   // get the size of the graph (avg of width and height to try to account for oddly shaped graphs)
-  let (graph_x, graph_y): (f32, f32) = {
-    let mut top = 0.0;
-    let mut bottom = 0.0;
-    let mut left = 0.0;
-    let mut right = 0.0;
-
-    for node in sim.get_graph().node_weights() {
-
-      let loc = node.location;
-
-      // add text width to the rightmost point to make sure text doesn't get cut off
-      let rightmost = match settings.text_style.clone() {
-        Some(ts) => {
-          loc.x + ts.font.box_size(&node.name).ok().map(|x| x.0 as f32).unwrap_or(0.0)
-        },
-        None => loc.x,
-      };
-
-      if rightmost > right {
-        right = rightmost;
-      }
-
-      if loc.x < left {
-        left = loc.x;
-      }
-
-      if loc.y > top {
-        top = loc.y
-      }
-
-      if loc.y < bottom {
-        bottom = loc.y;
-      }
-    }
-
-    ((right - left), (top - bottom))
-  };
-
-  let image_scale = 1.5;
-  let (image_x, image_y) = (
-    (graph_x * image_scale) as u32,
-    (graph_y * image_scale) as u32,
+  let (top, bottom, left, right): (f32, f32, f32, f32) = graph.node_weights().fold(
+    (0., 0., 0., 0.), |bounds, node| (
+      bounds.0.max(node.location.y),
+      bounds.1.min(node.location.y),
+      bounds.2.min(node.location.x),
+      bounds.3.max(node.location.x)
+    )
   );
 
-  // translate all points by graph average to (0,0)
-  let mut location_sum = Vec3::ZERO;
-  for node in sim.get_graph().node_weights() {
-    location_sum += node.location;
-  }
+  let size = (settings.size.0 as f32, settings.size.1 as f32);
+  let diff_x = match right - left {
+    x if x > 0.1 => x,
+    _ => size.0
+  };
+  let diff_y = match top - bottom {
+    y if y > 0.1 => y,
+    _ => size.1
+  };
+  let (avg_x, avg_y) = (0.5 * (left + right), 0.5 * (bottom + top));
 
-  let avg_vec = location_sum / sim.get_graph().node_count() as f32;
-  for node in sim.get_graph_mut().node_weights_mut() {
-    node.location -= avg_vec;
-  }
+  let image_scale = 1.5;
+  let (scale_x, scale_y) = (
+    (size.0 as f32) / (diff_x * image_scale),
+    (size.1 as f32) / (diff_y * image_scale),
+  );
 
   // translate all the points over into the image coordinate space
-  for node in sim.get_graph_mut().node_weights_mut() {
-    node.location.x += (image_x / 2) as f32;
-    node.location.y += (image_y / 2) as f32;
+  for node in graph.node_weights_mut() {
+    node.location.x = 0.5 * size.0 + scale_x * (node.location.x - avg_x);
+    node.location.y = 0.5 * size.1 + scale_y * (node.location.y - avg_y);
   }
 
   // fill in the background
   drawing_area.fill(&settings.background_color).unwrap();
 
   // draw all the edges
-  for edge in sim.get_graph().edge_references() {
-    let source = &sim.get_graph()[edge.source()].location;
-    let target = &sim.get_graph()[edge.target()].location;
+  for edge in graph.edge_references() {
+    let source = &graph[edge.source()].location;
+    let target = &graph[edge.target()].location;
 
     drawing_area.draw(&PathElement::new(
       vec![
@@ -159,7 +113,7 @@ pub fn gen_image<N, E, Ty: EdgeType, Backend: DrawingBackend>(
   }
 
   // draw all the nodes
-  for node in sim.get_graph().node_weights() {
+  for node in graph.node_weights() {
     drawing_area.draw(&Circle::new(
       (node.location.x as i32, node.location.y as i32),
       settings.node_size,
@@ -173,7 +127,7 @@ pub fn gen_image<N, E, Ty: EdgeType, Backend: DrawingBackend>(
 
   // draw the text by nodes
   if let Some(text_style) = settings.text_style {
-    for node in sim.get_graph().node_weights() {
+    for node in graph.node_weights() {
       let pos = (
         node.location.x as i32 + (text_style.font.get_size() / 2.0) as i32,
         node.location.y as i32,

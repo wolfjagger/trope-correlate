@@ -1,4 +1,7 @@
+mod about;
 mod home;
+mod method;
+mod trope;
 
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -8,6 +11,10 @@ use yew_router::prelude::*;
 pub enum Route {
     #[at("/")]
     Home,
+    #[at("/trope-relationship")]
+    TropeRelationship,
+    #[at("/method")]
+    Method,
     #[at("/about")]
     About,
     #[not_found]
@@ -18,7 +25,9 @@ pub enum Route {
 pub fn switch(route: Route) -> Html {
   match route {
     Route::Home => html! { <home::Home/> },
-    Route::About => html! { <h1>{ "About" }</h1> },
+    Route::TropeRelationship => html! { <trope::TropeRelationship/> },
+    Route::Method => html! { <method::Method/> },
+    Route::About => html! { <about::About/> },
     Route::NotFound => html! { <h1>{ "404" }</h1> },
   }
 }
