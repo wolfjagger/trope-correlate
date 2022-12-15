@@ -36,6 +36,13 @@ pub fn parse_tropelist() -> Result<(), Box<dyn std::error::Error>> {
     .join(&args.namespace)
     .join(&args.pagetype);
 
+  // Set up output file in same parent dir
+  let output_path = "../test_data/tropes.csv";
+  let mut output = match fs::File::create(&output_path) {
+    Ok(output) => output,
+    Err(why) => panic!("Couldn't write to {}: {}", output_path, why),
+  };
+
 
   // Page parse loop
   for page in 1..args.max_pages+1 {
@@ -76,13 +83,6 @@ pub fn parse_tropelist() -> Result<(), Box<dyn std::error::Error>> {
       trope.name = String::from(&trope.name[12..]);
       trope.name.retain(|c| c != '\n' && c != ' ' && c != '\t');
     }
-
-    // Open a file for writing
-    let output_path = "../test_data/tropes.csv";
-    let mut output = match fs::File::create(&output_path) {
-      Ok(output) => output,
-      Err(why) => panic!("Couldn't write to {}: {}", output_path, why),
-    };
 
     // Write all the values to the file
     for trope in tropes.iter() {
