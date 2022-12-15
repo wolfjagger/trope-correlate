@@ -15,9 +15,7 @@ const TVTROPES_SEARCH_PAGE: &str =
 
 
 /// Download all the pages
-pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
-
-  let args = Args::parse_args();
+pub fn save_pagelist(args: Args) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up output directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
