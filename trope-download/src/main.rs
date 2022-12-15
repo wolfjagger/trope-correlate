@@ -66,16 +66,19 @@ fn download_all_pages() -> Result<(), Box<dyn std::error::Error>> {
 /// Get header from local file and parse for headers (can panic!)
 fn get_header_map() -> reqwest::header::HeaderMap {
 
-  let header_str = fs::read_to_string(".header").expect("You need to set the .header file; see readme.");
+  let header_str = fs::read_to_string(".header").expect("You need to set the .header file; see readme");
   let mut map = reqwest::header::HeaderMap::new();
   let header_lines = header_str.lines();
 
   for header_line in header_lines {
-    let (key, val) = header_line.split_once(": ").expect("A header line is improperly formatted.");
-    let header_name = reqwest::header::HeaderName::from_bytes(key.as_bytes()).expect("Incorrect header name in header file.");
-    let header_value = val.parse().expect("Header value could not be parsed.");
+    let (key, val) = header_line.split_once(": ").expect("A header line is improperly formatted");
+    let header_name = reqwest::header::HeaderName::from_bytes(key.as_bytes()).expect("Incorrect header name in header file");
+    let header_value = val.parse().expect("Header value could not be parsed");
     map.append(header_name, header_value);
   }
+
+  // Force brotli compression so we can decompress uniformly
+  map.insert("Accept-Encoding", "br".parse().expect("Encoding header value could not be parsed"));
 
   map
 
