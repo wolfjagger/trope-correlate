@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+brotli = "3.3.4"
+bytes = "1.3.0"
 clap = { version = "4.0.29", features = ["derive"] }
-reqwest = { version = "0.11.13", features = ["blocking"] }
+reqwest = { version = "0.11.13", features = ["blocking", "cookies"] }
 url = "2.3.1"
