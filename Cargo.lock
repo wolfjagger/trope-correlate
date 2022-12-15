@@ -2511,8 +2511,13 @@ dependencies = [
  "bytes",
  "clap",
  "reqwest",
+ "trope-lib",
  "url",
 ]
+
+[[package]]
+name = "trope-lib"
+version = "0.1.0"
 
 [[package]]
 name = "trope-scraper"

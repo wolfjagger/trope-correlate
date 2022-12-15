@@ -1,5 +1,7 @@
 use clap::Parser;
 
+use trope_lib;
+
 
 /// Downloads index pages in bulk from tvtropes.
 #[derive(Parser, Debug)]
@@ -11,11 +13,11 @@ pub struct Args {
   pub encrypted: bool,
 
   /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = String::from("Main"))]
+  #[clap(short, long, value_parser, default_value_t = trope_lib::Namespace::Main.to_string())]
   pub namespace: String,
 
   /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = String::from("trope"))]
+  #[clap(short, long, value_parser, default_value_t = trope_lib::Pagetype::Trope.to_string())]
   pub pagetype: String,
 
   /// Max number of pages to call for
