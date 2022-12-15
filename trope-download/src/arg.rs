@@ -6,6 +6,10 @@ use clap::Parser;
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
 
+  /// If enabled, save an encrypted version of the html
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub encrypted: bool,
+
   /// Namespace for page search
   #[clap(short, long, value_parser, default_value_t = String::from("Main"))]
   pub namespace: String,

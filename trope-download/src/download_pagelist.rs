@@ -1,4 +1,4 @@
-use std::{fs, path, thread, time};
+use std::{io::Write, fs, path, thread, time};
 use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
@@ -19,8 +19,8 @@ pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
 
   let args = Args::parse_args();
 
-  // Set up output directory
-  let mut path_dir = path::PathBuf::from("test_data");
+  // Set up output directory in the parent trope-correlate dir
+  let mut path_dir = path::PathBuf::from("../test_data");
   path_dir.push(&args.namespace);
   path_dir.push(&args.pagetype);
   fs::create_dir_all(&path_dir)?;
@@ -34,9 +34,9 @@ pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
     let page_str = page.to_string();
 
     // Set up output file
-    let mut filename = path_dir.clone();
-    filename.push(format!("page{}.html", &page_str));
-    let mut file = fs::File::create(filename)?;
+    let mut file_name = format!("page{}.html", &page_str);
+    if args.encrypted { file_name.push_str(".br"); }
+    let mut file = fs::File::create(path_dir.clone().join(file_name))?;
 
     // Set up url
     let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
@@ -44,8 +44,12 @@ pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
     // Do request, get encoded body
     let encoded_body = get_body(&header_map, url)?;
 
-    // Decode using brotli decompression
-    BrotliDecompress(&mut encoded_body.reader(), &mut file)?;
+    if args.encrypted {
+      file.write_all(&encoded_body)?;
+    } else {
+      // Decode using brotli decompression
+      BrotliDecompress(&mut encoded_body.reader(), &mut file)?;
+    }
 
     // Sleep before next request
     thread::sleep(time::Duration::from_secs(1));
