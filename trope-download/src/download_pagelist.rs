@@ -20,7 +20,9 @@ pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
   let args = Args::parse_args();
 
   // Set up output directory
-  let path_dir = path::PathBuf::from(&format!("test_data{}_{}", args.namespace, args.pagetype));
+  let mut path_dir = path::PathBuf::from("test_data");
+  path_dir.push(&args.namespace);
+  path_dir.push(&args.pagetype);
   fs::create_dir_all(&path_dir)?;
 
   // Get header map for use in each page request (can panic)
