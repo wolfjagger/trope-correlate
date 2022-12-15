@@ -1,4 +1,4 @@
-use std::{io::Write, fs, path, thread, time};
+use std::{fs, io::prelude::*, path, thread, time};
 use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
@@ -20,9 +20,10 @@ pub fn save_pagelist() -> Result<(), Box<dyn std::error::Error>> {
   let args = Args::parse_args();
 
   // Set up output directory in the parent trope-correlate dir
-  let mut path_dir = path::PathBuf::from("../test_data");
-  path_dir.push(&args.namespace);
-  path_dir.push(&args.pagetype);
+  let path_dir = path::PathBuf::from("..")
+    .join(trope_lib::DATA_DIR)
+    .join(&args.namespace)
+    .join(&args.pagetype);
   fs::create_dir_all(&path_dir)?;
 
   // Get header map for use in each page request (can panic)
