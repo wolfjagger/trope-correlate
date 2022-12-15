@@ -2523,7 +2523,10 @@ version = "0.1.0"
 name = "trope-scraper"
 version = "0.1.0"
 dependencies = [
+ "brotli",
+ "clap",
  "scraper",
+ "trope-lib",
 ]
 
 [[package]]
