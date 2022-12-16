@@ -46,27 +46,17 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     let trope_selector = Selector::parse("td>a").unwrap();
 
     // Select all elements in the document
-    let trope_links = document.select(&trope_selector);
-
-    // For every trope, get the inner html (trope_name) and href (trope_url)
-    let mut tropes: Vec<trope_lib::NamedLink> = Vec::new();
-    for element in trope_links {
-      tropes.push(trope_lib::NamedLink {
-        name: element.inner_html(),
-        url: element.value().attr("href").unwrap().to_string(),
-      });
-    }
-
-    // In raw form, there are two non-breaking spaces, possible line breaks and possible
-    // spaces in the middle. Let's get rid of those for simplicity. Todo: break this into
-    // seprate function.
-    for trope in tropes.iter_mut() {
-      trope.name = String::from(&trope.name[12..]);
-      trope.name.retain(|c| c != '\n' && c != ' ' && c != '\t');
-    }
+    let tropes = document.select(&trope_selector).map(|el| {
+      // In raw form, there are two non-breaking spaces, possible line breaks and possible
+      // spaces in the middle. Let's get rid of those.
+      trope_lib::NamedLink{
+        name: el.inner_html().replace("&nbsp;", "").split_whitespace().collect::<String>(),
+        url: el.value().attr("href").unwrap().to_string(),
+      }
+    }).collect::<Vec<_>>();
 
     // Write all the values to the file
-    for trope in tropes.iter() {
+    for trope in tropes {
       csv_writer.write_record(&[trope.name.clone(), trope.url.clone()])?;
     }
 
