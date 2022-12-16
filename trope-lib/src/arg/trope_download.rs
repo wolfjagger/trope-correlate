@@ -68,7 +68,7 @@ pub struct TropeDownloadTropePage {
 }
 
 
-/// Downloads specific trope pages from tvtropes.
+/// Downloads trope pages in tropelist from tvtropes.
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadTropelist {
 

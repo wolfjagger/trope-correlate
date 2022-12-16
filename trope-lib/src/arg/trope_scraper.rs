@@ -23,7 +23,7 @@ pub enum TropeScrapeMethod {
 }
 
 
-/// Downloads index pages in bulk from tvtropes.
+/// Scrapes downloaded pagelists for tropelist
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeTropelist {
 
@@ -46,7 +46,7 @@ pub struct TropeScrapeTropelist {
 }
 
 
-/// Downloads index pages in bulk from tvtropes.
+/// Scrapes downloaded trope page
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeTropePage {
 
