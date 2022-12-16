@@ -15,7 +15,8 @@ pub fn scrape_trope_page(args: trope_lib::TropeScrapeTropePage) -> Result<(), Bo
   // Set up output file in same parent dir
   let out_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
-    .join("tropes");
+    .join("tropes")
+    .join(&args.name);
 
   scrape_trope_to_medialist(&in_dir, &out_dir, &args.name, args.encrypted)?;
 
