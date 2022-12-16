@@ -9,7 +9,7 @@ pub enum Namespace {
 impl ToString for Namespace {
   fn to_string(&self) -> String {
     match self {
-      Namespace::Main => "Main".to_string()
+      Namespace::Main => "main".to_string()
     }
   }
 }
@@ -20,8 +20,8 @@ pub struct NamespaceParseError;
 impl FromStr for Namespace {
   type Err = NamespaceParseError;
   fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s {
-      "Main" => Ok(Namespace::Main),
+    match s.to_lowercase().as_str() {
+      "main" => Ok(Namespace::Main),
       _ => Err(NamespaceParseError)
     }
   }
@@ -33,7 +33,7 @@ pub enum Pagetype {
 impl ToString for Pagetype {
   fn to_string(&self) -> String {
     match self {
-      Pagetype::Trope => "Trope".to_string()
+      Pagetype::Trope => "trope".to_string()
     }
   }
 }
@@ -44,7 +44,7 @@ pub struct PagetypeParseError;
 impl FromStr for Pagetype {
   type Err = PagetypeParseError;
   fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s {
+    match s.to_lowercase().as_str() {
       "trope" => Ok(Pagetype::Trope),
       _ => Err(PagetypeParseError)
     }
