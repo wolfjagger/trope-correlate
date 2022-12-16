@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 brotli = "3.3.4"
 clap = { version = "4.0.29", features = ["derive"] }
+csv = "1.1.6"
 scraper = "0.13.0"
 trope-lib = { path = "../trope-lib" }
