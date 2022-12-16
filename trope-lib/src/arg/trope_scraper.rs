@@ -5,26 +5,26 @@ use crate::{Namespace, Pagetype};
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
-pub struct TropeScraperArgs {
+pub struct TropeScrapeArgs {
   #[command(subcommand)]
-  pub method: TropeScraperMethod
+  pub method: TropeScrapeMethod
 }
 
-impl TropeScraperArgs {
+impl TropeScrapeArgs {
   pub fn parse_args() -> Self {
     Self::parse()
   }
 }
 
 #[derive(Debug, Subcommand)]
-pub enum TropeScraperMethod {
-  Pagelist(TropeScraperPagelist),
+pub enum TropeScrapeMethod {
+  Pagelist(TropeScrapePagelist),
 }
 
 
 /// Downloads index pages in bulk from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeScraperPagelist {
+pub struct TropeScrapePagelist {
 
   /// If enabled, save an encrypted version of the html
   #[clap(short, long, value_parser, default_value_t = false)]

@@ -7,6 +7,6 @@ pub use trope_download::{
   TropeDownloadPagelist, TropeDownloadTropePage, TropeDownloadTropelist,
 };
 pub use trope_scraper::{
-  TropeScraperArgs, TropeScraperMethod,
-  TropeScraperPagelist,
+  TropeScrapeArgs, TropeScrapeMethod,
+  TropeScrapePagelist,
 };

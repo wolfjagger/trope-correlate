@@ -7,7 +7,7 @@ use crate::read_html::read_html_file;
 
 
 /// Download all the pages
-pub fn scrape_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_tropelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")

@@ -7,8 +7,8 @@ mod util;
 pub use arg::{
   TropeDownloadArgs, TropeDownloadMethod,
   TropeDownloadPagelist, TropeDownloadTropePage, TropeDownloadTropelist,
-  TropeScraperArgs, TropeScraperMethod,
-  TropeScraperPagelist,
+  TropeScrapeArgs, TropeScrapeMethod,
+  TropeScrapePagelist,
 };
 pub use constant::DATA_DIR;
 pub use trope::Trope;
