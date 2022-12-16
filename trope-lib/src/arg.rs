@@ -58,11 +58,11 @@ pub struct TropeDownloadTropePage {
   pub encrypted: bool,
 
   /// Trope name
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  #[clap(short, long, value_parser,)]
   pub name: String,
 
   /// Trope url
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
+  #[clap(short, long, value_parser,)]
   pub url: String,
 
 }

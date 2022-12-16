@@ -1,10 +1,8 @@
-use std::{fs, io::prelude::*, path, thread, time};
-use brotli::BrotliDecompress;
-use bytes::{Bytes, Buf};
+use std::{path, thread, time};
 use reqwest;
 
 use trope_lib;
-use crate::header::get_header_map;
+use crate::download::save_page_to_path;
 
 
 const NAMESPACE_PREFIX: &str = "n";
@@ -18,14 +16,10 @@ const PAGELIST_SEARCH_PAGE: &str =
 pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up output directory in the parent trope-correlate dir
-  let path_dir = path::PathBuf::from("..")
+  let out_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
     .join(&args.namespace)
     .join(&args.pagetype);
-  fs::create_dir_all(&path_dir)?;
-
-  // Get header map for use in each page request (can panic)
-  let header_map = get_header_map();
 
   // Page request loop
   for page in 1..args.max_pages+1 {
@@ -33,22 +27,12 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
     let page_str = page.to_string();
 
     // Set up output file
-    let mut file_name = format!("page{}.html", &page_str);
-    if args.encrypted { file_name.push_str(".br"); }
-    let mut file = fs::File::create(path_dir.clone().join(file_name))?;
+    let file_name = format!("page{}", &page_str);
 
     // Set up url
     let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
 
-    // Do request, get encoded body
-    let encoded_body = get_body(&header_map, url)?;
-
-    if args.encrypted {
-      file.write_all(&encoded_body)?;
-    } else {
-      // Decode using brotli decompression
-      BrotliDecompress(&mut encoded_body.reader(), &mut file)?;
-    }
+    save_page_to_path(url, &out_dir, &file_name, args.encrypted)?;
 
     // Sleep before next request
     thread::sleep(time::Duration::from_secs(1));
@@ -66,16 +50,4 @@ fn create_url(namespace: &str, pagetype: &str, page: &str) -> Result<reqwest::Ur
     PAGELIST_SEARCH_PAGE,
     &[(NAMESPACE_PREFIX, namespace), (PAGETYPE_PREFIX, pagetype), (PAGENUM_PREFIX, page)]
   )
-}
-
-
-/// Do request for a specific url
-fn get_body(header_map: &reqwest::header::HeaderMap, url: reqwest::Url) -> Result<Bytes, reqwest::Error> {
-
-  let client = reqwest::blocking::Client::new();
-  let req_builder = client.request(reqwest::Method::GET, url).headers(header_map.clone());
-
-  let req = req_builder.build()?;
-  client.execute(req)?.bytes()
-
 }

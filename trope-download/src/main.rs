@@ -1,3 +1,4 @@
+mod download;
 mod download_pagelist;
 mod download_trope;
 mod header;
