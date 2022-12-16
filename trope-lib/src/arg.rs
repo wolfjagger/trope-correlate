@@ -22,6 +22,7 @@ impl TropeDownloadArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeDownloadMethod {
   Pagelist(TropeDownloadPagelist),
+  TropePage(TropeDownloadTropePage),
 }
 
 
@@ -44,6 +45,25 @@ pub struct TropeDownloadPagelist {
   /// Max number of pages to call for
   #[clap(short, long, value_parser, default_value_t = 2)]
   pub max_pages: u8,
+
+}
+
+
+/// Downloads specific trope pages from tvtropes.
+#[derive(Debug, ClapArgs)]
+pub struct TropeDownloadTropePage {
+
+  /// If enabled, save an encrypted version of the html
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub encrypted: bool,
+
+  /// Trope name
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub name: String,
+
+  /// Trope url
+  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
+  pub url: String,
 
 }
 
