@@ -3,6 +3,6 @@
 members = [
   "trope-download",
   "trope-lib",
-  "trope-scraper",
+  "trope-scrape",
   "trope-web",
 ]

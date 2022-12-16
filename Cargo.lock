@@ -2564,7 +2564,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "trope-scraper"
+name = "trope-scrape"
 version = "0.1.0"
 dependencies = [
  "brotli",
