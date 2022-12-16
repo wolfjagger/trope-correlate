@@ -2,7 +2,10 @@ mod arg;
 
 use std::str::FromStr;
 
-pub use arg::{TropeDownloadArgs, TropeDownloadMethod, PagelistArgs};
+pub use arg::{
+  TropeDownloadArgs, TropeDownloadMethod, TropeDownloadPagelist,
+  TropeScraperArgs, TropeScraperMethod, TropeScraperPagelist,
+};
 
 pub const DATA_DIR: &str = "test_data";
 

@@ -3,7 +3,7 @@ use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
 
-use trope_lib::PagelistArgs;
+use trope_lib::TropeDownloadPagelist;
 use crate::header::get_header_map;
 
 
@@ -15,7 +15,7 @@ const PAGELIST_SEARCH_PAGE: &str =
 
 
 /// Download all the pages
-pub fn save_pagelist(args: PagelistArgs) -> Result<(), Box<dyn std::error::Error>> {
+pub fn save_pagelist(args: TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up output directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")

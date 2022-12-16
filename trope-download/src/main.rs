@@ -4,9 +4,7 @@ mod header;
 use clap::Parser;
 
 use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};
-use crate::{
-  download_pagelist::save_pagelist
-};
+use crate::download_pagelist::save_pagelist;
 
 // Download TvTropes pages
 fn main() {
