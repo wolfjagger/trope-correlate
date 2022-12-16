@@ -1,11 +1,14 @@
-mod arg;
 mod parse_tropelist;
 mod read_html;
 
-use crate::{arg::Args, parse_tropelist::parse_tropelist};
+use trope_lib::{TropeScraperArgs, TropeScraperMethod};
+use crate::parse_tropelist::parse_tropelist;
 
 fn main() {
-  let args = Args::parse_args();
-  // TODO: Translate Args to more specific TropelistArgs based on "method" of scrape
-  parse_tropelist(args).expect("Unhandled parse_tropelist error");
+  let args = TropeScraperArgs::parse_args();
+  match args.method {
+    TropeScraperMethod::Pagelist(method_args) => {
+      parse_tropelist(method_args).expect("Unhandled parse_tropelist error");
+    },
+  }
 }

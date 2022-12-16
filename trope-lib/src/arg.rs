@@ -12,6 +12,12 @@ pub struct TropeDownloadArgs {
   pub method: TropeDownloadMethod
 }
 
+impl TropeDownloadArgs {
+  pub fn parse_args() -> Self {
+    Self::parse()
+  }
+}
+
 
 #[derive(Debug, Subcommand)]
 pub enum TropeDownloadMethod {
@@ -49,6 +55,12 @@ pub struct TropeDownloadPagelist {
 pub struct TropeScraperArgs {
   #[command(subcommand)]
   pub method: TropeScraperMethod
+}
+
+impl TropeScraperArgs {
+  pub fn parse_args() -> Self {
+    Self::parse()
+  }
 }
 
 #[derive(Debug, Subcommand)]

@@ -2,7 +2,7 @@ use std::{fmt, fs, io::prelude::*, path};
 use scraper::Selector;
 
 use trope_lib;
-use crate::{arg::Args, read_html::read_html_file};
+use crate::read_html::read_html_file;
 
 
 #[derive(Debug)]
@@ -19,7 +19,7 @@ impl fmt::Display for Trope {
 
 
 /// Download all the pages
-pub fn parse_tropelist(args: Args) -> Result<(), Box<dyn std::error::Error>> {
+pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
