@@ -1,4 +1,5 @@
 mod arg;
+mod trope;
 
 use std::str::FromStr;
 
@@ -8,6 +9,7 @@ pub use arg::{
   TropeScraperArgs, TropeScraperMethod,
   TropeScraperPagelist,
 };
+pub use trope::Trope;
 
 pub const DATA_DIR: &str = "test_data";
 

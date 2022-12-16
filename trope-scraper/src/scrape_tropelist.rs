@@ -1,4 +1,4 @@
-use std::{fmt, path};
+use std::path;
 use csv;
 use scraper::Selector;
 
@@ -6,21 +6,8 @@ use trope_lib;
 use crate::read_html::read_html_file;
 
 
-#[derive(Debug)]
-struct Trope {
-  name: String,
-  url: String,
-}
-
-impl fmt::Display for Trope {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "[{},{}]", self.name, self.url)
-  }
-}
-
-
 /// Download all the pages
-pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
@@ -60,9 +47,9 @@ pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<
     let trope_links = document.select(&trope_selector);
 
     // For every trope, get the inner html (trope_name) and
-    let mut tropes: Vec<Trope> = Vec::new();
+    let mut tropes: Vec<trope_lib::Trope> = Vec::new();
     for element in trope_links {
-      tropes.push(Trope {
+      tropes.push(trope_lib::Trope {
         name: element.inner_html(),
         url: element.value().attr("href").unwrap().to_string(),
       });
