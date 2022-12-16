@@ -3,19 +3,19 @@ use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
 
-use crate::arg::Args;
+use crate::arg::PagelistArgs;
 use crate::header::get_header_map;
 
 
 const NAMESPACE_PREFIX: &str = "n";
 const PAGETYPE_PREFIX: &str = "t";
 const PAGENUM_PREFIX: &str = "page";
-const TVTROPES_SEARCH_PAGE: &str =
+const PAGELIST_SEARCH_PAGE: &str =
   "https://tvtropes.org/pmwiki/pagelist_having_pagetype_in_namespace.php";
 
 
 /// Download all the pages
-pub fn save_pagelist(args: Args) -> Result<(), Box<dyn std::error::Error>> {
+pub fn save_pagelist(args: PagelistArgs) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up output directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
@@ -63,7 +63,7 @@ pub fn save_pagelist(args: Args) -> Result<(), Box<dyn std::error::Error>> {
 /// Define the url string from the query arguments.
 fn create_url(namespace: &str, pagetype: &str, page: &str) -> Result<reqwest::Url, url::ParseError> {
   reqwest::Url::parse_with_params(
-    TVTROPES_SEARCH_PAGE,
+    PAGELIST_SEARCH_PAGE,
     &[(NAMESPACE_PREFIX, namespace), (PAGETYPE_PREFIX, pagetype), (PAGENUM_PREFIX, page)]
   )
 }
