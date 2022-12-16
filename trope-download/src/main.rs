@@ -17,7 +17,7 @@ fn main() {
       save_pagelist(method_args).expect("Unhandled download_pagelist error");
     },
     TropeDownloadMethod::TropePage(method_args) => {
-      save_trope_page(method_args).expect("Unhandled download_pagelist error");
+      save_trope_page(method_args).expect("Unhandled save_trope_page error");
     },
   }
 }
