@@ -13,3 +13,19 @@ impl fmt::Display for NamedLink {
     write!(f, "[{},{}]", self.name, self.url)
   }
 }
+
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct TropeGeneralJson {
+  pub title: String,
+  pub subpages: Vec<NamedLink>,
+}
+
+impl Default for TropeGeneralJson {
+  fn default() -> Self {
+    Self {
+      title: String::default(),
+      subpages: Vec::default(),
+    }
+  }
+}

@@ -6,5 +6,5 @@ mod util;
 
 pub use arg::*;
 pub use constant::DATA_DIR;
-pub use serialization::NamedLink;
+pub use serialization::{NamedLink, TropeGeneralJson};
 pub use util::{Namespace, Pagetype};
