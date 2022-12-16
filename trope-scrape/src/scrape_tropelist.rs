@@ -49,9 +49,9 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     let trope_links = document.select(&trope_selector);
 
     // For every trope, get the inner html (trope_name) and href (trope_url)
-    let mut tropes: Vec<trope_lib::Trope> = Vec::new();
+    let mut tropes: Vec<trope_lib::NamedLink> = Vec::new();
     for element in trope_links {
-      tropes.push(trope_lib::Trope {
+      tropes.push(trope_lib::NamedLink {
         name: element.inner_html(),
         url: element.value().attr("href").unwrap().to_string(),
       });

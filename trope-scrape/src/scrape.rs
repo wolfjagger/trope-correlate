@@ -34,9 +34,9 @@ pub fn scrape_trope_to_medialist(
   let media_links = document.select(&media_selector);
 
   // For every media mentioned, get the inner html (media_name) and href (media_url)
-  let mut medias: Vec<trope_lib::Media> = Vec::new();
+  let mut medias: Vec<trope_lib::NamedLink> = Vec::new();
   for element in media_links {
-    medias.push(trope_lib::Media{
+    medias.push(trope_lib::NamedLink{
       name: element.inner_html(),
       url: element.value().attr("href").unwrap().to_string(),
     })
