@@ -19,6 +19,7 @@ impl TropeScrapeArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
   Pagelist(TropeScrapePagelist),
+  TropePage(TropeScrapeTropePage),
 }
 
 
@@ -41,5 +42,24 @@ pub struct TropeScrapePagelist {
   /// Max number of pages to call for
   #[clap(short, long, value_parser, default_value_t = 2)]
   pub max_pages: u8,
+
+}
+
+
+/// Downloads index pages in bulk from tvtropes.
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeTropePage {
+
+  /// If enabled, save an encrypted version of the html
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub encrypted: bool,
+
+  /// Trope name
+  #[clap(short, long, value_parser,)]
+  pub name: String,
+
+  /// Trope url
+  #[clap(short, long, value_parser,)]
+  pub url: String,
 
 }
