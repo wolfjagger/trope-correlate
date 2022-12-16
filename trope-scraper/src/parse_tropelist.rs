@@ -1,4 +1,5 @@
-use std::{fmt, fs, io::prelude::*, path};
+use std::{fmt, path};
+use csv;
 use scraper::Selector;
 
 use trope_lib;
@@ -29,8 +30,8 @@ pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<
 
   // Set up output file in same parent dir
   let output_path = "../test_data/tropes.csv";
-  let mut output = match fs::File::create(&output_path) {
-    Ok(output) => output,
+  let mut csv_writer = match csv::Writer::from_path(&output_path) {
+    Ok(w) => w,
     Err(why) => panic!("Couldn't write to {}: {}", output_path, why),
   };
 
@@ -77,10 +78,7 @@ pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<
 
     // Write all the values to the file
     for trope in tropes.iter() {
-      let s = format!("{}, {}\n", trope.name, trope.url);
-      output
-        .write_all(s.as_bytes())
-        .expect("Unable to write string");
+      csv_writer.write_record(&[trope.name.clone(), trope.url.clone()])?;
     }
 
   }

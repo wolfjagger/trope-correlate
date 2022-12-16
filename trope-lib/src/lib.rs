@@ -4,7 +4,7 @@ use std::str::FromStr;
 
 pub use arg::{
   TropeDownloadArgs, TropeDownloadMethod,
-  TropeDownloadPagelist, TropeDownloadTropePage,
+  TropeDownloadPagelist, TropeDownloadTropePage, TropeDownloadTropelist,
   TropeScraperArgs, TropeScraperMethod,
   TropeScraperPagelist,
 };
