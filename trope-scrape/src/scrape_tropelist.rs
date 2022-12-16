@@ -7,7 +7,7 @@ use crate::read_html::read_html_file;
 
 
 /// Download all the pages
-pub fn scrape_tropelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
@@ -16,10 +16,12 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<
     .join(&args.pagetype);
 
   // Set up output file in same parent dir
-  let output_path = "../test_data/tropes.csv";
+  let output_path = path::PathBuf::from("..")
+    .join("test_data")
+    .join("tropes.csv");
   let mut csv_writer = match csv::Writer::from_path(&output_path) {
     Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", output_path, why),
+    Err(why) => panic!("Couldn't write to {}: {}", output_path.display(), why),
   };
 
 
@@ -46,7 +48,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<
     // Select all elements in the document
     let trope_links = document.select(&trope_selector);
 
-    // For every trope, get the inner html (trope_name) and
+    // For every trope, get the inner html (trope_name) and href (trope_url)
     let mut tropes: Vec<trope_lib::Trope> = Vec::new();
     for element in trope_links {
       tropes.push(trope_lib::Trope {

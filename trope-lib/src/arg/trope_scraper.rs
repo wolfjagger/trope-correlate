@@ -18,14 +18,14 @@ impl TropeScrapeArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
-  Pagelist(TropeScrapePagelist),
+  Tropelist(TropeScrapeTropelist),
   TropePage(TropeScrapeTropePage),
 }
 
 
 /// Downloads index pages in bulk from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapePagelist {
+pub struct TropeScrapeTropelist {
 
   /// If enabled, save an encrypted version of the html
   #[clap(short, long, value_parser, default_value_t = false)]
@@ -57,9 +57,5 @@ pub struct TropeScrapeTropePage {
   /// Trope name
   #[clap(short, long, value_parser,)]
   pub name: String,
-
-  /// Trope url
-  #[clap(short, long, value_parser,)]
-  pub url: String,
 
 }

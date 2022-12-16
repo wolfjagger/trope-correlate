@@ -12,7 +12,7 @@ use crate::{
 fn main() {
   let args = TropeScrapeArgs::parse_args();
   match args.method {
-    TropeScrapeMethod::Pagelist(method_args) => {
+    TropeScrapeMethod::Tropelist(method_args) => {
       scrape_tropelist(method_args).expect("Unhandled parse_tropelist error");
     },
     TropeScrapeMethod::TropePage(method_args) => {
