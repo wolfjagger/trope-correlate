@@ -3,7 +3,7 @@ use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
 
-use crate::arg::PagelistArgs;
+use trope_lib::PagelistArgs;
 use crate::header::get_header_map;
 
 

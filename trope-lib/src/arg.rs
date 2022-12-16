@@ -1,17 +1,17 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use trope_lib;
+use crate::{Namespace, Pagetype};
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
-pub struct Args {
+pub struct TropeDownloadArgs {
   #[command(subcommand)]
-  pub method: DownloadMethodArgs
+  pub method: TropeDownloadMethod
 }
 
 
 #[derive(Debug, Subcommand)]
-pub enum DownloadMethodArgs {
+pub enum TropeDownloadMethod {
   Pagelist(PagelistArgs),
 }
 
@@ -25,11 +25,11 @@ pub struct PagelistArgs {
   pub encrypted: bool,
 
   /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = trope_lib::Namespace::Main.to_string())]
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
   /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = trope_lib::Pagetype::Trope.to_string())]
+  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
   /// Max number of pages to call for

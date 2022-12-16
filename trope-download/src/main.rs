@@ -1,19 +1,18 @@
-mod arg;
 mod download_pagelist;
 mod header;
 
 use clap::Parser;
 
+use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};
 use crate::{
-  arg::{Args, DownloadMethodArgs},
   download_pagelist::save_pagelist
 };
 
 // Download TvTropes pages
 fn main() {
-  let args = Args::parse();
+  let args = TropeDownloadArgs::parse();
   match args.method {
-    DownloadMethodArgs::Pagelist(method_args) => {
+    TropeDownloadMethod::Pagelist(method_args) => {
       save_pagelist(method_args).expect("Unhandled download_pagelist error");
     },
   }

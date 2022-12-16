@@ -1,4 +1,8 @@
+mod arg;
+
 use std::str::FromStr;
+
+pub use arg::{TropeDownloadArgs, TropeDownloadMethod, PagelistArgs};
 
 pub const DATA_DIR: &str = "test_data";
 
