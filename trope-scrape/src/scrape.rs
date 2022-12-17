@@ -1,4 +1,5 @@
 use std::{fs, path};
+use regex::Regex;
 use scraper::{Html, Selector};
 use serde_json;
 use trope_lib::TropeGeneralJson;
@@ -52,7 +53,11 @@ fn scrape_doc(doc: &Html) -> (TropeGeneralJson, Vec<trope_lib::NamedLink>) {
   let title_selector = Selector::parse("title").expect("Error creating title selector");
   let subpage_selector = Selector::parse("ul.subpage-links > li > a").expect("Error creating subpage selector");
   let span_wrapper_selector = Selector::parse("span.wrapper").expect("Error creating span wrapper selector");
-  let media_selector = Selector::parse("div#main-article a").expect("Error creating media selector");
+  let pmwiki_link_selector = Selector::parse("div#main-article a").expect("Error creating pmwiki link selector");
+
+  // Regexes
+
+  let namespace_re = Regex::new("/pmwiki/pmwiki.php/([^/]*)/").expect("Error creating namespace regex");
 
 
   // Scrape general
@@ -75,17 +80,47 @@ fn scrape_doc(doc: &Html) -> (TropeGeneralJson, Vec<trope_lib::NamedLink>) {
 
 
   // Scrape mentioned media
+  // For every link mentioned, get the inner html (name) and href (url)
+  // TODO: Very important to get this right. Consider:
+  //  - Only pick links after the <h2> containing "Examples"
+  //  - Consider bullets and sub-bullets separately
+  //  - Some tropes do not organize media under folders, but on separate pages under the namespace of the trope,
+  //   e.g. /pmwiki/pmwiki.php/Main/ShipToShipCombat with /pmwiki/pmwiki.php/ShipToShipCombat/AnimeAndManga
 
-  // TODO: Need to be more selective here
-  // For every media mentioned, get the inner html (media_name) and href (media_url)
-  let mentioned_media = doc.select(&media_selector).map(|el| {
+  // Use partition instead of filter so we can debug & see what we are dropping
+  let (wiki_link_els, _nonwiki_link_els): (Vec<_>, Vec<_>) = doc.select(&pmwiki_link_selector).partition(
+    // Filter out links that don't start with the pmwiki address
+    |el| el.value().attr("href").filter(|attr| attr.starts_with("/pmwiki/pmwiki.php/")).is_some()
+  );
+
+  let (media_links, _nonmedia_links): (Vec<_>, Vec<_>) = wiki_link_els.into_iter().map(|el| {
     trope_lib::NamedLink{
       name: el.inner_html().trim().to_string(),
       url: el.value().attr("href").unwrap().trim().to_string(),
     }
-  }).collect::<Vec<_>>();
+  }).partition(|link| {
+    // Try to filter to media based on url namespace
+    namespace_re.captures(&link.url).and_then(
+      |cap| cap.get(1).map(|m| m.as_str())
+    ).filter(
+      |namespace| trope_lib::KNOWN_MEDIA_NAMESPACES.iter().any(|s| s == namespace)
+    ).is_some()
+  });
 
+  let (nonhtml_media_links, _html_media_links): (Vec<_>, Vec<_>) = media_links.into_iter().partition(|link| {
+    !(link.name.contains("<") || link.name.contains(">"))
+  });
 
-  (general_trope_json, mentioned_media)
+  // println!("=================");
+  // println!("{:?}", _nonwiki_link_els);
+  // println!("=================");
+  // println!("{:?}", _nonmedia_links);
+  // println!("=================");
+  // println!("{:?}", _html_media_links);
+  // println!("=================");
+  // println!("{:?}", nonhtml_media_links);
+  // println!("=================");
+
+  (general_trope_json, nonhtml_media_links)
 
 }
