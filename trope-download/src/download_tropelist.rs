@@ -16,7 +16,9 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
   let csv_records = csv::Reader::from_path(args.in_path)?.into_records();
 
   // Page request loop
-  for (_idx, record) in (1..args.max_pages+1).zip(csv_records) {
+  let min_record = 1.min(args.min_record);
+  let max_record = args.max_record;
+  for (_idx, record) in (min_record..max_record+1).zip(csv_records.skip(min_record.into())) {
 
     let (name, url_str) = match record {
       Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),

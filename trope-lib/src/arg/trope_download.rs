@@ -84,8 +84,12 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser,)]
   pub in_path: path::PathBuf,
 
-  /// Max number of pages to call for
-  #[clap(short, long, value_parser, default_value_t = 2)]
-  pub max_pages: u8,
+  /// Min number of records to download (inclusive; known min: 0)
+  #[clap(short, long, value_parser,)]
+  pub min_record: u8,
+
+  /// Max number of records to download (inclusive; unknown max)
+  #[clap(short, long, value_parser,)]
+  pub max_record: u8,
 
 }
