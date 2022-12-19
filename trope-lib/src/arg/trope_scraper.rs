@@ -1,3 +1,5 @@
+use std::path;
+
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
 use crate::{Namespace, Pagetype};
@@ -18,8 +20,9 @@ impl TropeScrapeArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
-  Tropelist(TropeScrapePagelist),
+  Pagelist(TropeScrapePagelist),
   TropePage(TropeScrapeTropePage),
+  Tropelist(TropeScrapeTropelist),
 }
 
 
@@ -61,5 +64,28 @@ pub struct TropeScrapeTropePage {
   /// Trope name
   #[clap(short, long, value_parser,)]
   pub name: String,
+
+}
+
+
+/// Downloads trope pages in tropelist from tvtropes.
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeTropelist {
+
+  /// If enabled, save an encrypted version of the html
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub encrypted: bool,
+
+  /// Path to tropelist
+  #[clap(short, long, value_parser,)]
+  pub in_path: path::PathBuf,
+
+  /// Min number of records to scrape (inclusive; known min: 0)
+  #[clap(short, long, value_parser,)]
+  pub min_record: u8,
+
+  /// Max number of records to scrape (inclusive; unknown max)
+  #[clap(short, long, value_parser,)]
+  pub max_record: u8,
 
 }
