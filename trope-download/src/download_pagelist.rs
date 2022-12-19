@@ -22,7 +22,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
     .join(&args.pagetype);
 
   // Page request loop
-  for page in 1..args.max_pages+1 {
+  for page in args.min_page..args.max_page+1 {
 
     let page_str = page.to_string();
 

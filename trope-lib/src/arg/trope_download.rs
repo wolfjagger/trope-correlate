@@ -42,9 +42,13 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
-  /// Max number of pages to call for
-  #[clap(short, long, value_parser, default_value_t = 2)]
-  pub max_pages: u8,
+  /// Min number of pages to call for (inclusive; known min: 1)
+  #[clap(short, long, value_parser,)]
+  pub min_page: u8,
+
+  /// Max number of pages to call for (inclusive; known max: 13)
+  #[clap(short, long, value_parser,)]
+  pub max_page: u8,
 
 }
 
