@@ -26,7 +26,9 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
 
 
   // Page parse loop
-  for page in 1..args.max_pages+1 {
+  let min_page = 1.min(args.min_page);
+  let max_page = args.max_page;
+  for page in min_page..max_page+1 {
 
     let page_str = page.to_string();
 

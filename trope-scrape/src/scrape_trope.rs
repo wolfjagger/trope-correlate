@@ -7,7 +7,7 @@ use crate::{
 };
 
 
-/// Download all the pages
+/// Download a trope page from args
 pub fn scrape_trope_page(args: trope_lib::TropeScrapeTropePage) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input html
