@@ -18,14 +18,14 @@ impl TropeScrapeArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
-  Tropelist(TropeScrapeTropelist),
+  Tropelist(TropeScrapePagelist),
   TropePage(TropeScrapeTropePage),
 }
 
 
 /// Scrapes downloaded pagelists for tropelist
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropelist {
+pub struct TropeScrapePagelist {
 
   /// If enabled, save an encrypted version of the html
   #[clap(short, long, value_parser, default_value_t = false)]
