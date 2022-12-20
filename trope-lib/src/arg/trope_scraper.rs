@@ -30,8 +30,8 @@ pub enum TropeScrapeMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapePagelist {
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  /// If enabled, assume an encrypted version of the html
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Namespace for page search
@@ -44,11 +44,11 @@ pub struct TropeScrapePagelist {
 
   /// Min number of pages to scrape (inclusive; known min: 1)
   #[clap(short, long, value_parser,)]
-  pub min_page: u8,
+  pub beg_page: u8,
 
   /// Max number of pages to scrape (inclusive; known max: 13)
   #[clap(short, long, value_parser,)]
-  pub max_page: u8,
+  pub end_page: u8,
 
 }
 
@@ -57,8 +57,8 @@ pub struct TropeScrapePagelist {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeTropePage {
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  /// If enabled, assume an encrypted version of the html
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Trope name
@@ -72,8 +72,8 @@ pub struct TropeScrapeTropePage {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeTropelist {
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  /// If enabled, assume an encrypted version of the html
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Path to tropelist
@@ -82,10 +82,10 @@ pub struct TropeScrapeTropelist {
 
   /// Min number of records to scrape (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
-  pub min_record: u8,
+  pub beg_record: u8,
 
   /// Max number of records to scrape (inclusive; unknown max)
   #[clap(short, long, value_parser,)]
-  pub max_record: u8,
+  pub end_record: u8,
 
 }

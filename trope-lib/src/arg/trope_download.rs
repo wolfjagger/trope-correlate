@@ -31,7 +31,7 @@ pub enum TropeDownloadMethod {
 pub struct TropeDownloadPagelist {
 
   /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Namespace for page search
@@ -44,11 +44,11 @@ pub struct TropeDownloadPagelist {
 
   /// Min number of pages to download (inclusive; known min: 1)
   #[clap(short, long, value_parser,)]
-  pub min_page: u8,
+  pub beg_page: u8,
 
   /// Max number of pages to download (inclusive; known max: 13)
   #[clap(short, long, value_parser,)]
-  pub max_page: u8,
+  pub end_page: u8,
 
 }
 
@@ -58,7 +58,7 @@ pub struct TropeDownloadPagelist {
 pub struct TropeDownloadTropePage {
 
   /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Trope name
@@ -77,7 +77,7 @@ pub struct TropeDownloadTropePage {
 pub struct TropeDownloadTropelist {
 
   /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
+  #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
   /// Path to tropelist
@@ -86,10 +86,10 @@ pub struct TropeDownloadTropelist {
 
   /// Min number of records to download (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
-  pub min_record: u8,
+  pub beg_record: u8,
 
   /// Max number of records to download (inclusive; unknown max)
   #[clap(short, long, value_parser,)]
-  pub max_record: u8,
+  pub end_record: u8,
 
 }
