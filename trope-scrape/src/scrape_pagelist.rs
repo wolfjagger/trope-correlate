@@ -32,6 +32,8 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
 
     let page_str = page.to_string();
 
+    println!("Scraping page {}...", page_str);
+
     let file_name = path_dir.clone().join(
       if args.encrypted {
         format!("page{}.html.br", &page_str)

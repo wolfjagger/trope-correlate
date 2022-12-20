@@ -28,6 +28,8 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
     let page_str = page.to_string();
 
+    println!("Downloading page {}...", page_str);
+
     // Set up output file
     let file_name = format!("page{}", &page_str);
 

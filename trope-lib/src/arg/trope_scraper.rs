@@ -46,7 +46,7 @@ pub struct TropeScrapePagelist {
   #[clap(short, long, value_parser,)]
   pub beg_page: u8,
 
-  /// Max number of pages to scrape (inclusive; known max: 13)
+  /// Max number of pages to scrape (inclusive; known max: 58)
   #[clap(short, long, value_parser,)]
   pub end_page: u8,
 
