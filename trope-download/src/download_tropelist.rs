@@ -25,6 +25,8 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
       Err(why) => panic!("Problem reading csv record {}", &why),
     };
 
+    println!("Downloading {}...", name);
+
     // Set up url
     let url = reqwest::Url::parse(&url_str)?;
 
