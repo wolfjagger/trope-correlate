@@ -7,10 +7,11 @@ use crate::header::get_header_map;
 
 
 /// Download all the pages
+///  Returns true if a page was downloaded and false otherwise
 pub fn save_page_to_path(
   url: reqwest::Url, out_dir: &path::Path, out_name: &str,
   encrypted: bool, force: bool
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<bool, Box<dyn std::error::Error>> {
 
   fs::create_dir_all(&out_dir)?;
 
@@ -24,7 +25,7 @@ pub fn save_page_to_path(
       fs::remove_file(&out_path)?;
     } else {
       println!("File exists, skipping {}...", out_name);
-      return Ok(());
+      return Ok(false);
     }
   } else {
     println!("Downloading {}...", out_name);
@@ -46,7 +47,7 @@ pub fn save_page_to_path(
     BrotliDecompress(&mut encoded_body.reader(), &mut file)?;
   }
 
-  Ok(())
+  Ok(true)
 
 }
 
