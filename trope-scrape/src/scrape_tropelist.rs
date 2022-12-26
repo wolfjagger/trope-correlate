@@ -2,10 +2,7 @@ use std::path;
 use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 
 use trope_lib;
-use crate::{
-  read_html::read_html_file,
-  scrape::scrape_trope
-};
+use crate::scrape::scrape_trope;
 
 
 /// Download all the pages
@@ -59,12 +56,11 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
         format!("{}.html", &name)
       }
     );
-    let in_html = read_html_file(in_path, !args.unencrypted);
 
     // Save output to a subdir of the tropes dir
     let out_dir = tropes_dir.clone().join(&name);
 
-    scrape_trope(&name, &in_html, &out_dir, args.force)?;
+    scrape_trope(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
 
   }
 

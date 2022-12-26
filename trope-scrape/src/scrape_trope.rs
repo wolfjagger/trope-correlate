@@ -1,10 +1,7 @@
 use std::path;
 
 use trope_lib;
-use crate::{
-  read_html::read_html_file,
-  scrape::scrape_trope
-};
+use crate::scrape::scrape_trope;
 
 
 /// Download a trope page from args
@@ -23,7 +20,6 @@ pub fn scrape_trope_page(args: trope_lib::TropeScrapeTropePage) -> Result<(), Bo
       format!("{}.html", &name)
     }
   );
-  let in_html = read_html_file(in_path, !args.unencrypted);
 
   // Set up output file in same parent dir
   let out_dir = path::PathBuf::from("..")
@@ -31,7 +27,7 @@ pub fn scrape_trope_page(args: trope_lib::TropeScrapeTropePage) -> Result<(), Bo
     .join("tropes")
     .join(&name);
 
-  scrape_trope(&name, &in_html, &out_dir, args.force)?;
+  scrape_trope(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
 
   Ok(())
 
