@@ -76,9 +76,13 @@ pub struct TropeDownloadTropePage {
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadTropelist {
 
-  /// If enabled, save an encrypted version of the html
+  /// If enabled, save an encrypted version of the html (default: true)
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
+
+  /// If a seed is given, download pages out-of-order (default: None)
+  #[clap(short, long, value_parser, required = false)]
+  pub random_seed: Option<u64>,
 
   /// Path to tropelist
   #[clap(short, long, value_parser,)]
