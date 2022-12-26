@@ -7,10 +7,21 @@ use trope_lib::TropeGeneralJson;
 
 /// Scrape trope page for e.g. title, subpages, mentioned media
 pub fn scrape_trope(
-  in_doc: &Html, out_dir: &path::Path
+  name: &str, in_doc: &Html, out_dir: &path::Path,
+  force: bool
 ) -> Result<(), Box<dyn std::error::Error>> {
 
-  // Set up output files (first, to panic early)
+  if out_dir.exists() {
+    if force {
+      println!("Trope directory exists, scraping and overwriting {}...", name);
+      fs::remove_dir_all(&out_dir)?;
+    } else {
+      println!("Trope directory exists, skipping {}...", name);
+      return Ok(());
+    }
+  } else {
+    println!("Scraping {}...", name);
+  }
 
   fs::create_dir_all(&out_dir)?;
 

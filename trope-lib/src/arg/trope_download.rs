@@ -50,7 +50,7 @@ pub struct TropeDownloadPagelist {
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
-  /// Overwrite existing trope directory if enabled (default: false)
+  /// Overwrite existing page file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
@@ -77,7 +77,7 @@ pub struct TropeDownloadTropePage {
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
-  /// Overwrite existing trope directory if enabled (default: false)
+  /// Overwrite existing trope file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
@@ -104,7 +104,7 @@ pub struct TropeDownloadTropelist {
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
 
-  /// Overwrite existing trope directory if enabled (default: false)
+  /// Overwrite existing trope file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 

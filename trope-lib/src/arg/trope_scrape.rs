@@ -30,9 +30,13 @@ pub enum TropeScrapeMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapePagelist {
 
-  /// If enabled, assume an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// Min number of pages to scrape (inclusive; known min: 1)
+  #[clap(short, long, value_parser,)]
+  pub beg_page: u8,
+
+  /// Max number of pages to scrape (inclusive; known max: 58)
+  #[clap(short, long, value_parser,)]
+  pub end_page: u8,
 
   /// Namespace for page search
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
@@ -42,13 +46,13 @@ pub struct TropeScrapePagelist {
   #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
-  /// Min number of pages to scrape (inclusive; known min: 1)
-  #[clap(short, long, value_parser,)]
-  pub beg_page: u8,
+  /// If enabled, assume an encrypted version of the html
+  #[clap(long, value_parser, default_value_t = true)]
+  pub encrypted: bool,
 
-  /// Max number of pages to scrape (inclusive; known max: 58)
-  #[clap(short, long, value_parser,)]
-  pub end_page: u8,
+  /// Overwrite existing tropelist file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
 
 }
 
@@ -57,24 +61,24 @@ pub struct TropeScrapePagelist {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeTropePage {
 
-  /// If enabled, assume an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
-
   /// Trope name
   #[clap(short, long, value_parser,)]
   pub name: String,
 
-}
-
-
-/// Downloads trope pages in tropelist from tvtropes.
-#[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropelist {
-
   /// If enabled, assume an encrypted version of the html
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+
+
+/// Scrapes downloaded trope pages specified in tropelist
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeTropelist {
 
   /// Path to tropelist
   #[clap(short, long, value_parser,)]
@@ -87,5 +91,13 @@ pub struct TropeScrapeTropelist {
   /// Max number of records to scrape (inclusive; unknown max)
   #[clap(short, long, value_parser,)]
   pub end_record: u8,
+
+  /// If enabled, assume an encrypted version of the html
+  #[clap(long, value_parser, default_value_t = true)]
+  pub encrypted: bool,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
 
 }

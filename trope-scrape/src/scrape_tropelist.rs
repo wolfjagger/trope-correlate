@@ -26,8 +26,6 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
       Err(why) => panic!("Problem reading csv record {}", &why),
     };
 
-    println!("Scraping {}...", name);
-
     // Set up input html
     let in_dir = path::PathBuf::from("..")
       .join(trope_lib::DATA_DIR)
@@ -44,7 +42,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     // Save output to a subdir of the tropes dir
     let out_dir = tropes_dir.clone().join(&name);
 
-    scrape_trope(&in_html, &out_dir)?;
+    scrape_trope(&name, &in_html, &out_dir, args.force)?;
 
   }
 
