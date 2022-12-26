@@ -1,12 +1,12 @@
 mod trope_download;
-mod trope_scraper;
+mod trope_scrape;
 
 
 pub use trope_download::{
   TropeDownloadArgs, TropeDownloadMethod,
   TropeDownloadPagelist, TropeDownloadTropePage, TropeDownloadTropelist,
 };
-pub use trope_scraper::{
+pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
   TropeScrapePagelist, TropeScrapeTropePage, TropeScrapeTropelist,
 };
