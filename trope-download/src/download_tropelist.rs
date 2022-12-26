@@ -37,8 +37,9 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
 
   println!("Downloading records {} to {}...", beg_record, end_record);
 
-  // Page request loop
-  for (_idx, record) in (beg_record..end_record+1).zip(record_iter.skip((beg_record-1).into())) {
+  // Page request loop with peekable iterator
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record-1).into())).peekable();
+  while let Some((_idx, record)) = tup_iter.next() {
 
     let (name, url_str) = match record {
       Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),
@@ -49,7 +50,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     let url = reqwest::Url::parse(&url_str)?;
     let download_occurred = save_page_to_path(url, &out_dir, &name, args.encrypted, args.force)?;
 
-    if download_occurred {
+    if download_occurred && tup_iter.peek().is_some() {
       // Sleep before next request
       thread::sleep(time::Duration::from_secs(args.sleep_sec));
     }
