@@ -1,4 +1,5 @@
 use std::path;
+use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 
 use trope_lib;
 use crate::{
@@ -22,10 +23,25 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
   }
 
   let mut reader = csv::Reader::from_path(&args.in_path)?;
-  let csv_records = reader.deserialize::<trope_lib::NamedLink>();
+  let mut csv_records: Vec<_> = reader.deserialize::<trope_lib::NamedLink>().collect();
+  let record_iter = match args.random_seed {
+    None => {
+      println!("No seed, scrape in order");
+      csv_records.into_iter()
+    },
+    Some(seed) => {
+      println!("Seed {}, scrape randomly", seed);
+      let mut rng = SmallRng::seed_from_u64(seed);
+      csv_records.as_mut_slice().shuffle(&mut rng);
+      csv_records.into_iter()
+    }
+  };
+
+  println!("Scraping records {} to {}...", beg_record, end_record);
 
   // Page request loop
-  for (_idx, record) in (beg_record..end_record+1).zip(csv_records.skip((beg_record).into())) {
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record).into()));
+  while let Some((_idx, record)) = tup_iter.next() {
 
     let (name, _url_str) = match record {
       Ok(rec) => (rec.name, rec.url),

@@ -2599,6 +2599,7 @@ dependencies = [
  "brotli",
  "clap",
  "csv",
+ "rand 0.8.5",
  "regex",
  "scraper",
  "serde",

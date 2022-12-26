@@ -15,8 +15,8 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     .join("trope_page");
 
   // Inclusive
-  let beg_record = 1.max(args.beg_record);
-  let end_record = 1.max(args.end_record);
+  let beg_record = 0.max(args.beg_record);
+  let end_record = 0.max(args.end_record);
   if end_record < beg_record {
     panic!("end_record should not be less than beg_record");
   }
@@ -38,7 +38,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
   println!("Downloading records {} to {}...", beg_record, end_record);
 
   // Page request loop with peekable iterator
-  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record-1).into())).peekable();
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record).into())).peekable();
   while let Some((_idx, record)) = tup_iter.next() {
 
     let (name, url_str) = match record {

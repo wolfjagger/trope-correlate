@@ -100,4 +100,9 @@ pub struct TropeScrapeTropelist {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
+  /// If a seed is given, scrape pages out-of-order (default: None)
+  /// This will be in the same order as downloaded with the same seed
+  #[clap(short, long, value_parser, required = false)]
+  pub random_seed: Option<u64>,
+
 }
