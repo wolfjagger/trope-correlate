@@ -38,7 +38,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
   println!("Downloading records {} to {}...", beg_record, end_record);
 
   // Page request loop with peekable iterator
-  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record).into())).peekable();
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize)).peekable();
   while let Some((_idx, record)) = tup_iter.next() {
 
     let (name, url_str) = match record {

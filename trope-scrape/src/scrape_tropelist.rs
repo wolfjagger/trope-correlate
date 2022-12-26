@@ -37,7 +37,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
   println!("Scraping records {} to {}...", beg_record, end_record);
 
   // Page request loop
-  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip((beg_record).into()));
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize));
   while let Some((_idx, record)) = tup_iter.next() {
 
     let (name, _url_str) = match record {

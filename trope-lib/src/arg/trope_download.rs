@@ -94,11 +94,11 @@ pub struct TropeDownloadTropelist {
 
   /// Min number of records to download (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
-  pub beg_record: u8,
+  pub beg_record: u64,
 
   /// Max number of records to download (inclusive; unknown max)
   #[clap(short, long, value_parser,)]
-  pub end_record: u8,
+  pub end_record: u64,
 
   /// If enabled, save an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
