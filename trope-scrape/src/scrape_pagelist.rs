@@ -61,7 +61,7 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
 
     // Write all the values to the file
     for trope in tropes {
-      csv_writer.write_record(&[trope.name.clone(), trope.url.clone()])?;
+      csv_writer.serialize(trope)?;
     }
 
   }
