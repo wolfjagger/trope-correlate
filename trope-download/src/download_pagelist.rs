@@ -40,7 +40,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
     if download_occurred {
       // Sleep before next request
-      thread::sleep(time::Duration::from_secs(1));
+      thread::sleep(time::Duration::from_secs(args.sleep_sec));
     }
 
   }

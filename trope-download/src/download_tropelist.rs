@@ -51,7 +51,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
 
     if download_occurred {
       // Sleep before next request
-      thread::sleep(time::Duration::from_secs(1));
+      thread::sleep(time::Duration::from_secs(args.sleep_sec));
     }
 
   }

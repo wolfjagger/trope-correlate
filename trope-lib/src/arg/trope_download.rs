@@ -38,6 +38,14 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser,)]
   pub end_page: u8,
 
+  /// Namespace for page search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// Pagetype for page search
+  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
+  pub pagetype: String,
+
   /// If enabled, save an encrypted version of the html
   #[clap(long, value_parser, default_value_t = true)]
   pub encrypted: bool,
@@ -46,13 +54,9 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
-  /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
-  pub pagetype: String,
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
 
 }
 
@@ -103,6 +107,10 @@ pub struct TropeDownloadTropelist {
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
+
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
 
   /// If a seed is given, download pages out-of-order (default: None)
   #[clap(short, long, value_parser, required = false)]
