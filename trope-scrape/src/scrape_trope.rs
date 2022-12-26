@@ -23,7 +23,7 @@ pub fn scrape_trope_page(args: trope_lib::TropeScrapeTropePage) -> Result<(), Bo
       format!("{}.html", &name)
     }
   );
-  let in_html = read_html_file(in_path, !args.unencrypted).expect("Error reading html file");
+  let in_html = read_html_file(in_path, !args.unencrypted);
 
   // Set up output file in same parent dir
   let out_dir = path::PathBuf::from("..")
