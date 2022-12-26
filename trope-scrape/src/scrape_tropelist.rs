@@ -14,15 +14,21 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     .join(trope_lib::DATA_DIR)
     .join("tropes");
 
-  let csv_records = csv::Reader::from_path(args.in_path)?.into_records();
+  // Inclusive
+  let beg_record = 0.max(args.beg_record);
+  let end_record = 0.max(args.end_record);
+  if end_record < beg_record {
+    panic!("end_record should not be less than beg_record");
+  }
+
+  let mut reader = csv::Reader::from_path(&args.in_path)?;
+  let csv_records = reader.deserialize::<trope_lib::NamedLink>();
 
   // Page request loop
-  let min_record = 1.min(args.beg_record);
-  let max_record = args.end_record + 1;
-  for (_idx, record) in (min_record..max_record).zip(csv_records.skip(min_record.into())) {
+  for (_idx, record) in (beg_record..end_record+1).zip(csv_records.skip((beg_record).into())) {
 
     let (name, _url_str) = match record {
-      Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),
+      Ok(rec) => (rec.name, rec.url),
       Err(why) => panic!("Problem reading csv record {}", &why),
     };
 
