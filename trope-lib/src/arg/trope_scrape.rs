@@ -46,9 +46,9 @@ pub struct TropeScrapePagelist {
   #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
-  /// If enabled, assume an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing tropelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
@@ -65,9 +65,9 @@ pub struct TropeScrapeTropePage {
   #[clap(short, long, value_parser,)]
   pub name: String,
 
-  /// If enabled, assume an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
@@ -92,9 +92,9 @@ pub struct TropeScrapeTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u8,
 
-  /// If enabled, assume an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]

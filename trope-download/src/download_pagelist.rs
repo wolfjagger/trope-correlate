@@ -42,7 +42,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
     // Set up url
     let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
 
-    let download_occurred = save_page_to_path(url, &out_dir, &file_name, args.encrypted, args.force)?;
+    let download_occurred = save_page_to_path(url, &out_dir, &file_name, !args.unencrypted, args.force)?;
 
     if download_occurred && page_iter.peek().is_some() {
       // Sleep before next request

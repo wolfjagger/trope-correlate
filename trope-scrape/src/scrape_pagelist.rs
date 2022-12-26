@@ -35,14 +35,14 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     println!("Scraping page {}...", page_str);
 
     let file_name = path_dir.clone().join(
-      if args.encrypted {
+      if !args.unencrypted {
         format!("page{}.html.br", &page_str)
       } else {
         format!("page{}.html", &page_str)
       }
     );
 
-    let document = read_html_file(file_name, args.encrypted).expect("Error reading html file");
+    let document = read_html_file(file_name, !args.unencrypted).expect("Error reading html file");
 
     // Create a selector for the element we want
     // For the tropes page, every link in a table cell should get us what we want

@@ -48,7 +48,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
 
     // Set up url
     let url = reqwest::Url::parse(&url_str)?;
-    let download_occurred = save_page_to_path(url, &out_dir, &name, args.encrypted, args.force)?;
+    let download_occurred = save_page_to_path(url, &out_dir, &name, !args.unencrypted, args.force)?;
 
     if download_occurred && tup_iter.peek().is_some() {
       // Sleep before next request

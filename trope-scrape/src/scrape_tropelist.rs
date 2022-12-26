@@ -37,13 +37,13 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
       .join(trope_lib::DATA_DIR)
       .join("trope_page");
     let in_path = in_dir.join(
-      if args.encrypted {
+      if !args.unencrypted {
         format!("{}.html.br", &name)
       } else {
         format!("{}.html", &name)
       }
     );
-    let in_html = read_html_file(in_path, args.encrypted).expect("Error reading html file");
+    let in_html = read_html_file(in_path, !args.unencrypted).expect("Error reading html file");
 
     // Save output to a subdir of the tropes dir
     let out_dir = tropes_dir.clone().join(&name);

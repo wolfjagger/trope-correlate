@@ -46,9 +46,9 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing page file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
@@ -73,9 +73,9 @@ pub struct TropeDownloadTropePage {
   #[clap(short, long, value_parser,)]
   pub url: String,
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing trope file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
@@ -100,9 +100,9 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u8,
 
-  /// If enabled, save an encrypted version of the html (default: true)
-  #[clap(long, value_parser, default_value_t = true)]
-  pub encrypted: bool,
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
   /// Overwrite existing trope file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
