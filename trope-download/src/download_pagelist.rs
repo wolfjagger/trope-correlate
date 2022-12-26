@@ -36,7 +36,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
     // Set up url
     let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
 
-    save_page_to_path(url, &out_dir, &file_name, args.encrypted)?;
+    save_page_to_path(url, &out_dir, &file_name, args.encrypted, args.force)?;
 
     // Sleep before next request
     thread::sleep(time::Duration::from_secs(1));
