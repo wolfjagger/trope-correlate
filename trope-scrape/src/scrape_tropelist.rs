@@ -24,6 +24,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
 
   let mut reader = csv::Reader::from_path(&args.in_path)?;
   let mut csv_records: Vec<_> = reader.deserialize::<trope_lib::NamedLink>().collect();
+  let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
     None => {
       println!("No seed, scrape in order");
@@ -37,7 +38,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     }
   };
 
-  println!("Scraping records {} to {}...", beg_record, end_record);
+  println!("Scraping {} to {} of {} records...", beg_record, end_record, tot_records);
 
   // Page request loop
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize));

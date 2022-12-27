@@ -22,6 +22,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
   }
 
   let mut csv_records: Vec<_> = csv::Reader::from_path(args.in_path)?.into_records().collect();
+  let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
     None => {
       println!("No seed, download directly");
@@ -35,7 +36,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     }
   };
 
-  println!("Downloading records {} to {}...", beg_record, end_record);
+  println!("Downloading {} to {} of {} records...", beg_record, end_record, tot_records);
 
   // Page request loop with peekable iterator
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize)).peekable();
