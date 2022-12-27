@@ -8,5 +8,5 @@ pub use trope_download::{
 };
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
-  TropeScrapePagelist, TropeScrapeTropePage, TropeScrapeTropelist,
+  TropeScrapePagelist, TropeScrapeTropePage, TropeScrapeTropelist, TropeScrapeAllTropes,
 };

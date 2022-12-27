@@ -8,6 +8,9 @@ use crate::scrape::scrape_trope;
 /// Download all the pages
 pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
+  let in_dir = path::PathBuf::from("..")
+    .join(trope_lib::DATA_DIR)
+    .join("trope_page");
   let tropes_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
     .join("tropes");
@@ -46,9 +49,6 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     };
 
     // Set up input html
-    let in_dir = path::PathBuf::from("..")
-      .join(trope_lib::DATA_DIR)
-      .join("trope_page");
     let in_path = in_dir.join(
       if !args.unencrypted {
         format!("{}.html.br", &name)

@@ -23,6 +23,7 @@ pub enum TropeScrapeMethod {
   Pagelist(TropeScrapePagelist),
   TropePage(TropeScrapeTropePage),
   Tropelist(TropeScrapeTropelist),
+  AllTropes(TropeScrapeAllTropes),
 }
 
 
@@ -104,5 +105,20 @@ pub struct TropeScrapeTropelist {
   /// This will be in the same order as downloaded with the same seed
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
+
+}
+
+
+/// Scrapes downloaded trope pages that exist in the tropes directory
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeAllTropes {
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
 
 }
