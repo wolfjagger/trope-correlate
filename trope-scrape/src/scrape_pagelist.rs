@@ -53,10 +53,10 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     let tropes = document.select(&trope_selector).map(|el| {
       // In raw form, there are two non-breaking spaces, possible line breaks and possible
       // spaces in the middle. Let's get rid of those.
-      trope_lib::NamedLink{
-        name: el.inner_html().replace("&nbsp;", "").split_whitespace().collect::<String>(),
-        url: el.value().attr("href").unwrap().to_string(),
-      }
+      trope_lib::NamedLink::new(
+        el.inner_html().replace("&nbsp;", "").split_whitespace().collect::<String>(),
+        el.value().attr("href").unwrap().to_string(),
+      )
     }).collect::<Vec<_>>();
 
     // Write all the values to the file
