@@ -34,6 +34,12 @@ pub fn scrape_trope(
     Err(why) => panic!("Couldn't write to {}: {}", general_json_path.display(), why),
   };
 
+  let mentioned_tropes_path = out_dir.clone().join("mentioned_tropes.csv");
+  let mut mentioned_tropes_csv = match csv::Writer::from_path(&mentioned_tropes_path) {
+    Ok(w) => w,
+    Err(why) => panic!("Couldn't write to {}: {}", mentioned_tropes_path.display(), why),
+  };
+
   let mentioned_media_path = out_dir.clone().join("mentioned_media.csv");
   let mut mentioned_media_csv = match csv::Writer::from_path(&mentioned_media_path) {
     Ok(w) => w,
@@ -43,16 +49,21 @@ pub fn scrape_trope(
 
   // Scrape doc
 
-  let (general_trope_json, mentioned_media) = scrape_doc(&in_doc);
+  let (general_trope_json, mentioned_tropes, mentioned_media) = scrape_doc(&in_doc);
 
 
   // Write to output
 
   serde_json::to_writer_pretty(general_json_file, &general_trope_json)?;
 
-  // Write all the values to the file
-  for media in mentioned_media.iter() {
-    mentioned_media_csv.write_record(&[media.name.clone(), media.url.clone()])?;
+  // Write all mentioned tropes
+  for trope_link in mentioned_tropes.iter() {
+    mentioned_tropes_csv.write_record(&[trope_link.name.clone(), trope_link.url.clone()])?;
+  }
+
+  // Write all mentioned media
+  for media_link in mentioned_media.iter() {
+    mentioned_media_csv.write_record(&[media_link.name.clone(), media_link.url.clone()])?;
   }
 
   Ok(())
@@ -60,7 +71,11 @@ pub fn scrape_trope(
 }
 
 
-fn scrape_doc(doc: &Html) -> (TropeGeneralJson, Vec<trope_lib::NamedLink>) {
+fn scrape_doc(doc: &Html) -> (
+  TropeGeneralJson,
+  Vec<trope_lib::NamedLink>,
+  Vec<trope_lib::NamedLink>,
+) {
 
   // Selectors
 
@@ -131,6 +146,6 @@ fn scrape_doc(doc: &Html) -> (TropeGeneralJson, Vec<trope_lib::NamedLink>) {
   // println!("{:?}", nonhtml_media_links);
   // println!("=================");
 
-  (general_trope_json, media_links)
+  (general_trope_json, trope_links, media_links)
 
 }
