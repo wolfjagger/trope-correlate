@@ -16,13 +16,14 @@ pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Bo
 
   let in_files = fs::read_dir(&in_dir)?;
   let ext = if args.unencrypted { ".html" } else { ".html.br" };
-  let trope_names = in_files.into_iter().filter_map(|in_file| {
+  let mut trope_names = in_files.into_iter().filter_map(|in_file| {
     let some_file = in_file.ok();
     let fname = some_file.and_then(|in_fi| in_fi.path().file_name().map(|s| s.to_os_string()));
     let fname_str = fname.and_then(|fname| fname.into_string().ok());
     let name = fname_str.and_then(|fname_str| fname_str.strip_suffix(&ext).map(|s| s.to_string()));
     name
   }).collect::<Vec<_>>();
+  trope_names.sort();
 
   println!("Scraping {} records from download directory...", trope_names.len());
 
