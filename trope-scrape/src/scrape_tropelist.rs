@@ -1,4 +1,3 @@
-use std::path;
 use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 
 use trope_lib;
@@ -8,12 +7,9 @@ use crate::scrape::scrape_trope;
 /// Download all the pages
 pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let data_dir = path::PathBuf::from("..").join(trope_lib::DATA_DIR);
-  let download_dir = data_dir.join("download");
-  let scrape_dir = data_dir.join("scrape");
-  let tropelist_path = scrape_dir.join("tropelist").join("tropes.csv");
-  let trope_page_dir = download_dir.join("trope");
-  let scraped_trope_dir = scrape_dir.join("trope");
+  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
+  let trope_page_dir = trope_lib::download_dir().join("trope");
+  let scraped_trope_dir = trope_lib::scrape_dir().join("trope");
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);

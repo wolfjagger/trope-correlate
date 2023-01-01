@@ -1,4 +1,4 @@
-use std::{path, thread, time};
+use std::{thread, time};
 use csv;
 use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 use reqwest;
@@ -10,11 +10,8 @@ use crate::download::save_page_to_path;
 /// Download all the pages
 pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let data_dir = path::PathBuf::from("..").join(trope_lib::DATA_DIR);
-  let download_dir = data_dir.join("download");
-  let scrape_dir = data_dir.join("scrape");
-  let tropelist_path = scrape_dir.join("tropelist").join("tropes.csv");
-  let trope_page_dir = download_dir.join("trope");
+  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
+  let trope_page_dir = trope_lib::download_dir().join("trope");
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);

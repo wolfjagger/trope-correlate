@@ -1,4 +1,4 @@
-use std::{fs, path};
+use std::fs;
 
 use trope_lib;
 use crate::scrape::scrape_trope;
@@ -7,12 +7,8 @@ use crate::scrape::scrape_trope;
 /// Download all the pages
 pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Box<dyn std::error::Error>> {
 
-  let in_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join("download").join("trope");
-  let tropes_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join("scrape").join("trope");
+  let in_dir = trope_lib::download_dir().join("trope");
+  let tropes_dir = trope_lib::scrape_dir().join("trope");
 
   let in_files = fs::read_dir(&in_dir)?;
   let ext = if args.unencrypted { ".html" } else { ".html.br" };

@@ -1,4 +1,3 @@
-use std::path;
 use csv;
 use scraper::Selector;
 
@@ -9,12 +8,9 @@ use crate::read_html::read_html_file;
 /// Scrape pagelist to create tropelist
 pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let data_dir = path::PathBuf::from("..").join(trope_lib::DATA_DIR);
-  let download_dir = data_dir.join("download");
-  let scrape_dir = data_dir.join("scrape");
-  let pagelist_path = download_dir.join("pagelist")
+  let pagelist_path = trope_lib::download_dir().join("pagelist")
     .join(&args.namespace).join(&args.pagetype);
-  let tropelist_path = scrape_dir.join("tropelist").join("tropes.csv");
+  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
 
   let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {
     Ok(w) => w,
