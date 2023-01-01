@@ -6,5 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# reqwest = { version = "0.11.13", features = ["blocking"] }
-# scraper = "0.13"
+brotli = "3.3.4"
+clap = { version = "4.0.29", features = ["derive"] }
+csv = "1.1.6"
+scraper = "0.13.0"
+trope-lib = { path = "../trope-lib" }
