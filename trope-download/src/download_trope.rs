@@ -15,7 +15,7 @@ pub fn save_trope_page(args: trope_lib::TropeDownloadTropePage) -> Result<(), Bo
   // Set up url
   let url = reqwest::Url::parse(&args.url)?;
 
-  save_page_to_path(url, &out_dir, &args.name, args.encrypted)?;
+  save_page_to_path(url, &out_dir, &args.name, !args.unencrypted, args.force)?;
 
   Ok(())
 

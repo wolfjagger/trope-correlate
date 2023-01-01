@@ -15,16 +15,26 @@ const PAGELIST_SEARCH_PAGE: &str =
 /// Download all the pages
 pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
+  // Inclusive
+  let beg_page = 1.max(args.beg_page);
+  let end_page = 1.max(args.end_page);
+  if end_page < beg_page {
+    panic!("end_page should not be less than beg_page");
+  }
+
   // Set up output directory in the parent trope-correlate dir
   let out_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
     .join(&args.namespace)
     .join(&args.pagetype);
 
-  // Page request loop
-  for page in 1..args.max_pages+1 {
+  // Page request loop with peekable iterator
+  let mut page_iter = (beg_page..end_page+1).peekable();
+  while let Some(page) = page_iter.next() {
 
     let page_str = page.to_string();
+
+    println!("Downloading page {}...", page_str);
 
     // Set up output file
     let file_name = format!("page{}", &page_str);
@@ -32,10 +42,12 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
     // Set up url
     let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
 
-    save_page_to_path(url, &out_dir, &file_name, args.encrypted)?;
+    let download_occurred = save_page_to_path(url, &out_dir, &file_name, !args.unencrypted, args.force)?;
 
-    // Sleep before next request
-    thread::sleep(time::Duration::from_secs(1));
+    if download_occurred && page_iter.peek().is_some() {
+      // Sleep before next request
+      thread::sleep(time::Duration::from_secs(args.sleep_sec));
+    }
 
   }
 

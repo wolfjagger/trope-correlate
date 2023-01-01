@@ -30,9 +30,13 @@ pub enum TropeDownloadMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadPagelist {
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub encrypted: bool,
+  /// Min number of pages to download (inclusive; known min: 1)
+  #[clap(short, long, value_parser,)]
+  pub beg_page: u8,
+
+  /// Max number of pages to download (inclusive; known max: 58)
+  #[clap(short, long, value_parser,)]
+  pub end_page: u8,
 
   /// Namespace for page search
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
@@ -42,9 +46,17 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
   pub pagetype: String,
 
-  /// Max number of pages to call for
-  #[clap(short, long, value_parser, default_value_t = 2)]
-  pub max_pages: u8,
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing page file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
 
 }
 
@@ -52,10 +64,6 @@ pub struct TropeDownloadPagelist {
 /// Downloads specific trope pages from tvtropes.
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadTropePage {
-
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub encrypted: bool,
 
   /// Trope name
   #[clap(short, long, value_parser,)]
@@ -65,6 +73,14 @@ pub struct TropeDownloadTropePage {
   #[clap(short, long, value_parser,)]
   pub url: String,
 
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing trope file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
 }
 
 
@@ -72,16 +88,32 @@ pub struct TropeDownloadTropePage {
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadTropelist {
 
-  /// If enabled, save an encrypted version of the html
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub encrypted: bool,
-
   /// Path to tropelist
   #[clap(short, long, value_parser,)]
   pub in_path: path::PathBuf,
 
-  /// Max number of pages to call for
-  #[clap(short, long, value_parser, default_value_t = 2)]
-  pub max_pages: u8,
+  /// Min number of records to download (inclusive; known min: 0)
+  #[clap(short, long, value_parser,)]
+  pub beg_record: u64,
+
+  /// Max number of records to download (inclusive; unknown max)
+  #[clap(short, long, value_parser,)]
+  pub end_record: u64,
+
+  /// If enabled, save an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing trope file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
+
+  /// If a seed is given, download pages out-of-order (default: None)
+  #[clap(short, long, value_parser, required = false)]
+  pub random_seed: Option<u64>,
 
 }
