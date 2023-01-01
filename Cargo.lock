@@ -2588,6 +2588,7 @@ name = "trope-lib"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "derive_more",
  "once_cell",
  "regex",
  "serde",

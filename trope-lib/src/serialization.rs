@@ -1,5 +1,6 @@
 use std::fmt;
 
+use derive_more::Display;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -7,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::{KNOWN_MEDIA_NAMESPACES, KNOWN_TROPE_NAMESPACES};
 
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, Display, Clone, Copy, Deserialize, Serialize)]
 pub enum NamedLinkType {
   Trope,
   Media,
@@ -16,6 +17,13 @@ pub enum NamedLinkType {
 
 
 #[derive(Debug, Deserialize, Serialize)]
+pub struct SerdeNamedLink {
+  pub name: String,
+  pub url: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(from = "SerdeNamedLink", into = "SerdeNamedLink")]
 pub struct NamedLink {
   pub name: String,
   pub url: String,
@@ -63,11 +71,26 @@ impl NamedLink {
   }
 }
 
-impl fmt::Display for NamedLink {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "[{},{}]", self.name, self.url)
+impl From<SerdeNamedLink> for NamedLink {
+  fn from(s: SerdeNamedLink) -> Self {
+    Self::new(s.name, s.url)
   }
 }
+impl From<NamedLink> for SerdeNamedLink {
+  fn from(s: NamedLink) -> Self {
+    Self {
+      name: s.name,
+      url: s.url,
+    }
+  }
+}
+
+impl fmt::Display for NamedLink {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "[{},{}, {}]", self.name, self.url, self.link_type)
+  }
+}
+
 
 
 #[derive(Debug, Deserialize, Serialize)]
