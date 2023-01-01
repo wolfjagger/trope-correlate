@@ -9,19 +9,16 @@ use crate::read_html::read_html_file;
 /// Scrape pagelist to create tropelist
 pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  // Set up input directory in the parent trope-correlate dir
-  let path_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join(&args.namespace)
-    .join(&args.pagetype);
+  let data_dir = path::PathBuf::from("..").join(trope_lib::DATA_DIR);
+  let download_dir = data_dir.join("download");
+  let scrape_dir = data_dir.join("scrape");
+  let pagelist_path = download_dir.join("pagelist")
+    .join(&args.namespace).join(&args.pagetype);
+  let tropelist_path = scrape_dir.join("tropelist").join("tropes.csv");
 
-  // Set up output file in same parent dir
-  let output_path = path::PathBuf::from("..")
-    .join("test_data")
-    .join("tropes.csv");
-  let mut csv_writer = match csv::Writer::from_path(&output_path) {
+  let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {
     Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", output_path.display(), why),
+    Err(why) => panic!("Couldn't write to {}: {}", tropelist_path.display(), why),
   };
 
 
@@ -34,7 +31,7 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
 
     println!("Scraping page {}...", page_str);
 
-    let file_name = path_dir.clone().join(
+    let file_name = pagelist_path.join(
       if !args.unencrypted {
         format!("page{}.html.br", &page_str)
       } else {

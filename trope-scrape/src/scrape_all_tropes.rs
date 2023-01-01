@@ -9,10 +9,10 @@ pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Bo
 
   let in_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
-    .join("trope_page");
+    .join("download").join("trope");
   let tropes_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
-    .join("tropes");
+    .join("scrape").join("trope");
 
   let in_files = fs::read_dir(&in_dir)?;
   let ext = if args.unencrypted { ".html" } else { ".html.br" };

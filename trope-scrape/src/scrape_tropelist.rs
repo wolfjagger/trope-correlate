@@ -8,12 +8,12 @@ use crate::scrape::scrape_trope;
 /// Download all the pages
 pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let in_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join("trope_page");
-  let tropes_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join("tropes");
+  let data_dir = path::PathBuf::from("..").join(trope_lib::DATA_DIR);
+  let download_dir = data_dir.join("download");
+  let scrape_dir = data_dir.join("scrape");
+  let tropelist_path = scrape_dir.join("tropelist").join("tropes.csv");
+  let trope_page_dir = download_dir.join("trope");
+  let scraped_trope_dir = scrape_dir.join("trope");
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);
@@ -22,7 +22,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     panic!("end_record should not be less than beg_record");
   }
 
-  let mut reader = csv::Reader::from_path(&args.in_path)?;
+  let mut reader = csv::Reader::from_path(tropelist_path)?;
   let mut csv_records: Vec<_> = reader.deserialize::<trope_lib::NamedLink>().collect();
   let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
@@ -50,7 +50,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     };
 
     // Set up input html
-    let in_path = in_dir.join(
+    let trope_page_path = trope_page_dir.join(
       if !args.unencrypted {
         format!("{}.html.br", &name)
       } else {
@@ -59,9 +59,9 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     );
 
     // Save output to a subdir of the tropes dir
-    let out_dir = tropes_dir.clone().join(&name);
+    let out_dir = scraped_trope_dir.join(&name);
 
-    scrape_trope(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
+    scrape_trope(&name, trope_page_path, &out_dir, !args.unencrypted, args.force)?;
 
   }
 

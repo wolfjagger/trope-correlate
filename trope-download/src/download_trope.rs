@@ -10,7 +10,7 @@ pub fn save_trope_page(args: trope_lib::TropeDownloadTropePage) -> Result<(), Bo
 
   let out_dir = path::PathBuf::from("..")
     .join(trope_lib::DATA_DIR)
-    .join("trope_page");
+    .join("download").join("trope");
 
   // Set up url
   let url = reqwest::Url::parse(&args.url)?;
