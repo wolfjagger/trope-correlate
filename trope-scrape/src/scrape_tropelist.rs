@@ -1,4 +1,4 @@
-use std::{fmt, path};
+use std::path;
 use csv;
 use scraper::Selector;
 
@@ -6,21 +6,8 @@ use trope_lib;
 use crate::read_html::read_html_file;
 
 
-#[derive(Debug)]
-struct Trope {
-  name: String,
-  url: String,
-}
-
-impl fmt::Display for Trope {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "[{},{}]", self.name, self.url)
-  }
-}
-
-
 /// Download all the pages
-pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
   // Set up input directory in the parent trope-correlate dir
   let path_dir = path::PathBuf::from("..")
@@ -29,10 +16,12 @@ pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<
     .join(&args.pagetype);
 
   // Set up output file in same parent dir
-  let output_path = "../test_data/tropes.csv";
+  let output_path = path::PathBuf::from("..")
+    .join("test_data")
+    .join("tropes.csv");
   let mut csv_writer = match csv::Writer::from_path(&output_path) {
     Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", output_path, why),
+    Err(why) => panic!("Couldn't write to {}: {}", output_path.display(), why),
   };
 
 
@@ -57,27 +46,17 @@ pub fn parse_tropelist(args: trope_lib::TropeScraperPagelist) -> Result<(), Box<
     let trope_selector = Selector::parse("td>a").unwrap();
 
     // Select all elements in the document
-    let trope_links = document.select(&trope_selector);
-
-    // For every trope, get the inner html (trope_name) and
-    let mut tropes: Vec<Trope> = Vec::new();
-    for element in trope_links {
-      tropes.push(Trope {
-        name: element.inner_html(),
-        url: element.value().attr("href").unwrap().to_string(),
-      });
-    }
-
-    // In raw form, there are two non-breaking spaces, possible line breaks and possible
-    // spaces in the middle. Let's get rid of those for simplicity. Todo: break this into
-    // seprate function.
-    for trope in tropes.iter_mut() {
-      trope.name = String::from(&trope.name[12..]);
-      trope.name.retain(|c| c != '\n' && c != ' ' && c != '\t');
-    }
+    let tropes = document.select(&trope_selector).map(|el| {
+      // In raw form, there are two non-breaking spaces, possible line breaks and possible
+      // spaces in the middle. Let's get rid of those.
+      trope_lib::NamedLink{
+        name: el.inner_html().replace("&nbsp;", "").split_whitespace().collect::<String>(),
+        url: el.value().attr("href").unwrap().to_string(),
+      }
+    }).collect::<Vec<_>>();
 
     // Write all the values to the file
-    for trope in tropes.iter() {
+    for trope in tropes {
       csv_writer.write_record(&[trope.name.clone(), trope.url.clone()])?;
     }
 

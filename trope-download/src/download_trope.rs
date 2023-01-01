@@ -5,7 +5,7 @@ use trope_lib;
 use crate::download::save_page_to_path;
 
 
-/// Download all the pages
+/// Download a trope page
 pub fn save_trope_page(args: trope_lib::TropeDownloadTropePage) -> Result<(), Box<dyn std::error::Error>> {
 
   let out_dir = path::PathBuf::from("..")

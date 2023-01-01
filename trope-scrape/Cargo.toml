@@ -1,5 +1,5 @@
 [package]
-name = "trope-scraper"
+name = "trope-scrape"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,5 +9,8 @@ edition = "2021"
 brotli = "3.3.4"
 clap = { version = "4.0.29", features = ["derive"] }
 csv = "1.1.6"
+regex = "1.7.0"
 scraper = "0.13.0"
+serde = { version = "1.0.151", features = ["derive"] }
+serde_json = "1.0.89"
 trope-lib = { path = "../trope-lib" }
