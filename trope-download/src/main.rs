@@ -4,6 +4,7 @@ mod header;
 
 use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};
 use cmd::{
+  download_namespace::save_namespace,
   download_pagelist::save_pagelist,
   download_trope::save_trope_page,
   download_tropelist::save_tropelist,
@@ -14,6 +15,9 @@ use cmd::{
 fn main() {
   let args = TropeDownloadArgs::parse_args();
   match args.method {
+    TropeDownloadMethod::Namespace(method_args) => {
+      save_namespace(method_args).expect("Unhandled download_pagelist error");
+    },
     TropeDownloadMethod::Pagelist(method_args) => {
       save_pagelist(method_args).expect("Unhandled download_pagelist error");
     },
