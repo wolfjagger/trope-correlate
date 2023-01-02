@@ -20,6 +20,7 @@ impl TropeScrapeArgs {
 pub enum TropeScrapeMethod {
   Namespace(TropeScrapeNamespace),
   Pagelist(TropeScrapePagelist),
+  NamespaceTotPages(TropeScrapeNamespaceTotPages),
   TropePage(TropeScrapeTropePage),
   Tropelist(TropeScrapeTropelist),
   AllTropes(TropeScrapeAllTropes),
@@ -80,6 +81,21 @@ pub struct TropeScrapePagelist {
   /// Overwrite existing tropelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
+
+}
+
+
+/// Scrapes downloaded namespace page 1 and reports number of pages in namespace
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeNamespaceTotPages {
+
+  /// Namespace for page search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
 
 }
 

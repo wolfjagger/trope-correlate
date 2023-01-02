@@ -1,3 +1,4 @@
+pub mod get_namespace_tot_pages;
 pub mod scrape_all_tropes;
 pub mod scrape_namespace;
 pub mod scrape_pagelist;

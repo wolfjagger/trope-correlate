@@ -8,5 +8,6 @@ pub use trope_download::{
 };
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
-  TropeScrapeNamespace, TropeScrapePagelist, TropeScrapeTropePage, TropeScrapeTropelist, TropeScrapeAllTropes,
+  TropeScrapeNamespace, TropeScrapePagelist, TropeScrapeNamespaceTotPages,
+  TropeScrapeTropePage, TropeScrapeTropelist, TropeScrapeAllTropes,
 };
