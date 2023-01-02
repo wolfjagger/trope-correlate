@@ -4,6 +4,7 @@ mod scrape;
 
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
 use cmd::{
+  scrape_namespace::scrape_namespace,
   scrape_pagelist::scrape_pagelist,
   scrape_trope::scrape_trope_page,
   scrape_tropelist::scrape_tropelist,
@@ -13,6 +14,9 @@ use cmd::{
 fn main() {
   let args = TropeScrapeArgs::parse_args();
   match args.method {
+    TropeScrapeMethod::Namespace(method_args) => {
+      scrape_namespace(method_args).expect("Unhandled scrape_pagelist error");
+    },
     TropeScrapeMethod::Pagelist(method_args) => {
       scrape_pagelist(method_args).expect("Unhandled scrape_pagelist error");
     },

@@ -18,10 +18,38 @@ impl TropeScrapeArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
+  Namespace(TropeScrapeNamespace),
   Pagelist(TropeScrapePagelist),
   TropePage(TropeScrapeTropePage),
   Tropelist(TropeScrapeTropelist),
   AllTropes(TropeScrapeAllTropes),
+}
+
+
+/// Scrapes downloaded namespace pagelists for tropelist
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeNamespace {
+
+  /// Min number of pages to scrape (inclusive; known min: 1)
+  #[clap(short, long, value_parser,)]
+  pub beg_page: u8,
+
+  /// Max number of pages to scrape (inclusive; known max: 58)
+  #[clap(short, long, value_parser,)]
+  pub end_page: u8,
+
+  /// Namespace for page search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing tropelist file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
 }
 
 
