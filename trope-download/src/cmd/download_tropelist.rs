@@ -1,4 +1,4 @@
-use std::{path, thread, time};
+use std::{thread, time};
 use csv;
 use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 use reqwest;
@@ -10,9 +10,8 @@ use crate::download::save_page_to_path;
 /// Download all the pages
 pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let out_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join("trope_page");
+  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
+  let trope_page_dir = trope_lib::download_dir().join("trope");
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);
@@ -21,7 +20,8 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     panic!("end_record should not be less than beg_record");
   }
 
-  let mut csv_records: Vec<_> = csv::Reader::from_path(args.in_path)?.into_records().collect();
+  let mut csv_records: Vec<_> = csv::Reader::from_path(tropelist_path)?.into_records().collect();
+  let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
     None => {
       println!("No seed, download directly");
@@ -35,7 +35,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     }
   };
 
-  println!("Downloading records {} to {}...", beg_record, end_record);
+  println!("Downloading {} to {} of {} records...", beg_record, end_record, tot_records);
 
   // Page request loop with peekable iterator
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize)).peekable();
@@ -48,7 +48,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
 
     // Set up url
     let url = reqwest::Url::parse(&url_str)?;
-    let download_occurred = save_page_to_path(url, &out_dir, &name, !args.unencrypted, args.force)?;
+    let download_occurred = save_page_to_path(url, &trope_page_dir, &name, !args.unencrypted, args.force)?;
 
     if download_occurred && tup_iter.peek().is_some() {
       // Sleep before next request

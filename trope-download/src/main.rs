@@ -1,11 +1,9 @@
+mod cmd;
 mod download;
-mod download_pagelist;
-mod download_trope;
-mod download_tropelist;
 mod header;
 
 use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};
-use crate::{
+use cmd::{
   download_pagelist::save_pagelist,
   download_trope::save_trope_page,
   download_tropelist::save_tropelist,

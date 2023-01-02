@@ -1,4 +1,4 @@
-use std::{path, thread, time};
+use std::{thread, time};
 use reqwest;
 
 use trope_lib;
@@ -15,18 +15,16 @@ const PAGELIST_SEARCH_PAGE: &str =
 /// Download all the pages
 pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
+  // Set up output directory in the parent trope-correlate dir
+  let out_dir = trope_lib::download_dir().join("pagelist")
+    .join(&args.namespace).join(&args.pagetype);
+
   // Inclusive
   let beg_page = 1.max(args.beg_page);
   let end_page = 1.max(args.end_page);
   if end_page < beg_page {
     panic!("end_page should not be less than beg_page");
   }
-
-  // Set up output directory in the parent trope-correlate dir
-  let out_dir = path::PathBuf::from("..")
-    .join(trope_lib::DATA_DIR)
-    .join(&args.namespace)
-    .join(&args.pagetype);
 
   // Page request loop with peekable iterator
   let mut page_iter = (beg_page..end_page+1).peekable();

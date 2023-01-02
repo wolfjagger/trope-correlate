@@ -1,4 +1,3 @@
-use std::path;
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
 use crate::{Namespace, Pagetype};
@@ -87,10 +86,6 @@ pub struct TropeDownloadTropePage {
 /// Downloads trope pages in tropelist from tvtropes.
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadTropelist {
-
-  /// Path to tropelist
-  #[clap(short, long, value_parser,)]
-  pub in_path: path::PathBuf,
 
   /// Min number of records to download (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]

@@ -1,4 +1,6 @@
-pub const DATA_DIR: &str = "test_data";
+pub const KNOWN_TROPE_NAMESPACES: [&str; 1] = [
+  "Main"
+];
 
 pub const KNOWN_MEDIA_NAMESPACES: [&str; 44] = [
   "Advertising", "Animation", "Anime",

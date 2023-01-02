@@ -35,16 +35,20 @@ pub fn save_page_to_path(
   let header_map = get_header_map();
 
   // Set up output file
-  let mut file = fs::File::create(out_path)?;
+  let mut file = fs::File::create(&out_path)
+    .expect(&format!("Error writing file to {}", &out_path.display()));
 
   // Do request, get encoded body
-  let encoded_body = get_body(&header_map, url)?;
+  let encoded_body = get_body(&header_map, url)
+    .expect(&format!("Error encoding body for {}", &out_path.display()));
 
   if encrypted {
-    file.write_all(&encoded_body)?;
+    file.write_all(&encoded_body)
+      .expect(&format!("Error writing encrypted content for {}", &out_path.display()));
   } else {
     // Decode using brotli decompression
-    BrotliDecompress(&mut encoded_body.reader(), &mut file)?;
+    BrotliDecompress(&mut encoded_body.reader(), &mut file)
+      .expect(&format!("Error during brotli decompression for {}", &out_path.display()));
   }
 
   Ok(true)
