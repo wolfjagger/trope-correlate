@@ -16,11 +16,11 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
 
   fs::create_dir_all(&out_dir)?;
 
-  let tropelist_path = out_dir.join("tropes.csv");
+  let links_path = out_dir.join("links.csv");
 
-  let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {
+  let mut csv_writer = match csv::Writer::from_path(&links_path) {
     Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", tropelist_path.display(), why),
+    Err(why) => panic!("Couldn't write to {}: {}", links_path.display(), why),
   };
 
 
@@ -46,10 +46,10 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
     // Create a selector for the element we want
     // For the tropes page, every link in a table cell should get us what we want
     // This can be done outside of the main loop, since it's the same each time and passed by reference
-    let trope_selector = Selector::parse("#main-article li>a").unwrap();
+    let link_selector = Selector::parse("#main-article li>a").unwrap();
 
     // Select all elements in the document
-    let tropes = document.select(&trope_selector).map(|el| {
+    let links = document.select(&link_selector).map(|el| {
       // In raw form, there are two non-breaking spaces, possible line breaks and possible
       // spaces in the middle. Let's get rid of those.
       trope_lib::NamedLink::new(
@@ -59,8 +59,8 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
     }).collect::<Vec<_>>();
 
     // Write all the values to the file
-    for trope in tropes {
-      csv_writer.serialize(trope)?;
+    for link in links {
+      csv_writer.serialize(link)?;
     }
 
   }
