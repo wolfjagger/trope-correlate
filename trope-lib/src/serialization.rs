@@ -32,8 +32,12 @@ pub struct NamedLink {
 
 impl NamedLink {
 
-  pub fn new(name: String, url: String) -> Self {
+  pub fn new(name: String, mut url: String) -> Self {
     let link_type = Self::calc_link_type(&url);
+    // If an internal link, prepend the site
+    if url.starts_with("/pmwiki") {
+      url.insert_str(0, "https://tvtropes.org");
+    }
     NamedLink{
       name, url, link_type
     }
