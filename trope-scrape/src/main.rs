@@ -1,12 +1,9 @@
+mod cmd;
 mod read_html;
 mod scrape;
-mod scrape_all_tropes;
-mod scrape_pagelist;
-mod scrape_trope;
-mod scrape_tropelist;
 
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
-use crate::{
+use cmd::{
   scrape_pagelist::scrape_pagelist,
   scrape_trope::scrape_trope_page,
   scrape_tropelist::scrape_tropelist,
