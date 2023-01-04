@@ -39,3 +39,8 @@ pub struct TropePipelineNamespaceTropelist {
   pub force: bool,
 
 }
+impl From<TropePipelineNamespaceTropelist> for TropePipelineArgs {
+  fn from(method_args: TropePipelineNamespaceTropelist) -> Self {
+    TropePipelineArgs { method: TropePipelineMethod::NamespaceTropelist(method_args) }
+  }
+}

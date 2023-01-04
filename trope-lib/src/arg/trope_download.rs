@@ -55,6 +55,11 @@ pub struct TropeDownloadNamespace {
   pub sleep_sec: u64,
 
 }
+impl From<TropeDownloadNamespace> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadNamespace) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Namespace(method_args) }
+  }
+}
 
 
 /// Downloads index pages in bulk from tvtropes.
@@ -90,6 +95,11 @@ pub struct TropeDownloadPagelist {
   pub sleep_sec: u64,
 
 }
+impl From<TropeDownloadPagelist> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadPagelist) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Pagelist(method_args) }
+  }
+}
 
 
 /// Downloads specific trope pages from tvtropes.
@@ -112,6 +122,11 @@ pub struct TropeDownloadTropePage {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
+}
+impl From<TropeDownloadTropePage> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadTropePage) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::TropePage(method_args) }
+  }
 }
 
 
@@ -143,4 +158,9 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
 
+}
+impl From<TropeDownloadTropelist> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadTropelist) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Tropelist(method_args) }
+  }
 }

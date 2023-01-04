@@ -52,6 +52,11 @@ pub struct TropeScrapeNamespace {
   pub force: bool,
 
 }
+impl From<TropeScrapeNamespace> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeNamespace) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Namespace(method_args) }
+  }
+}
 
 
 /// Scrapes downloaded pagelists for tropelist
@@ -83,6 +88,11 @@ pub struct TropeScrapePagelist {
   pub force: bool,
 
 }
+impl From<TropeScrapePagelist> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelist) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
+  }
+}
 
 
 /// Scrapes downloaded namespace page 1 and reports number of pages in namespace
@@ -97,6 +107,11 @@ pub struct TropeScrapeNamespaceTotPages {
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
+}
+impl From<TropeScrapeNamespaceTotPages> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeNamespaceTotPages) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::NamespaceTotPages(method_args) }
+  }
 }
 
 
@@ -116,6 +131,11 @@ pub struct TropeScrapeTropePage {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
+}
+impl From<TropeScrapeTropePage> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeTropePage) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::TropePage(method_args) }
+  }
 }
 
 
@@ -145,6 +165,11 @@ pub struct TropeScrapeTropelist {
   pub random_seed: Option<u64>,
 
 }
+impl From<TropeScrapeTropelist> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeTropelist) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Tropelist(method_args) }
+  }
+}
 
 
 /// Scrapes downloaded trope pages that exist in the tropes directory
@@ -159,4 +184,9 @@ pub struct TropeScrapeAllTropes {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
+}
+impl From<TropeScrapeAllTropes> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeAllTropes) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::AllTropes(method_args) }
+  }
 }
