@@ -2596,6 +2596,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "trope-pipeline"
+version = "0.1.0"
+dependencies = [
+ "trope-download",
+ "trope-lib",
+ "trope-scrape",
+]
+
+[[package]]
 name = "trope-scrape"
 version = "0.1.0"
 dependencies = [
