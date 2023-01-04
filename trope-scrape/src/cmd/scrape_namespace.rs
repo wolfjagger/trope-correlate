@@ -24,10 +24,15 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
   };
 
 
+  // Inclusive
+  let beg_page = 1.max(args.beg_page);
+  let end_page = 1.max(args.end_page);
+  if end_page < beg_page {
+    panic!("end_page should not be less than beg_page");
+  }
+
   // Page parse loop
-  let min_page = 1.min(args.beg_page);
-  let max_page = args.end_page + 1;
-  for page in min_page..max_page {
+  for page in beg_page..end_page+1 {
 
     let page_str = page.to_string();
 
