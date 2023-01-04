@@ -17,7 +17,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   // Set up output directory in the parent trope-correlate dir
   let out_dir = trope_lib::download_dir().join("pagelist")
-    .join(&args.namespace).join(&args.pagetype);
+    .join(&args.namespace.to_lowercase()).join(&args.pagetype.to_lowercase());
 
   // Inclusive
   let beg_page = 1.max(args.beg_page);

@@ -16,7 +16,7 @@ pub fn save_namespace(args: trope_lib::TropeDownloadNamespace) -> Result<(), Box
 
   // Set up output directory in the parent trope-correlate dir
   let out_dir = trope_lib::download_dir().join("namespace")
-    .join(&args.namespace);
+    .join(&args.namespace.to_lowercase());
 
   // Inclusive
   let beg_page = 1.max(args.beg_page);

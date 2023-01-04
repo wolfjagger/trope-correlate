@@ -1,7 +1,7 @@
 mod cmd;
 
 use trope_lib::{TropePipelineArgs, TropePipelineMethod};
-use cmd::{
+pub use cmd::{
   namespace_tropelist::namespace_tropelist,
 };
 

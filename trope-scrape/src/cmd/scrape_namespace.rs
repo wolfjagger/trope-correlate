@@ -11,7 +11,7 @@ use crate::read_html::read_html_file;
 pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box<dyn std::error::Error>> {
 
   let pagelist_path = trope_lib::download_dir().join("namespace")
-    .join(&args.namespace);
+    .join(&args.namespace.to_lowercase());
   let out_dir = trope_lib::scrape_dir().join("tropelist").join(&args.namespace);
 
   fs::create_dir_all(&out_dir)?;

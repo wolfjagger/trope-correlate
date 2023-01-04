@@ -9,7 +9,7 @@ use crate::read_html::read_html_file;
 pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   let pagelist_path = trope_lib::download_dir().join("pagelist")
-    .join(&args.namespace).join(&args.pagetype);
+    .join(&args.namespace.to_lowercase()).join(&args.pagetype.to_lowercase());
   let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
 
   let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {

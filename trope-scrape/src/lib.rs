@@ -3,7 +3,7 @@ mod read_html;
 mod scrape;
 
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
-use cmd::{
+pub use cmd::{
   scrape_namespace::scrape_namespace,
   scrape_pagelist::scrape_pagelist,
   get_namespace_tot_pages::get_namespace_tot_pages,

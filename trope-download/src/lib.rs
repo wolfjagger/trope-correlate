@@ -3,7 +3,7 @@ mod download;
 mod header;
 
 use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};
-use cmd::{
+pub use cmd::{
   download_namespace::save_namespace,
   download_pagelist::save_pagelist,
   download_trope::save_trope_page,
