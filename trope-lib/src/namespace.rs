@@ -1,5 +1,8 @@
 use std::str::FromStr;
 
+use derive_more::Display;
+
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Namespace {
   // Trope
@@ -23,7 +26,7 @@ pub enum Namespace {
   UsefulNotes,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Display, PartialEq, Eq)]
 pub enum EntityType {
   Trope,
   Media,

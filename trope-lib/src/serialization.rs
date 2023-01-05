@@ -1,19 +1,10 @@
-use std::fmt;
+use std::{fmt, str::FromStr};
 
-use derive_more::Display;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::{KNOWN_MEDIA_NAMESPACES, KNOWN_TROPE_NAMESPACES};
-
-
-#[derive(Debug, Display, Clone, Copy, Deserialize, Serialize)]
-pub enum NamedLinkType {
-  Trope,
-  Media,
-  Other,
-}
+use crate::{Namespace, EntityType};
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -27,7 +18,7 @@ pub struct SerdeNamedLink {
 pub struct NamedLink {
   pub name: String,
   pub url: String,
-  link_type: NamedLinkType,
+  link_type: EntityType,
 }
 
 impl NamedLink {
@@ -43,11 +34,11 @@ impl NamedLink {
     }
   }
 
-  pub fn link_type(&self) -> NamedLinkType {
+  pub fn link_type(&self) -> EntityType {
     self.link_type
   }
 
-  fn calc_link_type(url: &str) -> NamedLinkType {
+  fn calc_link_type(url: &str) -> EntityType {
 
     static NAMESPACE_LINK_RE: Lazy<Regex> = Lazy::new(||
       Regex::new(
@@ -61,15 +52,9 @@ impl NamedLink {
       ns.and_then(|ns| link_name.map(|ln| (ns, ln)))
     }) {
       Some((namespace, _link_name)) => {
-        if KNOWN_TROPE_NAMESPACES.iter().any(|s| s == &namespace) {
-          NamedLinkType::Trope
-        } else if KNOWN_MEDIA_NAMESPACES.iter().any(|s| s == &namespace) {
-          NamedLinkType::Media
-        } else {
-          NamedLinkType::Other
-        }
+        Namespace::from_str(namespace).map_or(EntityType::Other, |ns| ns.entity_type())
       },
-      None => NamedLinkType::Other
+      None => EntityType::Other
     }
 
   }
