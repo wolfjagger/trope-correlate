@@ -19,10 +19,11 @@ impl TropePipelineArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropePipelineMethod {
   NamespaceTropelist(TropePipelineNamespaceTropelist),
+  AllTropelists(TropePipelineAllTropelists),
 }
 
 
-/// TODO
+/// Download and scrape tropelist for namespace
 #[derive(Debug, ClapArgs)]
 pub struct TropePipelineNamespaceTropelist {
 
@@ -42,5 +43,24 @@ pub struct TropePipelineNamespaceTropelist {
 impl From<TropePipelineNamespaceTropelist> for TropePipelineArgs {
   fn from(method_args: TropePipelineNamespaceTropelist) -> Self {
     TropePipelineArgs { method: TropePipelineMethod::NamespaceTropelist(method_args) }
+  }
+}
+
+/// Download and scrape tropelists for all namespaces
+#[derive(Debug, ClapArgs)]
+pub struct TropePipelineAllTropelists {
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing tropelist file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropePipelineAllTropelists> for TropePipelineArgs {
+  fn from(method_args: TropePipelineAllTropelists) -> Self {
+    TropePipelineArgs { method: TropePipelineMethod::AllTropelists(method_args) }
   }
 }

@@ -9,7 +9,7 @@ pub use trope_download::{
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,
-  TropePipelineNamespaceTropelist,
+  TropePipelineNamespaceTropelist, TropePipelineAllTropelists,
 };
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
