@@ -32,9 +32,25 @@ pub fn get_namespace_tot_pages(args: trope_lib::TropeScrapeNamespaceTotPages) ->
   let pagination_box_selector = Selector::parse("#main-article>div>nav.pagination-box").unwrap();
 
   // Select first element in the document
-  let tot_pages: u32 = document.select(&pagination_box_selector).next().and_then(
+  let tot_pages_result = document.select(&pagination_box_selector).next().and_then(
     |el| el.value().attr("data-total-pages").and_then(|s| s.parse().ok())
-  ).expect("Could not find pagination box with tot pages details; see url for sanity check");
+  );
+
+  let tot_pages = match tot_pages_result {
+    Some(0) => {
+      // Zero pages probably means bad namespace
+      panic!("Zero pages returned; is the namespace valid?");
+    },
+    Some(num) => {
+      // Non-zero pages means it's the tot pages
+      num
+    },
+    None => {
+      // Could not find pagination box with tot pages details,
+      //  but that likely means it's just one page
+      1
+    }
+  };
 
   println!("There are {} pages in the namespace", tot_pages);
 
