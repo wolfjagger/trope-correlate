@@ -12,7 +12,7 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let pagelist_path = trope_lib::dl_namespace_dir(&ns);
+  let dl_ns_path = trope_lib::dl_namespace_dir(&ns);
   let out_dir = trope_lib::sc_tropelist_dir(&ns);
 
   fs::create_dir_all(&out_dir)?;
@@ -39,7 +39,7 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
 
     println!("Scraping page {}...", page_str);
 
-    let file_name = pagelist_path.join(
+    let file_name = dl_ns_path.join(
       if !args.unencrypted {
         format!("page{}.html.br", &page_str)
       } else {
