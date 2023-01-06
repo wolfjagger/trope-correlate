@@ -1,4 +1,4 @@
-use std::{thread, time};
+use std::{str::FromStr, thread, time};
 use reqwest;
 
 use trope_lib;
@@ -15,9 +15,11 @@ const PAGELIST_SEARCH_PAGE: &str =
 /// Download all the pages
 pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
+
   // Set up output directory in the parent trope-correlate dir
   let out_dir = trope_lib::download_dir().join("pagelist")
-    .join(&args.namespace.to_lowercase()).join(&args.pagetype.to_lowercase());
+    .join(ns.to_string()).join(&args.pagetype.to_lowercase());
 
   // Inclusive
   let beg_page = 1.max(args.beg_page);

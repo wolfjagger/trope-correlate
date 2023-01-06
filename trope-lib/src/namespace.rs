@@ -1,6 +1,9 @@
-use std::str::FromStr;
+use std::{
+  fmt::Display,
+  str::FromStr,
+};
 
-use derive_more::Display;
+use derive_more;
 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -26,14 +29,14 @@ pub enum Namespace {
   UsefulNotes,
 }
 
-#[derive(Debug, Clone, Copy, Display, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq)]
 pub enum EntityType {
   Trope,
   Media,
   Other,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, derive_more::Display, derive_more::Error, PartialEq, Eq)]
 pub struct NamespaceParseError;
 
 
@@ -61,9 +64,9 @@ impl Namespace {
 }
 
 
-impl ToString for Namespace {
-  fn to_string(&self) -> String {
-    match self {
+impl Display for Namespace {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    f.write_str(match self {
       Namespace::Main => "main",
       Namespace::Advertising => "advertising",
       Namespace::Animation => "animation",
@@ -109,7 +112,7 @@ impl ToString for Namespace {
       Namespace::WesternAnimation => "westernanimation",
       Namespace::Wrestling => "wrestling",
       Namespace::UsefulNotes => "usefulnotes",
-    }.to_string()
+    })
   }
 }
 

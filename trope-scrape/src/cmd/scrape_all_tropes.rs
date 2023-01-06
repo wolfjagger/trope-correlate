@@ -7,8 +7,8 @@ use crate::scrape::scrape_trope;
 /// Download all the pages
 pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Box<dyn std::error::Error>> {
 
-  let in_dir = trope_lib::download_dir().join("trope");
-  let tropes_dir = trope_lib::scrape_dir().join("trope");
+  let in_dir = trope_lib::dl_trope_dir();
+  let tropes_dir = trope_lib::sc_trope_dir();
 
   let in_files = fs::read_dir(&in_dir)?;
   let ext = if args.unencrypted { ".html" } else { ".html.br" };

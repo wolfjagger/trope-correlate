@@ -151,6 +151,10 @@ pub struct TropeScrapeTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
+  /// Namespace for of tropelist, to find correct directory
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,

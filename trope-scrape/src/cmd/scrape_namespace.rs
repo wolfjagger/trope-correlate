@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, str::FromStr};
 
 use csv;
 use scraper::Selector;
@@ -10,9 +10,10 @@ use crate::read_html::read_html_file;
 /// Scrape pagelist to create tropelist
 pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box<dyn std::error::Error>> {
 
-  let pagelist_path = trope_lib::download_dir().join("namespace")
-    .join(&args.namespace.to_lowercase());
-  let out_dir = trope_lib::scrape_dir().join("tropelist").join(&args.namespace);
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
+
+  let pagelist_path = trope_lib::dl_namespace_dir(&ns);
+  let out_dir = trope_lib::sc_tropelist_dir(&ns);
 
   fs::create_dir_all(&out_dir)?;
 

@@ -1,4 +1,4 @@
-use std::{thread, time};
+use std::{str::FromStr, thread, time};
 use reqwest;
 
 use trope_lib;
@@ -14,9 +14,10 @@ const NAMESPACE_INDEX_PAGE: &str =
 /// Download all the pages
 pub fn save_namespace(args: trope_lib::TropeDownloadNamespace) -> Result<(), Box<dyn std::error::Error>> {
 
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
+
   // Set up output directory in the parent trope-correlate dir
-  let out_dir = trope_lib::download_dir().join("namespace")
-    .join(&args.namespace.to_lowercase());
+  let out_dir = trope_lib::dl_namespace_dir(&ns);
 
   // Inclusive
   let beg_page = 1.max(args.beg_page);
