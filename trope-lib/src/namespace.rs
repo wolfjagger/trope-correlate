@@ -28,6 +28,28 @@ pub enum Namespace {
   // Other
   UsefulNotes,
 }
+use Namespace::*;
+pub static ALL_NAMESPACES: [Namespace; 45] = [
+  // Trope
+  Main,
+  // Media
+  Advertising, Animation, Anime,
+  Art, ARG, AudioGame, AudioPlay,
+  Blog,
+  ComicBook, ComicStrip, Creator,
+  Fanfic, Film, Franchise,
+  LARP, LetsPlay, LightNovel, Literature,
+  Magazine, Manga, Manhua, Manhwa, Music, Myth,
+  Pinball, PlaygroundSong, Podcast,
+  Radio, Ride, Roleplay,
+  Series,
+  TabletopGame, Theatre, Toys,
+  VideoGame, VisualNovel,
+  WebAnimation, Webcomic, WebOriginal, Website,
+  WebVideo, WesternAnimation, Wrestling,
+  // Other
+  UsefulNotes,
+];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EntityType {
