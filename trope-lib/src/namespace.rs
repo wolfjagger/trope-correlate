@@ -29,7 +29,7 @@ pub enum Namespace {
   UsefulNotes,
 }
 
-#[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EntityType {
   Trope,
   Media,
@@ -165,6 +165,29 @@ impl FromStr for Namespace {
       "westernanimation" => Ok(Namespace::WesternAnimation),
       "wrestling" => Ok(Namespace::Wrestling),
       "usefulnotes" => Ok(Namespace::UsefulNotes),
+      _ => Err(NamespaceParseError)
+    }
+  }
+}
+
+
+impl Display for EntityType {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    f.write_str(match self {
+      Self::Trope => "trope",
+      Self::Media => "media",
+      Self::Other => "other",
+    })
+  }
+}
+
+impl FromStr for EntityType {
+  type Err = NamespaceParseError;
+  fn from_str(s: &str) -> Result<Self, Self::Err> {
+    match s.to_lowercase().as_str() {
+      "trope" => Ok(Self::Trope),
+      "media" => Ok(Self::Media),
+      "other" => Ok(Self::Other),
       _ => Err(NamespaceParseError)
     }
   }
