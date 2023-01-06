@@ -46,16 +46,13 @@ impl NamedLink {
       ).expect("Error creating namespace regex")
     );
 
-    match NAMESPACE_LINK_RE.captures(url).and_then(|cap| {
-      let ns = cap.get(1).map(|m| m.as_str());
+    NAMESPACE_LINK_RE.captures(url).and_then(|cap| {
+
+      let ns = cap.get(1).map(|m| m.as_str()).and_then(|ns| Namespace::from_str(ns).ok());
       let link_name = cap.get(2).map(|m| m.as_str());
-      ns.and_then(|ns| link_name.map(|ln| (ns, ln)))
-    }) {
-      Some((namespace, _link_name)) => {
-        Namespace::from_str(namespace).map_or(EntityType::Other, |ns| ns.entity_type())
-      },
-      None => EntityType::Other
-    }
+      ns.zip(link_name).map(|(ns, _ln)| ns.entity_type())
+
+    }).unwrap_or(EntityType::Other)
 
   }
 }
@@ -76,7 +73,7 @@ impl From<NamedLink> for SerdeNamedLink {
 
 impl fmt::Display for NamedLink {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "[{},{}, {}]", self.name, self.url, self.link_type)
+    write!(f, "[{}, {}, {}]", self.name, self.url, self.link_type)
   }
 }
 
