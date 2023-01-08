@@ -130,9 +130,9 @@ fn scrape_doc(doc: &Html) -> (
   let (mut trope_links, mut media_links, mut _other_links): (Vec<_>, Vec<_>, Vec<_>) = (vec![], vec![], vec![]);
   for link in nonhtml_wiki_links {
     match link.link_type() {
-      trope_lib::NamedLinkType::Trope => trope_links.push(link),
-      trope_lib::NamedLinkType::Media => media_links.push(link),
-      trope_lib::NamedLinkType::Other => _other_links.push(link),
+      trope_lib::EntityType::Trope => trope_links.push(link),
+      trope_lib::EntityType::Media => media_links.push(link),
+      trope_lib::EntityType::Other => _other_links.push(link),
     }
   }
 

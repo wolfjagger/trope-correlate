@@ -1,29 +1,5 @@
 use std::str::FromStr;
 
-pub enum Namespace {
-  Main,
-}
-
-impl ToString for Namespace {
-  fn to_string(&self) -> String {
-    match self {
-      Namespace::Main => "main".to_string()
-    }
-  }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct NamespaceParseError;
-
-impl FromStr for Namespace {
-  type Err = NamespaceParseError;
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
-    match s.to_lowercase().as_str() {
-      "main" => Ok(Namespace::Main),
-      _ => Err(NamespaceParseError)
-    }
-  }
-}
 
 pub enum Pagetype {
   Trope,

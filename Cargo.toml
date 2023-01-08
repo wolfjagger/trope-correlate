@@ -4,5 +4,6 @@ members = [
   "trope-download",
   "trope-lib",
   "trope-scrape",
+  "trope-pipeline",
   "trope-web",
 ]

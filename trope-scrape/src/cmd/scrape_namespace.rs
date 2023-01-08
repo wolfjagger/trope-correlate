@@ -1,3 +1,5 @@
+use std::{fs, str::FromStr};
+
 use csv;
 use scraper::Selector;
 
@@ -6,15 +8,20 @@ use crate::read_html::read_html_file;
 
 
 /// Scrape pagelist to create tropelist
-pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box<dyn std::error::Error>> {
 
-  let pagelist_path = trope_lib::download_dir().join("pagelist")
-    .join(&args.namespace.to_lowercase()).join(&args.pagetype.to_lowercase());
-  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {
+  let dl_ns_path = trope_lib::dl_namespace_dir(&ns);
+  let out_dir = trope_lib::sc_tropelist_dir(&ns);
+
+  fs::create_dir_all(&out_dir)?;
+
+  let links_path = out_dir.join("links.csv");
+
+  let mut csv_writer = match csv::Writer::from_path(&links_path) {
     Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", tropelist_path.display(), why),
+    Err(why) => panic!("Couldn't write to {}: {}", links_path.display(), why),
   };
 
 
@@ -32,7 +39,7 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
 
     println!("Scraping page {}...", page_str);
 
-    let file_name = pagelist_path.join(
+    let file_name = dl_ns_path.join(
       if !args.unencrypted {
         format!("page{}.html.br", &page_str)
       } else {
@@ -45,10 +52,10 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     // Create a selector for the element we want
     // For the tropes page, every link in a table cell should get us what we want
     // This can be done outside of the main loop, since it's the same each time and passed by reference
-    let trope_selector = Selector::parse("td>a").unwrap();
+    let link_selector = Selector::parse("#main-article li>a").unwrap();
 
     // Select all elements in the document
-    let tropes = document.select(&trope_selector).map(|el| {
+    let links = document.select(&link_selector).map(|el| {
       // In raw form, there are two non-breaking spaces, possible line breaks and possible
       // spaces in the middle. Let's get rid of those.
       trope_lib::NamedLink::new(
@@ -58,8 +65,8 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     }).collect::<Vec<_>>();
 
     // Write all the values to the file
-    for trope in tropes {
-      csv_writer.serialize(trope)?;
+    for link in links {
+      csv_writer.serialize(link)?;
     }
 
   }
