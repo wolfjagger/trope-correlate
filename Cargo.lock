@@ -2584,6 +2584,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "trope-learn"
+version = "0.1.0"
+
+[[package]]
 name = "trope-lib"
 version = "0.1.0"
 dependencies = [
