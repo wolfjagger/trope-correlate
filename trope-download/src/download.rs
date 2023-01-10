@@ -13,7 +13,9 @@ pub fn save_page_to_path(
   encrypted: bool, force: bool
 ) -> Result<bool, Box<dyn std::error::Error>> {
 
-  fs::create_dir_all(&out_dir)?;
+  fs::create_dir_all(&out_dir).expect(
+    &format!("Could not create directory {}", out_dir.display())
+  );
 
   let mut file_name = format!("{}.html", &out_name);
   if encrypted { file_name.push_str(".br"); }
