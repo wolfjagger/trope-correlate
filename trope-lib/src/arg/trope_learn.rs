@@ -16,9 +16,21 @@ impl TropeLearnArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropeLearnMethod {
+  Categorize(TropeLearnCategorize),
   Tutorial(TropeLearnTutorial),
 }
 
+
+/// Categorize media based on mentioned tropes
+#[derive(Debug, ClapArgs)]
+pub struct TropeLearnCategorize {
+
+}
+impl From<TropeLearnCategorize> for TropeLearnArgs {
+  fn from(method_args: TropeLearnCategorize) -> Self {
+    TropeLearnArgs { method: TropeLearnMethod::Categorize(method_args) }
+  }
+}
 
 /// Runs dfdx tutorials
 #[derive(Debug, ClapArgs)]

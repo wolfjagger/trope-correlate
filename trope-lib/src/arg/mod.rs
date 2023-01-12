@@ -10,7 +10,7 @@ pub use trope_download::{
 };
 pub use trope_learn::{
   TropeLearnArgs, TropeLearnMethod,
-  TropeLearnTutorial,
+  TropeLearnCategorize, TropeLearnTutorial,
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,
