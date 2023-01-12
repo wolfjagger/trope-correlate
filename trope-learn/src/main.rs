@@ -1,6 +1,6 @@
-mod tutorial;
+use trope_learn::run;
 
 
 fn main() {
- tutorial::tutorial();
+  run();
 }
