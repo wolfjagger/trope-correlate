@@ -20,7 +20,7 @@ pub enum TropeLearnMethod {
 }
 
 
-/// Scrapes downloaded namespace pagelists for tropelist
+/// Runs dfdx tutorials
 #[derive(Debug, ClapArgs)]
 pub struct TropeLearnTutorial {
 
