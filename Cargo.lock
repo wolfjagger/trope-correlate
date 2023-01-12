@@ -2669,6 +2669,7 @@ version = "0.1.0"
 dependencies = [
  "dfdx",
  "rand 0.8.5",
+ "trope-lib",
 ]
 
 [[package]]

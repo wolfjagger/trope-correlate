@@ -11,3 +11,4 @@ name = "trope_learn"
 [dependencies]
 dfdx = "0.10.0"
 rand = { version = "0.8.5", features = ["small_rng"] }
+trope-lib = { path = "../trope-lib" }

@@ -1,8 +1,10 @@
 use dfdx::{prelude::*, gradients::Gradients};
 use rand::{rngs::SmallRng, SeedableRng};
 
+use trope_lib::TropeLearnTutorial;
 
-pub fn tutorial() {
+
+pub fn tutorial(_args: TropeLearnTutorial) -> Result<(), Box<dyn std::error::Error>> {
   tutorial1();
   tutorial2();
   tutorial3();
@@ -10,6 +12,7 @@ pub fn tutorial() {
   tutorial5();
   tutorial6();
   tutorial7();
+  Ok(())
 }
 
 fn tutorial1() {
