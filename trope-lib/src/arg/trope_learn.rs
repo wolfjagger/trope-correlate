@@ -25,6 +25,14 @@ pub enum TropeLearnMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeLearnCategorize {
 
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
 }
 impl From<TropeLearnCategorize> for TropeLearnArgs {
   fn from(method_args: TropeLearnCategorize) -> Self {
