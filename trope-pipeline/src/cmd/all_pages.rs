@@ -6,7 +6,11 @@ use crate::{all_pagelists, namespace_pages};
 /// Download a trope page
 pub fn all_pages(args: trope_lib::TropePipelineAllPages) -> Result<(), Box<dyn std::error::Error>> {
 
-  let (unencrypted, force) = (args.unencrypted, args.force);
+  let (
+    unencrypted, force, sleep_sec, random_seed
+  ) = (
+    args.unencrypted, args.force, args.sleep_sec, args.random_seed
+  );
 
   let all_pagelists_args = trope_lib::TropePipelineAllPagelists{
     unencrypted,
@@ -21,6 +25,8 @@ pub fn all_pages(args: trope_lib::TropePipelineAllPages) -> Result<(), Box<dyn s
       namespace: ns.to_string(),
       unencrypted,
       force,
+      sleep_sec,
+      random_seed,
     };
     namespace_pages(ns_tl_args)?;
   }

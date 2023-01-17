@@ -83,6 +83,14 @@ pub struct TropePipelineNamespacePages {
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
+
+  /// If a seed is given, download pages out-of-order (default: None)
+  #[clap(short, long, value_parser, required = false)]
+  pub random_seed: Option<u64>,
+
 }
 impl From<TropePipelineNamespacePages> for TropePipelineArgs {
   fn from(method_args: TropePipelineNamespacePages) -> Self {
@@ -101,6 +109,14 @@ pub struct TropePipelineAllPages {
   /// Overwrite existing page file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
+
+  /// Number of seconds to sleep between requests (default: 5)
+  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
+  pub sleep_sec: u64,
+
+  /// If a seed is given, download pages out-of-order (default: None)
+  #[clap(short, long, value_parser, required = false)]
+  pub random_seed: Option<u64>,
 
 }
 impl From<TropePipelineAllPages> for TropePipelineArgs {
