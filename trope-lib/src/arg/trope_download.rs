@@ -1,6 +1,6 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use crate::{Namespace, Pagetype};
+use crate::Namespace;
 
 
 #[derive(Debug, Parser)]
@@ -20,7 +20,6 @@ impl TropeDownloadArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeDownloadMethod {
   Namespace(TropeDownloadNamespace),
-  Pagelist(TropeDownloadPagelist),
   TropePage(TropeDownloadTropePage),
   Tropelist(TropeDownloadTropelist),
 }
@@ -58,46 +57,6 @@ pub struct TropeDownloadNamespace {
 impl From<TropeDownloadNamespace> for TropeDownloadArgs {
   fn from(method_args: TropeDownloadNamespace) -> Self {
     TropeDownloadArgs { method: TropeDownloadMethod::Namespace(method_args) }
-  }
-}
-
-
-/// Downloads index pages in bulk from tvtropes.
-#[derive(Debug, ClapArgs)]
-pub struct TropeDownloadPagelist {
-
-  /// Min number of pages to download (inclusive; known min: 1)
-  #[clap(short, long, value_parser,)]
-  pub beg_page: u8,
-
-  /// Max number of pages to download (inclusive; known max: 58)
-  #[clap(short, long, value_parser,)]
-  pub end_page: u8,
-
-  /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
-  pub pagetype: String,
-
-  /// If enabled, save an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
-  /// Overwrite existing page file if enabled (default: false)
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub force: bool,
-
-  /// Number of seconds to sleep between requests (default: 5)
-  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
-  pub sleep_sec: u64,
-
-}
-impl From<TropeDownloadPagelist> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadPagelist) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::Pagelist(method_args) }
   }
 }
 

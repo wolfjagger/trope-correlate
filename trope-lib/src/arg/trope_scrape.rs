@@ -1,6 +1,6 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use crate::{Namespace, Pagetype};
+use crate::Namespace;
 
 
 #[derive(Debug, Parser)]
@@ -19,7 +19,6 @@ impl TropeScrapeArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
   Namespace(TropeScrapeNamespace),
-  Pagelist(TropeScrapePagelist),
   NamespaceTotPages(TropeScrapeNamespaceTotPages),
   TropePage(TropeScrapeTropePage),
   Tropelist(TropeScrapeTropelist),
@@ -55,42 +54,6 @@ pub struct TropeScrapeNamespace {
 impl From<TropeScrapeNamespace> for TropeScrapeArgs {
   fn from(method_args: TropeScrapeNamespace) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::Namespace(method_args) }
-  }
-}
-
-
-/// Scrapes downloaded pagelists for tropelist
-#[derive(Debug, ClapArgs)]
-pub struct TropeScrapePagelist {
-
-  /// Min number of pages to scrape (inclusive; known min: 1)
-  #[clap(short, long, value_parser,)]
-  pub beg_page: u8,
-
-  /// Max number of pages to scrape (inclusive; known max: 58)
-  #[clap(short, long, value_parser,)]
-  pub end_page: u8,
-
-  /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
-  pub pagetype: String,
-
-  /// If enabled, assume an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
-  /// Overwrite existing tropelist file if enabled (default: false)
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub force: bool,
-
-}
-impl From<TropeScrapePagelist> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapePagelist) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
   }
 }
 
