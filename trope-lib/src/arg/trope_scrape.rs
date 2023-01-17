@@ -86,6 +86,10 @@ pub struct TropeScrapePage {
   #[clap(short, long, value_parser,)]
   pub name: String,
 
+  /// Namespace for page
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
@@ -139,9 +143,13 @@ impl From<TropeScrapePagelist> for TropeScrapeArgs {
 }
 
 
-/// Scrapes downloaded trope pages that exist in the tropes directory
+/// Scrapes downloaded pages that exist in the given namespace directory
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeAllPages {
+
+  /// Namespace for pages to scrape
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]

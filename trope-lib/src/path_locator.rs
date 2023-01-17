@@ -24,14 +24,14 @@ static LAZY_SCRAPE_DIR: Lazy<path::PathBuf> = Lazy::new(||
 );
 pub fn scrape_dir() -> &'static path::Path { &*LAZY_SCRAPE_DIR }
 
-static LAZY_DL_PAGE_DIR: Lazy<path::PathBuf> = Lazy::new(||
-  LAZY_DOWNLOAD_DIR.join("page")
-);
-pub fn dl_page_dir() -> &'static path::Path { &*LAZY_DL_PAGE_DIR }
-static LAZY_SC_PAGE_DIR: Lazy<path::PathBuf> = Lazy::new(||
-  LAZY_SCRAPE_DIR.join("page")
-);
-pub fn sc_page_dir() -> &'static path::Path { &*LAZY_SC_PAGE_DIR }
+pub fn dl_page_dir(ns: &Namespace) -> path::PathBuf {
+  download_dir().join("page")
+    .join(ns.entity_type().to_string()).join(ns.to_string())
+}
+pub fn sc_page_dir(ns: &Namespace) -> path::PathBuf {
+  scrape_dir().join("page")
+    .join(ns.entity_type().to_string()).join(ns.to_string())
+}
 
 pub fn dl_namespace_dir(ns: &Namespace) -> path::PathBuf {
   download_dir().join("namespace")

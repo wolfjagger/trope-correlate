@@ -11,8 +11,8 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
-  let page_dir = trope_lib::dl_page_dir();
-  let scraped_page_dir = trope_lib::sc_page_dir();
+  let page_dir = trope_lib::dl_page_dir(&ns);
+  let scraped_page_dir = trope_lib::sc_page_dir(&ns);
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);

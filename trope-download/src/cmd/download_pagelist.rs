@@ -13,7 +13,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
-  let page_dir = trope_lib::dl_page_dir();
+  let page_dir = trope_lib::dl_page_dir(&ns);
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);
