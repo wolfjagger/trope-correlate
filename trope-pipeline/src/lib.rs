@@ -5,6 +5,7 @@ pub use cmd::{
   namespace_pagelist::namespace_pagelist,
   all_pagelists::all_pagelists,
   namespace_pages::namespace_pages,
+  all_pages::all_pages,
 };
 
 pub fn run(args: TropePipelineArgs) {
@@ -17,6 +18,9 @@ pub fn run(args: TropePipelineArgs) {
     },
     TropePipelineMethod::NamespacePages(method_args) => {
       namespace_pages(method_args).expect("Unhandled namespace_pages error");
-    }
+    },
+    TropePipelineMethod::AllPages(method_args) => {
+      all_pages(method_args).expect("Unhandled all_pages error");
+    },
   }
 }

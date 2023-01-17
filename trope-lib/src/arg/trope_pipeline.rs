@@ -21,6 +21,7 @@ pub enum TropePipelineMethod {
   NamespacePagelist(TropePipelineNamespacePagelist),
   AllPagelists(TropePipelineAllPagelists),
   NamespacePages(TropePipelineNamespacePages),
+  AllPages(TropePipelineAllPages),
 }
 
 
@@ -86,5 +87,24 @@ pub struct TropePipelineNamespacePages {
 impl From<TropePipelineNamespacePages> for TropePipelineArgs {
   fn from(method_args: TropePipelineNamespacePages) -> Self {
     TropePipelineArgs { method: TropePipelineMethod::NamespacePages(method_args) }
+  }
+}
+
+/// Download and scrape pages for all namespaces
+#[derive(Debug, ClapArgs)]
+pub struct TropePipelineAllPages {
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+  /// Overwrite existing page file if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropePipelineAllPages> for TropePipelineArgs {
+  fn from(method_args: TropePipelineAllPages) -> Self {
+    TropePipelineArgs { method: TropePipelineMethod::AllPages(method_args) }
   }
 }
