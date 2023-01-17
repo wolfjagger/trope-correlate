@@ -14,7 +14,8 @@ pub use trope_learn::{
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,
-  TropePipelineNamespacePagelist, TropePipelineAllPagelists, TropePipelineNamespacePages,
+  TropePipelineNamespacePagelist, TropePipelineAllPagelists,
+  TropePipelineNamespacePages, TropePipelineAllPages,
 };
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
