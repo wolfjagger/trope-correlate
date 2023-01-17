@@ -23,6 +23,7 @@ pub enum TropeScrapeMethod {
   Page(TropeScrapePage),
   Pagelist(TropeScrapePagelist),
   AllPages(TropeScrapeAllPages),
+  PagelistLen(TropeScrapePagelistLen),
 }
 
 
@@ -139,6 +140,26 @@ pub struct TropeScrapePagelist {
 impl From<TropeScrapePagelist> for TropeScrapeArgs {
   fn from(method_args: TropeScrapePagelist) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
+  }
+}
+
+
+/// Scrapes downloaded pagelist and reports number of records/pages
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapePagelistLen {
+
+  /// Namespace for pagelist search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+}
+impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelistLen) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::PagelistLen(method_args) }
   }
 }
 
