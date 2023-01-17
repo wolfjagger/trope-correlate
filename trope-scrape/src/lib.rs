@@ -6,7 +6,7 @@ use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
 pub use cmd::{
   scrape_namespace::scrape_namespace,
   get_namespace_tot_pages::get_namespace_tot_pages,
-  scrape_trope::scrape_trope_page,
+  scrape_page::scrape_page,
   scrape_pagelist::scrape_pagelist,
   scrape_all_pages::scrape_all_pages,
 };
@@ -19,8 +19,8 @@ pub fn run(args: TropeScrapeArgs) {
     TropeScrapeMethod::NamespaceTotPages(method_args) => {
       get_namespace_tot_pages(method_args).expect("Unhandled get_namespace_tot_pages error");
     }
-    TropeScrapeMethod::TropePage(method_args) => {
-      scrape_trope_page(method_args).expect("Unhandled scrape_trope_page error");
+    TropeScrapeMethod::Page(method_args) => {
+      scrape_page(method_args).expect("Unhandled scrape_page error");
     },
     TropeScrapeMethod::Pagelist(method_args) => {
       scrape_pagelist(method_args).expect("Unhandled scrape_pagelist error");

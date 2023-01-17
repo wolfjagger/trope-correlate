@@ -20,7 +20,7 @@ impl TropeDownloadArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeDownloadMethod {
   Namespace(TropeDownloadNamespace),
-  TropePage(TropeDownloadTropePage),
+  Page(TropeDownloadPage),
   Pagelist(TropeDownloadPagelist),
 }
 
@@ -61,9 +61,9 @@ impl From<TropeDownloadNamespace> for TropeDownloadArgs {
 }
 
 
-/// Downloads specific trope pages from tvtropes.
+/// Downloads specific pages from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeDownloadTropePage {
+pub struct TropeDownloadPage {
 
   /// Trope name
   #[clap(short, long, value_parser,)]
@@ -82,9 +82,9 @@ pub struct TropeDownloadTropePage {
   pub force: bool,
 
 }
-impl From<TropeDownloadTropePage> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadTropePage) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::TropePage(method_args) }
+impl From<TropeDownloadPage> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadPage) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Page(method_args) }
   }
 }
 

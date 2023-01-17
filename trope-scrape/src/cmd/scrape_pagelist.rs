@@ -2,7 +2,7 @@ use std::str::FromStr;
 use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 
 use trope_lib;
-use crate::scrape::scrape_trope;
+use crate::scrape;
 
 
 /// Download all the pages
@@ -11,8 +11,8 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
-  let trope_page_dir = trope_lib::dl_trope_dir();
-  let scraped_trope_dir = trope_lib::sc_trope_dir();
+  let page_dir = trope_lib::dl_page_dir();
+  let scraped_page_dir = trope_lib::sc_page_dir();
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);
@@ -49,7 +49,7 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     };
 
     // Set up input html
-    let trope_page_path = trope_page_dir.join(
+    let page_path = page_dir.join(
       if !args.unencrypted {
         format!("{}.html.br", &name)
       } else {
@@ -57,10 +57,10 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
       }
     );
 
-    // Save output to a subdir of the tropes dir
-    let out_dir = scraped_trope_dir.join(&name);
+    // Save output to a subdir of the pages dir
+    let out_dir = scraped_page_dir.join(&name);
 
-    scrape_trope(&name, trope_page_path, &out_dir, !args.unencrypted, args.force)?;
+    scrape::scrape_page(&name, page_path, &out_dir, !args.unencrypted, args.force)?;
 
   }
 

@@ -13,7 +13,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
-  let trope_page_dir = trope_lib::dl_trope_dir();
+  let page_dir = trope_lib::dl_page_dir();
 
   // Inclusive
   let beg_record = 0.max(args.beg_record);
@@ -50,7 +50,7 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
     // Set up url
     let url = reqwest::Url::parse(&url_str)?;
-    let download_occurred = save_page_to_path(url, &trope_page_dir, &name, !args.unencrypted, args.force)?;
+    let download_occurred = save_page_to_path(url, &page_dir, &name, !args.unencrypted, args.force)?;
 
     if download_occurred && tup_iter.peek().is_some() {
       // Sleep before next request

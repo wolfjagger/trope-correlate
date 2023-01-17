@@ -5,9 +5,9 @@ use crate::download::save_page_to_path;
 
 
 /// Download a trope page
-pub fn save_trope_page(args: trope_lib::TropeDownloadTropePage) -> Result<(), Box<dyn std::error::Error>> {
+pub fn save_page(args: trope_lib::TropeDownloadPage) -> Result<(), Box<dyn std::error::Error>> {
 
-  let out_dir = trope_lib::dl_trope_dir();
+  let out_dir = trope_lib::dl_page_dir();
 
   // Set up url
   let url = reqwest::Url::parse(&args.url)?;

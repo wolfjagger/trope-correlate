@@ -20,7 +20,7 @@ impl TropeScrapeArgs {
 pub enum TropeScrapeMethod {
   Namespace(TropeScrapeNamespace),
   NamespaceTotPages(TropeScrapeNamespaceTotPages),
-  TropePage(TropeScrapeTropePage),
+  Page(TropeScrapePage),
   Pagelist(TropeScrapePagelist),
   AllPages(TropeScrapeAllPages),
 }
@@ -80,7 +80,7 @@ impl From<TropeScrapeNamespaceTotPages> for TropeScrapeArgs {
 
 /// Scrapes downloaded trope page
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropePage {
+pub struct TropeScrapePage {
 
   /// Trope name
   #[clap(short, long, value_parser,)]
@@ -95,9 +95,9 @@ pub struct TropeScrapeTropePage {
   pub force: bool,
 
 }
-impl From<TropeScrapeTropePage> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeTropePage) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::TropePage(method_args) }
+impl From<TropeScrapePage> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePage) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Page(method_args) }
   }
 }
 
