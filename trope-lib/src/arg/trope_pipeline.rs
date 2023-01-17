@@ -18,14 +18,14 @@ impl TropePipelineArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum TropePipelineMethod {
-  NamespaceTropelist(TropePipelineNamespaceTropelist),
-  AllTropelists(TropePipelineAllTropelists),
+  NamespacePagelist(TropePipelineNamespacePagelist),
+  AllPagelists(TropePipelineAllPagelists),
 }
 
 
-/// Download and scrape tropelist for namespace
+/// Download and scrape namespace for pagelist
 #[derive(Debug, ClapArgs)]
-pub struct TropePipelineNamespaceTropelist {
+pub struct TropePipelineNamespacePagelist {
 
   /// Namespace for page search
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
@@ -35,32 +35,32 @@ pub struct TropePipelineNamespaceTropelist {
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
-  /// Overwrite existing tropelist file if enabled (default: false)
+  /// Overwrite existing pagelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
 }
-impl From<TropePipelineNamespaceTropelist> for TropePipelineArgs {
-  fn from(method_args: TropePipelineNamespaceTropelist) -> Self {
-    TropePipelineArgs { method: TropePipelineMethod::NamespaceTropelist(method_args) }
+impl From<TropePipelineNamespacePagelist> for TropePipelineArgs {
+  fn from(method_args: TropePipelineNamespacePagelist) -> Self {
+    TropePipelineArgs { method: TropePipelineMethod::NamespacePagelist(method_args) }
   }
 }
 
-/// Download and scrape tropelists for all namespaces
+/// Download and scrape pagelists for all namespaces
 #[derive(Debug, ClapArgs)]
-pub struct TropePipelineAllTropelists {
+pub struct TropePipelineAllPagelists {
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
-  /// Overwrite existing tropelist file if enabled (default: false)
+  /// Overwrite existing pagelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
 }
-impl From<TropePipelineAllTropelists> for TropePipelineArgs {
-  fn from(method_args: TropePipelineAllTropelists) -> Self {
-    TropePipelineArgs { method: TropePipelineMethod::AllTropelists(method_args) }
+impl From<TropePipelineAllPagelists> for TropePipelineArgs {
+  fn from(method_args: TropePipelineAllPagelists) -> Self {
+    TropePipelineArgs { method: TropePipelineMethod::AllPagelists(method_args) }
   }
 }

@@ -4,7 +4,7 @@ use trope_scrape;
 
 
 /// Download a trope page
-pub fn namespace_tropelist(args: trope_lib::TropePipelineNamespaceTropelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn namespace_pagelist(args: trope_lib::TropePipelineNamespacePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   let (namespace, unencrypted, force) = (args.namespace, args.unencrypted, args.force);
 

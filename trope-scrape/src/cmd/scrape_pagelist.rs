@@ -6,11 +6,11 @@ use crate::scrape::scrape_trope;
 
 
 /// Download all the pages
-pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let tropelist_path = trope_lib::sc_tropelist_dir(&ns).join("links.csv");
+  let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
   let trope_page_dir = trope_lib::dl_trope_dir();
   let scraped_trope_dir = trope_lib::sc_trope_dir();
 
@@ -21,7 +21,7 @@ pub fn scrape_tropelist(args: trope_lib::TropeScrapeTropelist) -> Result<(), Box
     panic!("end_record should not be less than beg_record");
   }
 
-  let mut reader = csv::Reader::from_path(tropelist_path)?;
+  let mut reader = csv::Reader::from_path(pagelist_path)?;
   let mut csv_records: Vec<_> = reader.deserialize::<trope_lib::NamedLink>().collect();
   let tot_records = csv_records.len();
   let record_iter = match args.random_seed {

@@ -8,11 +8,11 @@ use crate::download::save_page_to_path;
 
 
 /// Download all the pages
-pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box<dyn std::error::Error>> {
+pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<dyn std::error::Error>> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let tropelist_path = trope_lib::sc_tropelist_dir(&ns).join("links.csv");
+  let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
   let trope_page_dir = trope_lib::dl_trope_dir();
 
   // Inclusive
@@ -22,7 +22,7 @@ pub fn save_tropelist(args: trope_lib::TropeDownloadTropelist) -> Result<(), Box
     panic!("end_record should not be less than beg_record");
   }
 
-  let mut csv_records: Vec<_> = csv::Reader::from_path(tropelist_path)?.into_records().collect();
+  let mut csv_records: Vec<_> = csv::Reader::from_path(pagelist_path)?.into_records().collect();
   let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
     None => {

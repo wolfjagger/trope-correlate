@@ -5,7 +5,7 @@ use trope_lib;
 use crate::read_html::read_html_file;
 
 
-/// Scrape pagelist to create tropelist
+/// Scrape namespace to find number of total pages for download
 pub fn get_namespace_tot_pages(args: trope_lib::TropeScrapeNamespaceTotPages) -> Result<u32, Box<dyn std::error::Error>> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;

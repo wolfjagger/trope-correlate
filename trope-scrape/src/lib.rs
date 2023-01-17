@@ -7,8 +7,8 @@ pub use cmd::{
   scrape_namespace::scrape_namespace,
   get_namespace_tot_pages::get_namespace_tot_pages,
   scrape_trope::scrape_trope_page,
-  scrape_tropelist::scrape_tropelist,
-  scrape_all_tropes::scrape_all_tropes
+  scrape_pagelist::scrape_pagelist,
+  scrape_all_pages::scrape_all_pages,
 };
 
 pub fn run(args: TropeScrapeArgs) {
@@ -22,11 +22,11 @@ pub fn run(args: TropeScrapeArgs) {
     TropeScrapeMethod::TropePage(method_args) => {
       scrape_trope_page(method_args).expect("Unhandled scrape_trope_page error");
     },
-    TropeScrapeMethod::Tropelist(method_args) => {
-      scrape_tropelist(method_args).expect("Unhandled scrape_tropelist error");
+    TropeScrapeMethod::Pagelist(method_args) => {
+      scrape_pagelist(method_args).expect("Unhandled scrape_pagelist error");
     },
-    TropeScrapeMethod::AllTropes(method_args) => {
-      scrape_all_tropes(method_args).expect("Unhandled scrape_all_tropes error");
+    TropeScrapeMethod::AllPages(method_args) => {
+      scrape_all_pages(method_args).expect("Unhandled scrape_all_tropes error");
     },
   }
 }

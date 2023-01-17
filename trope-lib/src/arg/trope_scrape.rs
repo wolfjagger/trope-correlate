@@ -21,12 +21,12 @@ pub enum TropeScrapeMethod {
   Namespace(TropeScrapeNamespace),
   NamespaceTotPages(TropeScrapeNamespaceTotPages),
   TropePage(TropeScrapeTropePage),
-  Tropelist(TropeScrapeTropelist),
-  AllTropes(TropeScrapeAllTropes),
+  Pagelist(TropeScrapePagelist),
+  AllPages(TropeScrapeAllPages),
 }
 
 
-/// Scrapes downloaded namespace pagelists for tropelist
+/// Scrapes downloaded namespace for pagelist
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeNamespace {
 
@@ -46,7 +46,7 @@ pub struct TropeScrapeNamespace {
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
-  /// Overwrite existing tropelist file if enabled (default: false)
+  /// Overwrite existing pagelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
@@ -102,9 +102,9 @@ impl From<TropeScrapeTropePage> for TropeScrapeArgs {
 }
 
 
-/// Scrapes downloaded trope pages specified in tropelist
+/// Scrapes downloaded pages specified in pagelist
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropelist {
+pub struct TropeScrapePagelist {
 
   /// Min number of records to scrape (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
@@ -114,7 +114,7 @@ pub struct TropeScrapeTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
-  /// Namespace for of tropelist, to find correct directory
+  /// Namespace for pagelist, to find correct directory
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
@@ -132,16 +132,16 @@ pub struct TropeScrapeTropelist {
   pub random_seed: Option<u64>,
 
 }
-impl From<TropeScrapeTropelist> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeTropelist) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::Tropelist(method_args) }
+impl From<TropeScrapePagelist> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelist) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
   }
 }
 
 
 /// Scrapes downloaded trope pages that exist in the tropes directory
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeAllTropes {
+pub struct TropeScrapeAllPages {
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
@@ -152,8 +152,8 @@ pub struct TropeScrapeAllTropes {
   pub force: bool,
 
 }
-impl From<TropeScrapeAllTropes> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeAllTropes) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::AllTropes(method_args) }
+impl From<TropeScrapeAllPages> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeAllPages) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::AllPages(method_args) }
   }
 }

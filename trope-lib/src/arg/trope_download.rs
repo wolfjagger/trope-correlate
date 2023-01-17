@@ -21,7 +21,7 @@ impl TropeDownloadArgs {
 pub enum TropeDownloadMethod {
   Namespace(TropeDownloadNamespace),
   TropePage(TropeDownloadTropePage),
-  Tropelist(TropeDownloadTropelist),
+  Pagelist(TropeDownloadPagelist),
 }
 
 
@@ -89,9 +89,9 @@ impl From<TropeDownloadTropePage> for TropeDownloadArgs {
 }
 
 
-/// Downloads trope pages in tropelist from tvtropes.
+/// Downloads pages in pagelist from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeDownloadTropelist {
+pub struct TropeDownloadPagelist {
 
   /// Min number of records to download (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
@@ -101,7 +101,7 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
-  /// Namespace for of tropelist, to find correct directory
+  /// Namespace for of pagelist, to find correct directory
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
@@ -122,8 +122,8 @@ pub struct TropeDownloadTropelist {
   pub random_seed: Option<u64>,
 
 }
-impl From<TropeDownloadTropelist> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadTropelist) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::Tropelist(method_args) }
+impl From<TropeDownloadPagelist> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadPagelist) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Pagelist(method_args) }
   }
 }

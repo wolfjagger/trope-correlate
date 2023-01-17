@@ -37,7 +37,7 @@ pub fn dl_namespace_dir(ns: &Namespace) -> path::PathBuf {
   download_dir().join("namespace")
     .join(ns.entity_type().to_string()).join(ns.to_string())
 }
-pub fn sc_tropelist_dir(ns: &Namespace) -> path::PathBuf {
-  scrape_dir().join("tropelist")
+pub fn sc_pagelist_dir(ns: &Namespace) -> path::PathBuf {
+  scrape_dir().join("pagelist")
     .join(ns.entity_type().to_string()).join(ns.to_string())
 }
