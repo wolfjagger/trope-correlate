@@ -142,7 +142,11 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
-  /// If enabled, save an unencrypted version of the html (default: false)
+  /// Namespace for of tropelist, to find correct directory
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+ /// If enabled, save an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
