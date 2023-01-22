@@ -16,5 +16,6 @@ csv = { workspace = true }
 log = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 reqwest = { workspace = true, features = ["blocking", "cookies"] }
+simple_logger = { workspace = true, features = ["stderr"] }
 trope-lib = { path = "../trope-lib" }
 url = { workspace = true }
