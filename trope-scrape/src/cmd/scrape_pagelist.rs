@@ -26,18 +26,18 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
   let tot_records = csv_records.len();
   let record_iter = match args.random_seed {
     None => {
-      println!("No seed, scrape in order");
+      log::warn!("No seed, scrape in order");
       csv_records.into_iter()
     },
     Some(seed) => {
-      println!("Seed {}, scrape randomly", seed);
+      log::warn!("Seed {}, scrape randomly", seed);
       let mut rng = SmallRng::seed_from_u64(seed);
       csv_records.as_mut_slice().shuffle(&mut rng);
       csv_records.into_iter()
     }
   };
 
-  println!("Scraping {} to {} of {} records...", beg_record, end_record, tot_records);
+  log::info!("Scraping {} to {} of {} records...", beg_record, end_record, tot_records);
 
   // Page request loop
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize));

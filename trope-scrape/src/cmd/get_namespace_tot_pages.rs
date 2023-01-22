@@ -15,7 +15,7 @@ pub fn get_namespace_tot_pages(args: trope_lib::TropeScrapeNamespaceTotPages) ->
   let page = 1;
   let page_str = page.to_string();
 
-  println!("Scraping page {}...", page_str);
+  log::info!("Scraping page {}...", page_str);
 
   let file_name = dl_ns_path.join(
     if !args.unencrypted {
@@ -52,7 +52,7 @@ pub fn get_namespace_tot_pages(args: trope_lib::TropeScrapeNamespaceTotPages) ->
     }
   };
 
-  println!("There are {} pages in the namespace", tot_pages);
+  log::info!("There are {} pages in the namespace", tot_pages);
 
   Ok(tot_pages)
 
