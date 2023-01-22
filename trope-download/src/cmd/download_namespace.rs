@@ -32,7 +32,7 @@ pub fn save_namespace(args: trope_lib::TropeDownloadNamespace) -> Result<(), Box
 
     let page_str = page.to_string();
 
-    println!("Downloading page {}...", page_str);
+    log::info!("Downloading page {}...", page_str);
 
     // Set up output file
     let file_name = format!("page{}", &page_str);

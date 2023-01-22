@@ -18,7 +18,7 @@ pub fn save_page_to_path(
   );
 
   if out_name.contains("/") {
-    println!("Filename {} contains bad character; not saving to path", out_name);
+    log::error!("Filename {} contains bad character; not saving to path", out_name);
     return Ok(false);
   }
 
@@ -28,14 +28,14 @@ pub fn save_page_to_path(
 
   if out_path.exists() {
     if force {
-      println!("File exists, downloading and overwriting {}...", out_name);
+      log::info!("File exists, downloading and overwriting {}...", out_name);
       fs::remove_file(&out_path)?;
     } else {
-      println!("File exists, skipping {}...", out_name);
+      log::info!("File exists, skipping {}...", out_name);
       return Ok(false);
     }
   } else {
-    println!("Downloading {}...", out_name);
+    log::info!("Downloading {}...", out_name);
   }
 
   // Get header map for use in each page request (can panic)
