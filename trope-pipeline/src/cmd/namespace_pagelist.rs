@@ -29,7 +29,7 @@ pub fn namespace_pagelist(args: trope_lib::TropePipelineNamespacePagelist) -> Re
     panic!("no pages found for namespace");
   }
 
-  println!("Tot pages: {}", tot_pages);
+  log::info!("Tot pages: {}", tot_pages);
 
   let download_ns_args = trope_lib::TropeDownloadNamespace {
     beg_page: 1,

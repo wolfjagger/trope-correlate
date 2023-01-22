@@ -19,8 +19,8 @@ pub fn all_pages(args: trope_lib::TropePipelineAllPages) -> Result<(), Box<dyn s
   all_pagelists(all_pagelists_args)?;
 
   for ns in trope_lib::ALL_NAMESPACES {
-    println!("\n\n=====");
-    println!("Namespace {}", &ns);
+    log::info!("\n\n=====");
+    log::info!("Namespace {}", &ns);
     let ns_tl_args = trope_lib::TropePipelineNamespacePages{
       namespace: ns.to_string(),
       unencrypted,
