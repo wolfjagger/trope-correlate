@@ -13,6 +13,7 @@ brotli = { workspace = true }
 bytes = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 csv = { workspace = true }
+log = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 reqwest = { workspace = true, features = ["blocking", "cookies"] }
 trope-lib = { path = "../trope-lib" }

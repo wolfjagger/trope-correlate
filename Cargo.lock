@@ -2645,6 +2645,7 @@ dependencies = [
  "bytes",
  "clap",
  "csv",
+ "log",
  "rand 0.8.5",
  "reqwest",
  "trope-lib",
