@@ -68,7 +68,7 @@ pub struct TropeDownloadPage {
 
   /// Trope name
   #[clap(short, long, value_parser,)]
-  pub name: String,
+  pub pagename: String,
 
   /// Trope url
   #[clap(short, long, value_parser,)]

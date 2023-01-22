@@ -84,9 +84,9 @@ impl From<TropeScrapeNamespaceTotPages> for TropeScrapeArgs {
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapePage {
 
-  /// Trope name
+  /// Page name
   #[clap(short, long, value_parser,)]
-  pub name: String,
+  pub pagename: String,
 
   /// Namespace for page
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
