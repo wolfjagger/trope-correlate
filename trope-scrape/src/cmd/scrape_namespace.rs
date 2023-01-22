@@ -7,13 +7,13 @@ use trope_lib;
 use crate::read_html::read_html_file;
 
 
-/// Scrape pagelist to create tropelist
+/// Scrape pagelist to create pagelist
 pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box<dyn std::error::Error>> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   let dl_ns_path = trope_lib::dl_namespace_dir(&ns);
-  let out_dir = trope_lib::sc_tropelist_dir(&ns);
+  let out_dir = trope_lib::sc_pagelist_dir(&ns);
 
   fs::create_dir_all(&out_dir)?;
 

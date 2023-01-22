@@ -17,6 +17,11 @@ pub fn save_page_to_path(
     &format!("Could not create directory {}", out_dir.display())
   );
 
+  if out_name.contains("/") {
+    println!("Filename {} contains bad character; not saving to path", out_name);
+    return Ok(false);
+  }
+
   let mut file_name = format!("{}.html", &out_name);
   if encrypted { file_name.push_str(".br"); }
   let out_path = out_dir.clone().join(file_name);

@@ -6,7 +6,7 @@ mod trope_scrape;
 
 pub use trope_download::{
   TropeDownloadArgs, TropeDownloadMethod,
-  TropeDownloadNamespace, TropeDownloadPagelist, TropeDownloadTropePage, TropeDownloadTropelist,
+  TropeDownloadNamespace, TropeDownloadPage, TropeDownloadPagelist,
 };
 pub use trope_learn::{
   TropeLearnArgs, TropeLearnMethod,
@@ -14,10 +14,11 @@ pub use trope_learn::{
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,
-  TropePipelineNamespaceTropelist, TropePipelineAllTropelists,
+  TropePipelineNamespacePagelist, TropePipelineAllPagelists,
+  TropePipelineNamespacePages, TropePipelineAllPages,
 };
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
-  TropeScrapeNamespace, TropeScrapePagelist, TropeScrapeNamespaceTotPages,
-  TropeScrapeTropePage, TropeScrapeTropelist, TropeScrapeAllTropes,
+  TropeScrapeNamespace, TropeScrapeNamespaceTotPages,
+  TropeScrapePage, TropeScrapePagelist, TropeScrapePagelistLen, TropeScrapeAllPages,
 };

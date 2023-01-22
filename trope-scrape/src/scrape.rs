@@ -6,18 +6,18 @@ use trope_lib::TropeGeneralJson;
 use crate::read_html::read_html_file;
 
 
-/// Scrape trope page for e.g. title, subpages, mentioned media
-pub fn scrape_trope(
+/// Scrape page for e.g. title, subpages, mentioned media
+pub fn scrape_page(
   name: &str, in_path: path::PathBuf, out_dir: &path::Path,
   encrypted: bool, force: bool
 ) -> Result<(), Box<dyn std::error::Error>> {
 
   if out_dir.exists() {
     if force {
-      println!("Trope directory exists, scraping and overwriting {}...", name);
+      println!("Page directory exists, scraping and overwriting {}...", name);
       fs::remove_dir_all(&out_dir)?;
     } else {
-      println!("Trope directory exists, skipping {}...", name);
+      println!("Page directory exists, skipping {}...", name);
       return Ok(());
     }
   } else {
@@ -49,12 +49,12 @@ pub fn scrape_trope(
 
   // Scrape doc
 
-  let (general_trope_json, mentioned_tropes, mentioned_media) = scrape_doc(&in_doc);
+  let (general_page_json, mentioned_tropes, mentioned_media) = scrape_doc(&in_doc);
 
 
   // Write to output
 
-  serde_json::to_writer_pretty(general_json_file, &general_trope_json)?;
+  serde_json::to_writer_pretty(general_json_file, &general_page_json)?;
 
   // Write all mentioned tropes
   for trope_link in mentioned_tropes.iter() {
@@ -99,9 +99,9 @@ fn scrape_doc(doc: &Html) -> (
     |named_link| !named_link.name.eq_ignore_ascii_case("create new")
   ).collect::<Vec<_>>();
 
-  let mut general_trope_json = trope_lib::TropeGeneralJson::default();
-  general_trope_json.title = title;
-  general_trope_json.subpages = subpages;
+  let mut general_page_json = trope_lib::TropeGeneralJson::default();
+  general_page_json.title = title;
+  general_page_json.subpages = subpages;
 
 
   // Scrape mentioned media
@@ -146,6 +146,6 @@ fn scrape_doc(doc: &Html) -> (
   // println!("{:?}", nonhtml_media_links);
   // println!("=================");
 
-  (general_trope_json, trope_links, media_links)
+  (general_page_json, trope_links, media_links)
 
 }

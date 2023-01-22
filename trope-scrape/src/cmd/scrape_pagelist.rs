@@ -1,66 +1,66 @@
-use csv;
-use scraper::Selector;
+use std::str::FromStr;
+use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 
 use trope_lib;
-use crate::read_html::read_html_file;
+use crate::scrape;
 
 
-/// Scrape pagelist to create tropelist
+/// Download all the pages
 pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<dyn std::error::Error>> {
 
-  let pagelist_path = trope_lib::download_dir().join("pagelist")
-    .join(&args.namespace.to_lowercase()).join(&args.pagetype.to_lowercase());
-  let tropelist_path = trope_lib::scrape_dir().join("tropelist").join("tropes.csv");
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let mut csv_writer = match csv::Writer::from_path(&tropelist_path) {
-    Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", tropelist_path.display(), why),
-  };
-
+  let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
+  let page_dir = trope_lib::dl_page_dir(&ns);
+  let scraped_page_dir = trope_lib::sc_page_dir(&ns);
 
   // Inclusive
-  let beg_page = 1.max(args.beg_page);
-  let end_page = 1.max(args.end_page);
-  if end_page < beg_page {
-    panic!("end_page should not be less than beg_page");
+  let beg_record = 0.max(args.beg_record);
+  let end_record = 0.max(args.end_record);
+  if end_record < beg_record {
+    panic!("end_record should not be less than beg_record");
   }
 
-  // Page parse loop
-  for page in beg_page..end_page+1 {
+  let mut reader = csv::Reader::from_path(pagelist_path)?;
+  let mut csv_records: Vec<_> = reader.deserialize::<trope_lib::NamedLink>().collect();
+  let tot_records = csv_records.len();
+  let record_iter = match args.random_seed {
+    None => {
+      println!("No seed, scrape in order");
+      csv_records.into_iter()
+    },
+    Some(seed) => {
+      println!("Seed {}, scrape randomly", seed);
+      let mut rng = SmallRng::seed_from_u64(seed);
+      csv_records.as_mut_slice().shuffle(&mut rng);
+      csv_records.into_iter()
+    }
+  };
 
-    let page_str = page.to_string();
+  println!("Scraping {} to {} of {} records...", beg_record, end_record, tot_records);
 
-    println!("Scraping page {}...", page_str);
+  // Page request loop
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize));
+  while let Some((_idx, record)) = tup_iter.next() {
 
-    let file_name = pagelist_path.join(
+    let (name, _url_str) = match record {
+      Ok(rec) => (rec.name, rec.url),
+      Err(why) => panic!("Problem reading csv record {}", &why),
+    };
+
+    // Set up input html
+    let page_path = page_dir.join(
       if !args.unencrypted {
-        format!("page{}.html.br", &page_str)
+        format!("{}.html.br", &name)
       } else {
-        format!("page{}.html", &page_str)
+        format!("{}.html", &name)
       }
     );
 
-    let document = read_html_file(file_name, !args.unencrypted);
+    // Save output to a subdir of the pages dir
+    let out_dir = scraped_page_dir.join(&name);
 
-    // Create a selector for the element we want
-    // For the tropes page, every link in a table cell should get us what we want
-    // This can be done outside of the main loop, since it's the same each time and passed by reference
-    let trope_selector = Selector::parse("td>a").unwrap();
-
-    // Select all elements in the document
-    let tropes = document.select(&trope_selector).map(|el| {
-      // In raw form, there are two non-breaking spaces, possible line breaks and possible
-      // spaces in the middle. Let's get rid of those.
-      trope_lib::NamedLink::new(
-        el.inner_html().replace("&nbsp;", "").split_whitespace().collect::<String>(),
-        el.value().attr("href").unwrap().to_string(),
-      )
-    }).collect::<Vec<_>>();
-
-    // Write all the values to the file
-    for trope in tropes {
-      csv_writer.serialize(trope)?;
-    }
+    scrape::scrape_page(&name, page_path, &out_dir, !args.unencrypted, args.force)?;
 
   }
 

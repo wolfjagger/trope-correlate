@@ -24,20 +24,20 @@ static LAZY_SCRAPE_DIR: Lazy<path::PathBuf> = Lazy::new(||
 );
 pub fn scrape_dir() -> &'static path::Path { &*LAZY_SCRAPE_DIR }
 
-static LAZY_DL_TROPE_DIR: Lazy<path::PathBuf> = Lazy::new(||
-  LAZY_DOWNLOAD_DIR.join("trope")
-);
-pub fn dl_trope_dir() -> &'static path::Path { &*LAZY_DL_TROPE_DIR }
-static LAZY_SC_TROPE_DIR: Lazy<path::PathBuf> = Lazy::new(||
-  LAZY_SCRAPE_DIR.join("trope")
-);
-pub fn sc_trope_dir() -> &'static path::Path { &*LAZY_SC_TROPE_DIR }
+pub fn dl_page_dir(ns: &Namespace) -> path::PathBuf {
+  download_dir().join("page")
+    .join(ns.entity_type().to_string()).join(ns.to_string())
+}
+pub fn sc_page_dir(ns: &Namespace) -> path::PathBuf {
+  scrape_dir().join("page")
+    .join(ns.entity_type().to_string()).join(ns.to_string())
+}
 
 pub fn dl_namespace_dir(ns: &Namespace) -> path::PathBuf {
   download_dir().join("namespace")
     .join(ns.entity_type().to_string()).join(ns.to_string())
 }
-pub fn sc_tropelist_dir(ns: &Namespace) -> path::PathBuf {
-  scrape_dir().join("tropelist")
+pub fn sc_pagelist_dir(ns: &Namespace) -> path::PathBuf {
+  scrape_dir().join("pagelist")
     .join(ns.entity_type().to_string()).join(ns.to_string())
 }

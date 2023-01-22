@@ -1,14 +1,16 @@
-use std::fs;
+use std::{fs, str::FromStr};
 
 use trope_lib;
-use crate::scrape::scrape_trope;
+use crate::scrape;
 
 
 /// Download all the pages
-pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Box<dyn std::error::Error>> {
+pub fn scrape_all_pages(args: trope_lib::TropeScrapeAllPages) -> Result<(), Box<dyn std::error::Error>> {
 
-  let in_dir = trope_lib::dl_trope_dir();
-  let tropes_dir = trope_lib::sc_trope_dir();
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
+
+  let in_dir = trope_lib::dl_page_dir(&ns);
+  let tropes_dir = trope_lib::sc_page_dir(&ns);
 
   let in_files = fs::read_dir(&in_dir)?;
   let ext = if args.unencrypted { ".html" } else { ".html.br" };
@@ -31,7 +33,7 @@ pub fn scrape_all_tropes(args: trope_lib::TropeScrapeAllTropes) -> Result<(), Bo
     // Save output to a subdir of the tropes dir
     let out_dir = tropes_dir.clone().join(&name);
 
-    scrape_trope(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
+    scrape::scrape_page(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
 
   }
 

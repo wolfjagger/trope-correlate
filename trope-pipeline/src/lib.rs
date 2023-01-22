@@ -2,17 +2,25 @@ mod cmd;
 
 use trope_lib::{TropePipelineArgs, TropePipelineMethod};
 pub use cmd::{
-  namespace_tropelist::namespace_tropelist,
-  all_tropelists::all_tropelists,
+  namespace_pagelist::namespace_pagelist,
+  all_pagelists::all_pagelists,
+  namespace_pages::namespace_pages,
+  all_pages::all_pages,
 };
 
 pub fn run(args: TropePipelineArgs) {
   match args.method {
-    TropePipelineMethod::NamespaceTropelist(method_args) => {
-      namespace_tropelist(method_args).expect("Unhandled namespace_tropelist error");
+    TropePipelineMethod::NamespacePagelist(method_args) => {
+      namespace_pagelist(method_args).expect("Unhandled namespace_pagelist error");
     },
-    TropePipelineMethod::AllTropelists(method_args) => {
-      all_tropelists(method_args).expect("Unhandled namespace_tropelist error");
+    TropePipelineMethod::AllPagelists(method_args) => {
+      all_pagelists(method_args).expect("Unhandled all_pagelists error");
+    },
+    TropePipelineMethod::NamespacePages(method_args) => {
+      namespace_pages(method_args).expect("Unhandled namespace_pages error");
+    },
+    TropePipelineMethod::AllPages(method_args) => {
+      all_pages(method_args).expect("Unhandled all_pages error");
     },
   }
 }

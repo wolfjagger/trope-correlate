@@ -1,6 +1,6 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use crate::{Namespace, Pagetype};
+use crate::Namespace;
 
 
 #[derive(Debug, Parser)]
@@ -20,9 +20,8 @@ impl TropeDownloadArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeDownloadMethod {
   Namespace(TropeDownloadNamespace),
+  Page(TropeDownloadPage),
   Pagelist(TropeDownloadPagelist),
-  TropePage(TropeDownloadTropePage),
-  Tropelist(TropeDownloadTropelist),
 }
 
 
@@ -62,49 +61,9 @@ impl From<TropeDownloadNamespace> for TropeDownloadArgs {
 }
 
 
-/// Downloads index pages in bulk from tvtropes.
+/// Downloads specific pages from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeDownloadPagelist {
-
-  /// Min number of pages to download (inclusive; known min: 1)
-  #[clap(short, long, value_parser,)]
-  pub beg_page: u8,
-
-  /// Max number of pages to download (inclusive; known max: 58)
-  #[clap(short, long, value_parser,)]
-  pub end_page: u8,
-
-  /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
-  pub pagetype: String,
-
-  /// If enabled, save an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
-  /// Overwrite existing page file if enabled (default: false)
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub force: bool,
-
-  /// Number of seconds to sleep between requests (default: 5)
-  #[clap(short, long, value_parser=clap::value_parser!(u64).range(1..), default_value_t = 5)]
-  pub sleep_sec: u64,
-
-}
-impl From<TropeDownloadPagelist> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadPagelist) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::Pagelist(method_args) }
-  }
-}
-
-
-/// Downloads specific trope pages from tvtropes.
-#[derive(Debug, ClapArgs)]
-pub struct TropeDownloadTropePage {
+pub struct TropeDownloadPage {
 
   /// Trope name
   #[clap(short, long, value_parser,)]
@@ -113,6 +72,10 @@ pub struct TropeDownloadTropePage {
   /// Trope url
   #[clap(short, long, value_parser,)]
   pub url: String,
+
+  /// Namespace of page to download
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
 
   /// If enabled, save an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
@@ -123,16 +86,16 @@ pub struct TropeDownloadTropePage {
   pub force: bool,
 
 }
-impl From<TropeDownloadTropePage> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadTropePage) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::TropePage(method_args) }
+impl From<TropeDownloadPage> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadPage) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Page(method_args) }
   }
 }
 
 
-/// Downloads trope pages in tropelist from tvtropes.
+/// Downloads pages in pagelist from tvtropes.
 #[derive(Debug, ClapArgs)]
-pub struct TropeDownloadTropelist {
+pub struct TropeDownloadPagelist {
 
   /// Min number of records to download (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
@@ -142,7 +105,11 @@ pub struct TropeDownloadTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
-  /// If enabled, save an unencrypted version of the html (default: false)
+  /// Namespace for of pagelist, to find correct directory
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+ /// If enabled, save an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
@@ -159,8 +126,8 @@ pub struct TropeDownloadTropelist {
   pub random_seed: Option<u64>,
 
 }
-impl From<TropeDownloadTropelist> for TropeDownloadArgs {
-  fn from(method_args: TropeDownloadTropelist) -> Self {
-    TropeDownloadArgs { method: TropeDownloadMethod::Tropelist(method_args) }
+impl From<TropeDownloadPagelist> for TropeDownloadArgs {
+  fn from(method_args: TropeDownloadPagelist) -> Self {
+    TropeDownloadArgs { method: TropeDownloadMethod::Pagelist(method_args) }
   }
 }

@@ -1,15 +1,10 @@
 use std::{str::FromStr, thread, time};
+use csv;
+use rand::{rngs::SmallRng, seq::SliceRandom, SeedableRng};
 use reqwest;
 
 use trope_lib;
 use crate::download::save_page_to_path;
-
-
-const NAMESPACE_PREFIX: &str = "n";
-const PAGETYPE_PREFIX: &str = "t";
-const PAGENUM_PREFIX: &str = "page";
-const PAGELIST_SEARCH_PAGE: &str =
-  "https://tvtropes.org/pmwiki/pagelist_having_pagetype_in_namespace.php";
 
 
 /// Download all the pages
@@ -17,34 +12,47 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  // Set up output directory in the parent trope-correlate dir
-  let out_dir = trope_lib::download_dir().join("pagelist")
-    .join(ns.to_string()).join(&args.pagetype.to_lowercase());
+  let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
+  let page_dir = trope_lib::dl_page_dir(&ns);
 
   // Inclusive
-  let beg_page = 1.max(args.beg_page);
-  let end_page = 1.max(args.end_page);
-  if end_page < beg_page {
-    panic!("end_page should not be less than beg_page");
+  let beg_record = 0.max(args.beg_record);
+  let end_record = 0.max(args.end_record);
+  if end_record < beg_record {
+    panic!("end_record should not be less than beg_record");
   }
 
+  let mut csv_records: Vec<_> = csv::Reader::from_path(pagelist_path)?.into_records().collect();
+  let tot_records = csv_records.len();
+  let record_iter = match args.random_seed {
+    None => {
+      println!("No seed, download directly");
+      csv_records.into_iter()
+    },
+    Some(seed) => {
+      println!("Seed {}, download randomly", seed);
+      let mut rng = SmallRng::seed_from_u64(seed);
+      csv_records.as_mut_slice().shuffle(&mut rng);
+      csv_records.into_iter()
+    }
+  };
+
+  println!("Downloading {} to {} of {} records...", beg_record, end_record, tot_records);
+
   // Page request loop with peekable iterator
-  let mut page_iter = (beg_page..end_page+1).peekable();
-  while let Some(page) = page_iter.next() {
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize)).peekable();
+  while let Some((_idx, record)) = tup_iter.next() {
 
-    let page_str = page.to_string();
-
-    println!("Downloading page {}...", page_str);
-
-    // Set up output file
-    let file_name = format!("page{}", &page_str);
+    let (name, url_str) = match record {
+      Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),
+      Err(why) => panic!("Problem reading csv record {}", &why),
+    };
 
     // Set up url
-    let url = create_url(&args.namespace, &args.pagetype, &page_str)?;
+    let url = reqwest::Url::parse(&url_str)?;
+    let download_occurred = save_page_to_path(url, &page_dir, &name, !args.unencrypted, args.force)?;
 
-    let download_occurred = save_page_to_path(url, &out_dir, &file_name, !args.unencrypted, args.force)?;
-
-    if download_occurred && page_iter.peek().is_some() {
+    if download_occurred && tup_iter.peek().is_some() {
       // Sleep before next request
       thread::sleep(time::Duration::from_secs(args.sleep_sec));
     }
@@ -53,13 +61,4 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   Ok(())
 
-}
-
-
-/// Define the url string from the query arguments.
-fn create_url(namespace: &str, pagetype: &str, page: &str) -> Result<reqwest::Url, url::ParseError> {
-  reqwest::Url::parse_with_params(
-    PAGELIST_SEARCH_PAGE,
-    &[(NAMESPACE_PREFIX, namespace), (PAGETYPE_PREFIX, pagetype), (PAGENUM_PREFIX, page)]
-  )
 }

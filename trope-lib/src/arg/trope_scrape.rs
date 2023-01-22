@@ -1,6 +1,6 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use crate::{Namespace, Pagetype};
+use crate::Namespace;
 
 
 #[derive(Debug, Parser)]
@@ -19,15 +19,15 @@ impl TropeScrapeArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeScrapeMethod {
   Namespace(TropeScrapeNamespace),
-  Pagelist(TropeScrapePagelist),
   NamespaceTotPages(TropeScrapeNamespaceTotPages),
-  TropePage(TropeScrapeTropePage),
-  Tropelist(TropeScrapeTropelist),
-  AllTropes(TropeScrapeAllTropes),
+  Page(TropeScrapePage),
+  Pagelist(TropeScrapePagelist),
+  AllPages(TropeScrapeAllPages),
+  PagelistLen(TropeScrapePagelistLen),
 }
 
 
-/// Scrapes downloaded namespace pagelists for tropelist
+/// Scrapes downloaded namespace for pagelist
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeNamespace {
 
@@ -47,7 +47,7 @@ pub struct TropeScrapeNamespace {
   #[clap(long, value_parser, default_value_t = false)]
   pub unencrypted: bool,
 
-  /// Overwrite existing tropelist file if enabled (default: false)
+  /// Overwrite existing pagelist file if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
@@ -55,42 +55,6 @@ pub struct TropeScrapeNamespace {
 impl From<TropeScrapeNamespace> for TropeScrapeArgs {
   fn from(method_args: TropeScrapeNamespace) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::Namespace(method_args) }
-  }
-}
-
-
-/// Scrapes downloaded pagelists for tropelist
-#[derive(Debug, ClapArgs)]
-pub struct TropeScrapePagelist {
-
-  /// Min number of pages to scrape (inclusive; known min: 1)
-  #[clap(short, long, value_parser,)]
-  pub beg_page: u8,
-
-  /// Max number of pages to scrape (inclusive; known max: 58)
-  #[clap(short, long, value_parser,)]
-  pub end_page: u8,
-
-  /// Namespace for page search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// Pagetype for page search
-  #[clap(short, long, value_parser, default_value_t = Pagetype::Trope.to_string())]
-  pub pagetype: String,
-
-  /// If enabled, assume an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
-  /// Overwrite existing tropelist file if enabled (default: false)
-  #[clap(short, long, value_parser, default_value_t = false)]
-  pub force: bool,
-
-}
-impl From<TropeScrapePagelist> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapePagelist) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
   }
 }
 
@@ -117,11 +81,15 @@ impl From<TropeScrapeNamespaceTotPages> for TropeScrapeArgs {
 
 /// Scrapes downloaded trope page
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropePage {
+pub struct TropeScrapePage {
 
   /// Trope name
   #[clap(short, long, value_parser,)]
   pub name: String,
+
+  /// Namespace for page
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
@@ -132,16 +100,16 @@ pub struct TropeScrapeTropePage {
   pub force: bool,
 
 }
-impl From<TropeScrapeTropePage> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeTropePage) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::TropePage(method_args) }
+impl From<TropeScrapePage> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePage) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Page(method_args) }
   }
 }
 
 
-/// Scrapes downloaded trope pages specified in tropelist
+/// Scrapes downloaded pages specified in pagelist
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeTropelist {
+pub struct TropeScrapePagelist {
 
   /// Min number of records to scrape (inclusive; known min: 0)
   #[clap(short, long, value_parser,)]
@@ -151,7 +119,7 @@ pub struct TropeScrapeTropelist {
   #[clap(short, long, value_parser,)]
   pub end_record: u64,
 
-  /// Namespace for of tropelist, to find correct directory
+  /// Namespace for pagelist, to find correct directory
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
@@ -169,16 +137,40 @@ pub struct TropeScrapeTropelist {
   pub random_seed: Option<u64>,
 
 }
-impl From<TropeScrapeTropelist> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeTropelist) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::Tropelist(method_args) }
+impl From<TropeScrapePagelist> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelist) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::Pagelist(method_args) }
   }
 }
 
 
-/// Scrapes downloaded trope pages that exist in the tropes directory
+/// Scrapes downloaded pagelist and reports number of records/pages
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeAllTropes {
+pub struct TropeScrapePagelistLen {
+
+  /// Namespace for pagelist search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+}
+impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelistLen) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::PagelistLen(method_args) }
+  }
+}
+
+
+/// Scrapes downloaded pages that exist in the given namespace directory
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeAllPages {
+
+  /// Namespace for pages to scrape
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]
@@ -189,8 +181,8 @@ pub struct TropeScrapeAllTropes {
   pub force: bool,
 
 }
-impl From<TropeScrapeAllTropes> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeAllTropes) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::AllTropes(method_args) }
+impl From<TropeScrapeAllPages> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeAllPages) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::AllPages(method_args) }
   }
 }

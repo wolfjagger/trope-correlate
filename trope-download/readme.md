@@ -46,7 +46,7 @@ Between each download, it will sleep for some number of seconds, min `1` and def
 
 See command help for more configuration.
 
-### Download tropelist
+### Download tropelist (out of date!)
 
 You can download tropelists from scraped pagelists with the subcommand `tropelist`.
 For example, to download the first 50 tropes from a tropelist at

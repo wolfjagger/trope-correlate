@@ -1,2 +1,4 @@
-pub mod all_tropelists;
-pub mod namespace_tropelist;
+pub mod all_pagelists;
+pub mod all_pages;
+pub mod namespace_pagelist;
+pub mod namespace_pages;
