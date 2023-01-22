@@ -9,6 +9,6 @@ name = "trope_learn"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dfdx = "0.10.0"
-rand = { version = "0.8.5", features = ["small_rng"] }
+dfdx = { workspace = true }
+rand = { workspace = true, features = ["small_rng"] }
 trope-lib = { path = "../trope-lib" }
