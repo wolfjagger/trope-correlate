@@ -2,6 +2,7 @@
 
 members = [
   "trope-download",
+  "trope-learn",
   "trope-lib",
   "trope-scrape",
   "trope-pipeline",

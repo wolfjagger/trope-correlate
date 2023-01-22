@@ -1,0 +1,14 @@
+[package]
+name = "trope-learn"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "trope_learn"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dfdx = "0.10.0"
+rand = { version = "0.8.5", features = ["small_rng"] }
+trope-lib = { path = "../trope-lib" }
