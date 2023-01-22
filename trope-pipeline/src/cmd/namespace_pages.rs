@@ -32,13 +32,23 @@ pub fn namespace_pages(args: trope_lib::TropePipelineNamespacePages) -> Result<(
   let save_pagelist_args = trope_lib::TropeDownloadPagelist{
     beg_record: 0,
     end_record,
-    namespace,
+    namespace: namespace.clone(),
     unencrypted,
     force,
     sleep_sec,
     random_seed,
   };
   trope_download::save_pagelist(save_pagelist_args)?;
+
+  let scrape_pagelist_args = trope_lib::TropeScrapePagelist{
+    beg_record: 0,
+    end_record,
+    namespace: namespace.clone(),
+    unencrypted,
+    force,
+    random_seed,
+  };
+  trope_scrape::scrape_pagelist(scrape_pagelist_args)?;
 
   Ok(())
 
