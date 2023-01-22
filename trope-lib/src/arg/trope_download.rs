@@ -12,6 +12,7 @@ pub struct TropeDownloadArgs {
 
 impl TropeDownloadArgs {
   pub fn parse_args() -> Self {
+    log::info!("Parse trope-download args");
     Self::parse()
   }
 }

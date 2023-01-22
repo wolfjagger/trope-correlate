@@ -12,6 +12,7 @@ pub struct TropeScrapeArgs {
 
 impl TropeScrapeArgs {
   pub fn parse_args() -> Self {
+    log::info!("Parse trope-scrape args");
     Self::parse()
   }
 }
