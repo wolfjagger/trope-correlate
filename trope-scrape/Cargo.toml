@@ -12,9 +12,11 @@ name = "trope_scrape"
 brotli = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 csv = { workspace = true }
+log = { workspace = true }
 rand = { workspace = true }
 regex = { workspace = true }
 scraper = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
+simple_logger = { workspace = true, features = ["stderr"] }
 trope-lib = { path = "../trope-lib" }

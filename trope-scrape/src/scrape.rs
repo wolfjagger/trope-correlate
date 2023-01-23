@@ -14,14 +14,14 @@ pub fn scrape_page(
 
   if out_dir.exists() {
     if force {
-      println!("Page directory exists, scraping and overwriting {}...", name);
+      log::info!("Page directory exists, scraping and overwriting {}...", name);
       fs::remove_dir_all(&out_dir)?;
     } else {
-      println!("Page directory exists, skipping {}...", name);
+      log::info!("Page directory exists, skipping {}...", name);
       return Ok(());
     }
   } else {
-    println!("Scraping {}...", name);
+    log::info!("Scraping {}...", name);
   }
 
   fs::create_dir_all(&out_dir)?;
@@ -127,24 +127,26 @@ fn scrape_doc(doc: &Html) -> (
     !(link.name.contains("<") || link.name.contains(">"))
   });
 
-  let (mut trope_links, mut media_links, mut _other_links): (Vec<_>, Vec<_>, Vec<_>) = (vec![], vec![], vec![]);
+  let (mut trope_links, mut media_links, mut other_links): (Vec<_>, Vec<_>, Vec<_>) = (vec![], vec![], vec![]);
   for link in nonhtml_wiki_links {
     match link.link_type() {
       trope_lib::EntityType::Trope => trope_links.push(link),
       trope_lib::EntityType::Media => media_links.push(link),
-      trope_lib::EntityType::Other => _other_links.push(link),
+      trope_lib::EntityType::Other => other_links.push(link),
     }
   }
 
-  // println!("=================");
-  // println!("{:?}", _nonwiki_link_els);
-  // println!("=================");
-  // println!("{:?}", _html_wiki_links);
-  // println!("=================");
-  // println!("{:?}", _other_links);
-  // println!("=================");
-  // println!("{:?}", nonhtml_media_links);
-  // println!("=================");
+  log::trace!("=================");
+  log::trace!("{:?}", _nonwiki_link_els);
+  log::trace!("=================");
+  log::trace!("{:?}", _html_wiki_links);
+  log::trace!("=================");
+  log::trace!("{:?}", trope_links);
+  log::trace!("=================");
+  log::trace!("{:?}", media_links);
+  log::trace!("=================");
+  log::trace!("{:?}", other_links);
+  log::trace!("=================");
 
   (general_page_json, trope_links, media_links)
 

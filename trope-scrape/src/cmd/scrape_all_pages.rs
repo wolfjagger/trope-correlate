@@ -23,7 +23,7 @@ pub fn scrape_all_pages(args: trope_lib::TropeScrapeAllPages) -> Result<(), Box<
   }).collect::<Vec<_>>();
   trope_names.sort();
 
-  println!("Scraping {} records from download directory...", trope_names.len());
+  log::info!("Scraping {} records from download directory...", trope_names.len());
 
   for name in trope_names {
 

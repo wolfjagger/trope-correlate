@@ -14,7 +14,7 @@ pub fn namespace_pages(args: trope_lib::TropePipelineNamespacePages) -> Result<(
     args.namespace, args.unencrypted, args.force, args.sleep_sec, args.random_seed
   );
 
-  println!("Fetching pagelist...");
+  log::info!("Fetching pagelist...");
 
   let namespace_pagelist_args = trope_lib::TropePipelineNamespacePagelist{
     namespace: namespace.clone(),

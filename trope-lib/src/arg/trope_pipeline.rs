@@ -12,6 +12,7 @@ pub struct TropePipelineArgs {
 
 impl TropePipelineArgs {
   pub fn parse_args() -> Self {
+    log::info!("Parse trope-pipeline args");
     Self::parse()
   }
 }

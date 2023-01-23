@@ -10,5 +10,7 @@ name = "trope_learn"
 
 [dependencies]
 dfdx = { workspace = true }
+log = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
+simple_logger = { workspace = true, features = ["stderr"] }
 trope-lib = { path = "../trope-lib" }

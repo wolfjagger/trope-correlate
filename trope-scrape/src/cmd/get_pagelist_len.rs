@@ -14,7 +14,7 @@ pub fn get_pagelist_len(args: trope_lib::TropeScrapePagelistLen) -> Result<u32, 
 
   let len = io::BufReader::new(fi).lines().count() - 1;
 
-  println!("There are {} pages in the pagelist", len);
+  log::info!("There are {} pages in the pagelist", len);
 
   Ok(len as u32)
 

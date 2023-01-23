@@ -9,6 +9,8 @@ name = "trope_pipeline"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = { workspace = true }
+simple_logger = { workspace = true, features = ["stderr"] }
 trope-download = { path = "../trope-download" }
 trope-lib = { path = "../trope-lib" }
 trope-scrape = { path = "../trope-scrape" }

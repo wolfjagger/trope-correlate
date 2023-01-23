@@ -37,7 +37,7 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
 
     let page_str = page.to_string();
 
-    println!("Scraping page {}...", page_str);
+    log::info!("Scraping page {}...", page_str);
 
     let file_name = dl_ns_path.join(
       if !args.unencrypted {

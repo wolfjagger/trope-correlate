@@ -6,7 +6,7 @@ use crate::scrape;
 /// Download a trope page from args
 pub fn scrape_page(args: trope_lib::TropeScrapePage) -> Result<(), Box<dyn std::error::Error>> {
 
-  let name = args.name;
+  let name = args.pagename;
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
   // Set up input html

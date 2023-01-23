@@ -10,6 +10,7 @@ pub struct TropeLearnArgs {
 
 impl TropeLearnArgs {
   pub fn parse_args() -> Self {
+    log::info!("Parse trope-learn args");
     Self::parse()
   }
 }
