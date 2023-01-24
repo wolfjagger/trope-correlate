@@ -126,6 +126,10 @@ pub struct TropeDownloadPagelist {
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
 
+  /// Enable to log progress
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub progress: bool,
+
 }
 impl From<TropeDownloadPagelist> for TropeDownloadArgs {
   fn from(method_args: TropeDownloadPagelist) -> Self {

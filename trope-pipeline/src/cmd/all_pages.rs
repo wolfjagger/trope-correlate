@@ -7,9 +7,9 @@ use crate::{all_pagelists, namespace_pages};
 pub fn all_pages(args: trope_lib::TropePipelineAllPages) -> Result<(), Box<dyn std::error::Error>> {
 
   let (
-    unencrypted, force, sleep_sec, random_seed
+    unencrypted, force, sleep_sec, random_seed, progress
   ) = (
-    args.unencrypted, args.force, args.sleep_sec, args.random_seed
+    args.unencrypted, args.force, args.sleep_sec, args.random_seed, args.progress
   );
 
   let all_pagelists_args = trope_lib::TropePipelineAllPagelists{
@@ -27,6 +27,7 @@ pub fn all_pages(args: trope_lib::TropePipelineAllPages) -> Result<(), Box<dyn s
       force,
       sleep_sec,
       random_seed,
+      progress,
     };
     namespace_pages(ns_tl_args)?;
   }

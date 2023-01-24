@@ -9,9 +9,9 @@ use crate::namespace_pagelist;
 pub fn namespace_pages(args: trope_lib::TropePipelineNamespacePages) -> Result<(), Box<dyn std::error::Error>> {
 
   let (
-    namespace, unencrypted, force, sleep_sec, random_seed
+    namespace, unencrypted, force, sleep_sec, random_seed, progress
   ) = (
-    args.namespace, args.unencrypted, args.force, args.sleep_sec, args.random_seed
+    args.namespace, args.unencrypted, args.force, args.sleep_sec, args.random_seed, args.progress
   );
 
   log::info!("Fetching pagelist...");
@@ -37,6 +37,7 @@ pub fn namespace_pages(args: trope_lib::TropePipelineNamespacePages) -> Result<(
     force,
     sleep_sec,
     random_seed,
+    progress,
   };
   trope_download::save_pagelist(save_pagelist_args)?;
 

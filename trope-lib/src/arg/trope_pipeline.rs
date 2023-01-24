@@ -92,6 +92,10 @@ pub struct TropePipelineNamespacePages {
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
 
+  /// Enable to log progress
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub progress: bool,
+
 }
 impl From<TropePipelineNamespacePages> for TropePipelineArgs {
   fn from(method_args: TropePipelineNamespacePages) -> Self {
@@ -118,6 +122,10 @@ pub struct TropePipelineAllPages {
   /// If a seed is given, download pages out-of-order (default: None)
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
+
+  /// Enable to log progress
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub progress: bool,
 
 }
 impl From<TropePipelineAllPages> for TropePipelineArgs {

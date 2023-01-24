@@ -41,7 +41,13 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   // Page request loop with peekable iterator
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize)).peekable();
-  while let Some((_idx, record)) = tup_iter.next() {
+  let mut progress_tick = 0;
+  while let Some((idx, record)) = tup_iter.next() {
+
+    if args.progress && (100 * idx > (progress_tick * tot_records) as u64) {
+      log::warn!("Progress: {}%", progress_tick);
+      progress_tick += 1;
+    }
 
     let (name, url_str) = match record {
       Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),
