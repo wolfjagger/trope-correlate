@@ -46,8 +46,13 @@ pub fn save_page_to_path(
     .expect(&format!("Error writing file to {}", &out_path.display()));
 
   // Do request, get encoded body
-  let encoded_body = get_body(&header_map, url)
-    .expect(&format!("Error encoding body for {}", &out_path.display()));
+  let encoded_body = match get_body(&header_map, url) {
+    Ok(b) => b,
+    Err(why) => {
+      log::error!("Problem encountered when requesting encoded body: {}", why);
+      return Ok(true);
+    }
+  };
 
   if encrypted {
     file.write_all(&encoded_body)
