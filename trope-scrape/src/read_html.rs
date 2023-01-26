@@ -10,7 +10,7 @@ pub fn read_html_file(
 ) -> Result<Html, Box<dyn std::error::Error>> {
 
   let mut fi = fs::File::open(&file_name).map_err(
-    |err| ScrapeError::FileError(err.to_string())
+    |err| ScrapeError::File(err.to_string())
   )?;
 
   // Cannot write directly to string; use bytes and convert from latin1
@@ -20,15 +20,15 @@ pub fn read_html_file(
 
     // Decode using brotli decompression
     BrotliDecompress(&mut fi, &mut html_writer).map_err(
-      |err| ScrapeError::BrotliError(err.to_string())
+      |err| ScrapeError::Brotli(err.to_string())
     )?;
 
-    html_writer.into_inner().map_err(|err| ScrapeError::FileError(err.to_string()))?
+    html_writer.into_inner().map_err(|err| ScrapeError::File(err.to_string()))?
 
   } else {
 
     let mut html_bytes = vec![];
-    fi.read_to_end(&mut html_bytes).map_err(|err| ScrapeError::FileError(err.to_string()))?;
+    fi.read_to_end(&mut html_bytes).map_err(|err| ScrapeError::File(err.to_string()))?;
     html_bytes
 
   };
