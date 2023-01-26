@@ -22,10 +22,17 @@ pub fn scrape_all_pages(args: trope_lib::TropeScrapeAllPages) -> Result<(), Box<
     name
   }).collect::<Vec<_>>();
   trope_names.sort();
+  let tot_pages = trope_names.len();
 
   log::info!("Scraping {} records from download directory...", trope_names.len());
 
-  for name in trope_names {
+  let mut progress_tick = 0;
+  for (idx, name) in trope_names.iter().enumerate() {
+
+    if args.progress && (100 * idx > progress_tick * tot_pages) {
+      log::warn!("Progress: {}%", progress_tick);
+      progress_tick += 1;
+    }
 
     // Set up input html
     let in_path = in_dir.join(format!("{}{}", &name, &ext));

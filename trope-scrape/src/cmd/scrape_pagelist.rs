@@ -15,8 +15,8 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
   let scraped_page_dir = trope_lib::sc_page_dir(&ns);
 
   // Inclusive
-  let beg_record = 0.max(args.beg_record);
-  let end_record = 0.max(args.end_record);
+  let beg_record = 0.max(args.beg_record) as usize;
+  let end_record = 0.max(args.end_record) as usize;
   if end_record < beg_record {
     panic!("end_record should not be less than beg_record");
   }
@@ -40,8 +40,14 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
   log::info!("Scraping {} to {} of {} records...", beg_record, end_record, tot_records);
 
   // Page request loop
-  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record as usize));
-  while let Some((_idx, record)) = tup_iter.next() {
+  let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record));
+  let mut progress_tick = 0;
+  while let Some((idx, record)) = tup_iter.next() {
+
+    if args.progress && (100 * idx > progress_tick * tot_records) {
+      log::warn!("Progress: {}%", progress_tick);
+      progress_tick += 1;
+    }
 
     let (name, _url_str) = match record {
       Ok(rec) => (rec.name, rec.url),

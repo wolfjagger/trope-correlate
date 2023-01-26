@@ -137,6 +137,10 @@ pub struct TropeScrapePagelist {
   #[clap(short, long, value_parser, required = false)]
   pub random_seed: Option<u64>,
 
+  /// Enable to log progress
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub progress: bool,
+
 }
 impl From<TropeScrapePagelist> for TropeScrapeArgs {
   fn from(method_args: TropeScrapePagelist) -> Self {
@@ -180,6 +184,10 @@ pub struct TropeScrapeAllPages {
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
+
+  /// Enable to log progress
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub progress: bool,
 
 }
 impl From<TropeScrapeAllPages> for TropeScrapeArgs {
