@@ -95,11 +95,14 @@ fn scrape_doc(doc: &Html) -> (
 
   let title = doc.select(&title_selector).next().expect("Error finding title").inner_html();
 
-  let subpages = doc.select(&subpage_selector).map(|el| {
-    trope_lib::NamedLink::new(
-      el.select(&span_wrapper_selector).next().unwrap().text().next().unwrap().trim().to_string(),
-      el.value().attr("href").unwrap().trim().to_string(),
-    )
+  let subpages = doc.select(&subpage_selector).filter_map(|el| {
+    let span = el.select(&span_wrapper_selector).next()?;
+    let subpage = span.text().next()?;
+    let attr = el.value().attr("href")?;
+    Some(trope_lib::NamedLink::new(
+      subpage.trim().to_string(),
+      attr.trim().to_string(),
+    ))
   }).filter(
     // Filter out "Create New" non-subpage
     |named_link| !named_link.name.eq_ignore_ascii_case("create new")
@@ -124,10 +127,13 @@ fn scrape_doc(doc: &Html) -> (
     |el| el.value().attr("href").filter(|attr| attr.starts_with("/pmwiki/pmwiki.php/")).is_some()
   );
 
-  let named_wiki_links = wiki_link_els.into_iter().map(|el| trope_lib::NamedLink::new(
-    el.inner_html().trim().to_string(),
-    el.value().attr("href").unwrap().trim().to_string(),
-  ));
+  let named_wiki_links = wiki_link_els.into_iter().filter_map(|el| {
+    let attr = el.value().attr("href")?;
+    Some(trope_lib::NamedLink::new(
+      el.inner_html().trim().to_string(),
+      attr.trim().to_string(),
+    ))
+  });
 
   let (nonhtml_wiki_links, _html_wiki_links): (Vec<_>, Vec<_>) = named_wiki_links.partition(|link| {
     !(link.name.contains("<") || link.name.contains(">"))
