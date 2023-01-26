@@ -7,7 +7,7 @@ use crate::error::ScrapeError;
 
 pub fn read_html_file(
   file_name: path::PathBuf, encrypted: bool
-) -> Result<Html, Box<dyn std::error::Error>> {
+) -> Result<Html, ScrapeError> {
 
   let mut fi = fs::File::open(&file_name).map_err(
     |err| ScrapeError::File(err.to_string())

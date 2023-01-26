@@ -40,7 +40,14 @@ pub fn scrape_all_pages(args: trope_lib::TropeScrapeAllPages) -> Result<(), Box<
     // Save output to a subdir of the tropes dir
     let out_dir = tropes_dir.clone().join(&name);
 
-    scrape::scrape_page(&name, in_path, &out_dir, !args.unencrypted, args.force)?;
+    match scrape::scrape_page(
+      &name, in_path, &out_dir, !args.unencrypted, args.force
+    ) {
+      Ok(_) => {},
+      Err(err) => {
+        log::error!("Scrape error occured page {}: {}", name, err);
+      }
+    }
 
   }
 

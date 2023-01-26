@@ -66,7 +66,14 @@ pub fn scrape_pagelist(args: trope_lib::TropeScrapePagelist) -> Result<(), Box<d
     // Save output to a subdir of the pages dir
     let out_dir = scraped_page_dir.join(&name);
 
-    scrape::scrape_page(&name, page_path, &out_dir, !args.unencrypted, args.force)?;
+    match scrape::scrape_page(
+      &name, page_path, &out_dir, !args.unencrypted, args.force
+    ) {
+      Ok(_) => {},
+      Err(err) => {
+        log::error!("Scrape error occured page {}: {}", name, err);
+      }
+    }
 
   }
 
