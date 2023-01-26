@@ -3,14 +3,17 @@ use scraper::{Html, Selector};
 use serde_json;
 use trope_lib::TropeGeneralJson;
 
-use crate::read_html::read_html_file;
+use crate::{
+  error::ScrapeError,
+  read_html::read_html_file
+};
 
 
 /// Scrape page for e.g. title, subpages, mentioned media
 pub fn scrape_page(
   name: &str, in_path: path::PathBuf, out_dir: &path::Path,
   encrypted: bool, force: bool
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), ScrapeError> {
 
   if out_dir.exists() {
     if force {
