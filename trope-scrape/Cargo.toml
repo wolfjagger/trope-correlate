@@ -12,6 +12,7 @@ name = "trope_scrape"
 brotli = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 csv = { workspace = true }
+derive_more = { workspace = true }
 log = { workspace = true }
 rand = { workspace = true }
 regex = { workspace = true }
