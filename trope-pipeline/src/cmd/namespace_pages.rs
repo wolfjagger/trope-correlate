@@ -48,6 +48,7 @@ pub fn namespace_pages(args: trope_lib::TropePipelineNamespacePages) -> Result<(
     unencrypted,
     force,
     random_seed,
+    progress,
   };
   trope_scrape::scrape_pagelist(scrape_pagelist_args)?;
 
