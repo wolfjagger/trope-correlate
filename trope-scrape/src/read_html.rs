@@ -2,10 +2,16 @@ use std::{fs, io::{prelude::*, BufWriter}, path};
 use brotli::BrotliDecompress;
 use scraper::Html;
 
+use crate::error::ScrapeError;
 
-pub fn read_html_file(file_name: path::PathBuf, encrypted: bool) -> Html {
 
-  let mut fi = fs::File::open(&file_name).expect(&format!("Cannot open {}", &file_name.display()));
+pub fn read_html_file(
+  file_name: path::PathBuf, encrypted: bool
+) -> Result<Html, Box<dyn std::error::Error>> {
+
+  let mut fi = fs::File::open(&file_name).map_err(
+    |err| ScrapeError::FileError(err.to_string())
+  )?;
 
   // Cannot write directly to string; use bytes and convert from latin1
   let html_bytes = if encrypted {
@@ -13,21 +19,23 @@ pub fn read_html_file(file_name: path::PathBuf, encrypted: bool) -> Html {
     let mut html_writer = BufWriter::new(Vec::new());
 
     // Decode using brotli decompression
-    BrotliDecompress(&mut fi, &mut html_writer).expect("Error during Brotli decompression");
+    BrotliDecompress(&mut fi, &mut html_writer).map_err(
+      |err| ScrapeError::BrotliError(err.to_string())
+    )?;
 
-    html_writer.into_inner().expect("Into inner error")
+    html_writer.into_inner().map_err(|err| ScrapeError::FileError(err.to_string()))?
 
   } else {
 
     let mut html_bytes = vec![];
-    fi.read_to_end(&mut html_bytes).expect("Error reading html file");
+    fi.read_to_end(&mut html_bytes).map_err(|err| ScrapeError::FileError(err.to_string()))?;
     html_bytes
 
   };
 
   let html_content = latin1_to_string(&html_bytes);
 
-  Html::parse_document(&html_content)
+  Ok(Html::parse_document(&html_content))
 
 }
 

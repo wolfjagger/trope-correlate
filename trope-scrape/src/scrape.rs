@@ -26,7 +26,13 @@ pub fn scrape_page(
 
   fs::create_dir_all(&out_dir)?;
 
-  let in_doc = read_html_file(in_path, encrypted);
+  let in_doc = match read_html_file(in_path, encrypted) {
+    Ok(b) => b,
+    Err(why) => {
+      log::error!("Problem encountered when reading html file for page {}: {}", name, why);
+      return Ok(());
+    }
+  };
 
   let general_json_path = out_dir.clone().join("general.json");
   let general_json_file = match fs::File::create(&general_json_path) {

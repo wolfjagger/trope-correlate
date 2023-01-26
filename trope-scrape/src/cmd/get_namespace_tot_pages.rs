@@ -25,7 +25,7 @@ pub fn get_namespace_tot_pages(args: trope_lib::TropeScrapeNamespaceTotPages) ->
     }
   );
 
-  let document = read_html_file(file_name, !args.unencrypted);
+  let document = read_html_file(file_name, !args.unencrypted)?;
 
   // Create a selector for the element we want
   // For tot pages, we are looking for the navigation button, which has an attribute with the number

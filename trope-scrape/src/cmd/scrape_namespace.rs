@@ -47,7 +47,7 @@ pub fn scrape_namespace(args: trope_lib::TropeScrapeNamespace) -> Result<(), Box
       }
     );
 
-    let document = read_html_file(file_name, !args.unencrypted);
+    let document = read_html_file(file_name, !args.unencrypted)?;
 
     // Create a selector for the element we want
     // For the tropes page, every link in a table cell should get us what we want

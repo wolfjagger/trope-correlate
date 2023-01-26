@@ -1,14 +1,15 @@
 mod cmd;
+mod error;
 mod read_html;
 mod scrape;
 
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
 pub use cmd::{
-  scrape_namespace::scrape_namespace,
   get_namespace_tot_pages::get_namespace_tot_pages,
+  get_pagelist_len::get_pagelist_len,
+  scrape_namespace::scrape_namespace,
   scrape_page::scrape_page,
   scrape_pagelist::scrape_pagelist,
-  get_pagelist_len::get_pagelist_len,
   scrape_all_pages::scrape_all_pages,
 };
 
