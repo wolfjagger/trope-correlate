@@ -2700,6 +2700,7 @@ dependencies = [
  "bytes",
  "clap",
  "csv",
+ "derive_more",
  "log",
  "rand 0.8.5",
  "reqwest",
