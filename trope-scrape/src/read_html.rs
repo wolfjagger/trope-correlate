@@ -9,9 +9,7 @@ pub fn read_html_file(
   file_name: path::PathBuf, encrypted: bool
 ) -> Result<Html, ScrapeError> {
 
-  let mut fi = fs::File::open(&file_name).map_err(
-    |err| ScrapeError::File(err.to_string())
-  )?;
+  let mut fi = fs::File::open(&file_name)?;
 
   // Cannot write directly to string; use bytes and convert from latin1
   let html_bytes = if encrypted {
@@ -20,15 +18,15 @@ pub fn read_html_file(
 
     // Decode using brotli decompression
     BrotliDecompress(&mut fi, &mut html_writer).map_err(
-      |err| ScrapeError::Brotli(err.to_string())
+      |err| ScrapeError::Brotli(err)
     )?;
 
-    html_writer.into_inner().map_err(|err| ScrapeError::File(err.to_string()))?
+    html_writer.into_inner()?
 
   } else {
 
     let mut html_bytes = vec![];
-    fi.read_to_end(&mut html_bytes).map_err(|err| ScrapeError::File(err.to_string()))?;
+    fi.read_to_end(&mut html_bytes)?;
     html_bytes
 
   };
