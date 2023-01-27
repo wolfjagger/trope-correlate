@@ -1,5 +1,6 @@
 mod cmd;
 mod download;
+mod error;
 mod header;
 
 use trope_lib::{TropeDownloadArgs, TropeDownloadMethod};

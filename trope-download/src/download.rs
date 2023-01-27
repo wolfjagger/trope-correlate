@@ -3,7 +3,10 @@ use brotli::BrotliDecompress;
 use bytes::{Bytes, Buf};
 use reqwest;
 
-use crate::header::get_header_map;
+use crate::{
+  error::DownloadError,
+  header::get_header_map,
+};
 
 
 /// Download all the pages
@@ -11,11 +14,9 @@ use crate::header::get_header_map;
 pub fn save_page_to_path(
   url: reqwest::Url, out_dir: &path::Path, out_name: &str,
   encrypted: bool, force: bool
-) -> Result<bool, Box<dyn std::error::Error>> {
+) -> Result<bool, DownloadError> {
 
-  fs::create_dir_all(&out_dir).expect(
-    &format!("Could not create directory {}", out_dir.display())
-  );
+  fs::create_dir_all(&out_dir)?;
 
   if out_name.contains("/") {
     log::error!("Filename {} contains bad character; not saving to path", out_name);
@@ -42,8 +43,7 @@ pub fn save_page_to_path(
   let header_map = get_header_map();
 
   // Set up output file
-  let mut file = fs::File::create(&out_path)
-    .expect(&format!("Error writing file to {}", &out_path.display()));
+  let mut file = fs::File::create(&out_path)?;
 
   // Do request, get encoded body
   let encoded_body = match get_body(&header_map, url) {
@@ -55,12 +55,14 @@ pub fn save_page_to_path(
   };
 
   if encrypted {
-    file.write_all(&encoded_body)
-      .expect(&format!("Error writing encrypted content for {}", &out_path.display()));
+    file.write_all(&encoded_body).map_err(
+      |err| DownloadError::Brotli(err)
+    )?;
   } else {
     // Decode using brotli decompression
-    BrotliDecompress(&mut encoded_body.reader(), &mut file)
-      .expect(&format!("Error during brotli decompression for {}", &out_path.display()));
+    BrotliDecompress(&mut encoded_body.reader(), &mut file).map_err(
+      |err| DownloadError::Brotli(err)
+    )?;
   }
 
   Ok(true)
