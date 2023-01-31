@@ -187,6 +187,7 @@ dependencies = [
  "js-sys",
  "num-integer",
  "num-traits",
+ "serde",
  "time 0.1.45",
  "wasm-bindgen",
  "winapi",
@@ -2698,6 +2699,7 @@ version = "0.1.0"
 dependencies = [
  "brotli",
  "bytes",
+ "chrono",
  "clap",
  "csv",
  "derive_more",

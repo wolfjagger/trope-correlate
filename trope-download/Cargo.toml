@@ -12,6 +12,7 @@ name = "trope_download"
 brotli = { workspace = true }
 bytes = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
+chrono = { workspace = true, features = ["serde"] }
 csv = { workspace = true }
 derive_more = { workspace = true }
 log = { workspace = true }
