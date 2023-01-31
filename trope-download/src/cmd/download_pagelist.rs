@@ -39,6 +39,30 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   log::info!("Downloading {} to {} of {} records...", beg_record, end_record, tot_records);
 
+  if args.progress {
+    let expected_duration = chrono::Duration::seconds(
+      (tot_records as u64 * args.sleep_sec) as i64
+    );
+    let expected_duration_str = if expected_duration.num_days() > 0 {
+      let d = expected_duration.num_days();
+      let h = expected_duration.num_hours() - 24 * expected_duration.num_days();
+      format!("{} d, {} h", d, h)
+    } else if expected_duration.num_hours() > 0 {
+      let h = expected_duration.num_hours();
+      let m = expected_duration.num_minutes() - 60 * expected_duration.num_hours();
+      format!("{} h, {} m", h, m)
+    } else if expected_duration.num_minutes() > 0 {
+      let m = expected_duration.num_minutes();
+      let s = expected_duration.num_seconds() - 60 * expected_duration.num_minutes();
+      format!("{} m, {} s", m, s)
+    } else if expected_duration.num_seconds() > 0 {
+      format!("{} s", expected_duration.num_seconds())
+    } else {
+      format!("< 1s")
+    };
+    log::warn!("Should take about {}", expected_duration_str);
+  }
+
   // Page request loop with peekable iterator
   let mut tup_iter = (beg_record..end_record+1).zip(record_iter.skip(beg_record)).peekable();
   let mut progress_tick = 0;
