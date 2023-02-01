@@ -1,5 +1,7 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
+use crate::Namespace;
+
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -25,6 +27,14 @@ pub enum TropeLearnMethod {
 /// Categorize media based on mentioned tropes
 #[derive(Debug, ClapArgs)]
 pub struct TropeLearnCategorize {
+
+  /// Name
+  #[clap(short, long, value_parser,)]
+  pub pagename: String,
+
+  /// Namespace of page
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
 
   /// If enabled, assume an unencrypted version of the html (default: false)
   #[clap(long, value_parser, default_value_t = false)]

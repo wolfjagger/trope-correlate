@@ -5,7 +5,11 @@ use trope_lib::TropeLearnCategorize;
 
 pub fn categorize(args: TropeLearnCategorize) -> Result<(), Box<dyn std::error::Error>> {
 
-  let (_unencrypted, _force) = (args.unencrypted, args.force);
+  let (
+    _pagename, _namespace,_unencrypted, _force
+  ) = (
+    args.pagename, args.namespace, args.unencrypted, args.force
+  );
 
   Ok(())
 

@@ -66,7 +66,7 @@ impl From<TropeDownloadNamespace> for TropeDownloadArgs {
 #[derive(Debug, ClapArgs)]
 pub struct TropeDownloadPage {
 
-  /// Trope name
+  /// Name
   #[clap(short, long, value_parser,)]
   pub pagename: String,
 
@@ -74,7 +74,7 @@ pub struct TropeDownloadPage {
   #[clap(short, long, value_parser,)]
   pub url: String,
 
-  /// Namespace of page to download
+  /// Namespace of page
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
