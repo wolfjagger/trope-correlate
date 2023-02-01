@@ -1,8 +1,11 @@
 mod categorize;
+mod error;
 mod tutorial;
 
 use trope_lib::{TropeLearnArgs, TropeLearnMethod};
+
 use categorize::categorize;
+use error::LearnError;
 use tutorial::tutorial;
 
 pub fn run(args: TropeLearnArgs) {
