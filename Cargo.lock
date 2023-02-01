@@ -2715,6 +2715,8 @@ dependencies = [
 name = "trope-learn"
 version = "0.1.0"
 dependencies = [
+ "csv",
+ "derive_more",
  "dfdx",
  "log",
  "rand 0.8.5",
