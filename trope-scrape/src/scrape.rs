@@ -61,12 +61,12 @@ pub fn scrape_page(
 
   // Write all mentioned tropes
   for trope_link in mentioned_tropes.iter() {
-    mentioned_tropes_csv.write_record(&[trope_link.name.clone(), trope_link.url.clone()])?;
+    mentioned_tropes_csv.serialize(trope_link)?;
   }
 
   // Write all mentioned media
   for media_link in mentioned_media.iter() {
-    mentioned_media_csv.write_record(&[media_link.name.clone(), media_link.url.clone()])?;
+    mentioned_media_csv.serialize(media_link)?;
   }
 
   Ok(())
