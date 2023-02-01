@@ -36,10 +36,6 @@ pub struct TropeLearnCategorize {
   #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
   pub namespace: String,
 
-  /// If enabled, assume an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,

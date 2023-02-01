@@ -6,7 +6,7 @@ mod util;
 
 
 pub use arg::*;
-pub use namespace::{Namespace, EntityType, ALL_NAMESPACES};
+pub use namespace::{Namespace, NamespaceParseError, EntityType, ALL_NAMESPACES};
 pub use path_locator::{
   workspace_dir, data_dir, download_dir, scrape_dir,
   dl_page_dir, sc_page_dir,
