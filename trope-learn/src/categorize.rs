@@ -3,15 +3,21 @@ use dfdx::{prelude::*, gradients::Gradients};
 use trope_lib::TropeLearnCategorize;
 
 
-type MLP = (
-  (Linear<10, 32>, ReLU),
-  (Linear<32, 32>, ReLU),
-  (Linear<32, 5>, Tanh),
-);
-
 pub fn categorize(args: TropeLearnCategorize) -> Result<(), Box<dyn std::error::Error>> {
 
   let (_unencrypted, _force) = (args.unencrypted, args.force);
+
+  Ok(())
+
+}
+
+fn _do_tensor_propagation() {
+
+  type MLP = (
+    (Linear<10, 32>, ReLU),
+    (Linear<32, 32>, ReLU),
+    (Linear<32, 5>, Tanh),
+  );
 
   // 7. Use an optimizer from crate::optim to optimize your network!
 
@@ -46,7 +52,5 @@ pub fn categorize(args: TropeLearnCategorize) -> Result<(), Box<dyn std::error::
   // pass the gradients & the model into the optimizer's update method
   opt.update(&mut mlp, gradients).unwrap();
   log::info!("opt: {:?}", opt);
-
-  Ok(())
 
 }
