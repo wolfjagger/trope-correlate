@@ -1,14 +1,45 @@
+use std::str::FromStr;
 use dfdx::{prelude::*, gradients::Gradients};
 
-use trope_lib::TropeLearnCategorize;
+use trope_lib::{TropeLearnCategorize, NamedLink};
+
+use crate::LearnError;
 
 
-pub fn categorize(args: TropeLearnCategorize) -> Result<(), Box<dyn std::error::Error>> {
+pub fn categorize(args: TropeLearnCategorize) -> Result<(), LearnError> {
 
-  let (
-    _pagename, _namespace,_unencrypted, _force
-  ) = (
-    args.pagename, args.namespace, args.unencrypted, args.force
+  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
+
+  let sc_dir = trope_lib::sc_page_dir(&ns).join(&args.pagename);
+
+  let page = 1;
+  let page_str = page.to_string();
+
+  log::info!("Categorizing page {}...", page_str);
+
+  let mentioned_tropes_path = sc_dir.join("mentioned_tropes.csv");
+  let mentioned_media_path = sc_dir.join("mentioned_media.csv");
+  let mentioned_tropes = csv::Reader::from_path(&mentioned_tropes_path)?.into_deserialize();
+  let mentioned_media = csv::Reader::from_path(&mentioned_media_path)?.into_deserialize();
+
+  let tropes = match mentioned_tropes.collect::<Result<Vec<NamedLink>, _>>() {
+    Ok(t) => t,
+    Err(err) => {
+      log::error!("Cannot parse trope, {}", err);
+      return Err(err.into());
+    }
+  };
+  let medias = match mentioned_media.collect::<Result<Vec<NamedLink>, _>>() {
+    Ok(m) => m,
+    Err(err) => {
+      log::error!("Cannot parse media, {}", err);
+      return Err(err.into());
+    }
+  };
+
+  println!(
+    "{} mentioned tropes, {} mentioned media",
+    medias.len(), tropes.len()
   );
 
   Ok(())
