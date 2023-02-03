@@ -1,7 +1,8 @@
-use std::str::FromStr;
+use std::{path::Path, str::FromStr};
 use dfdx::{prelude::*, gradients::Gradients};
+use serde::de::DeserializeOwned;
 
-use trope_lib::{TropeLearnCategorize, NamedLink};
+use trope_lib::{EntityType, NamedLink, PageId, TropeLearnCategorize};
 
 use crate::LearnError;
 
@@ -10,41 +11,43 @@ pub fn categorize(args: TropeLearnCategorize) -> Result<(), LearnError> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 
-  let sc_dir = trope_lib::sc_page_dir(&ns).join(&args.pagename);
+  let page = args.pagename;
+  log::info!("Categorizing page {}...", page);
+  let sc_page_dir = trope_lib::sc_page_dir(&ns).join(&page);
 
-  let page = 1;
-  let page_str = page.to_string();
+  let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
+  let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
+  let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
+  let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
 
-  log::info!("Categorizing page {}...", page_str);
+  let trope_pageids = path_to_records::<PageId>(&trope_pageid_path)?;
+  let media_pageids = path_to_records::<PageId>(&media_pageid_path)?;
+  let mentioned_tropes = path_to_records::<NamedLink>(&mentioned_tropes_path)?;
+  let mentioned_media = path_to_records::<NamedLink>(&mentioned_media_path)?;
 
-  let mentioned_tropes_path = sc_dir.join("mentioned_tropes.csv");
-  let mentioned_media_path = sc_dir.join("mentioned_media.csv");
-  let mentioned_tropes = csv::Reader::from_path(&mentioned_tropes_path)?.into_deserialize();
-  let mentioned_media = csv::Reader::from_path(&mentioned_media_path)?.into_deserialize();
-
-  let tropes = match mentioned_tropes.collect::<Result<Vec<NamedLink>, _>>() {
-    Ok(t) => t,
-    Err(err) => {
-      log::error!("Cannot parse trope, {}", err);
-      return Err(err.into());
-    }
-  };
-  let medias = match mentioned_media.collect::<Result<Vec<NamedLink>, _>>() {
-    Ok(m) => m,
-    Err(err) => {
-      log::error!("Cannot parse media, {}", err);
-      return Err(err.into());
-    }
-  };
+  // Input to ML is the list of tropes and/or media
+  // Output is namespace
 
   println!(
+    "{} trope pageids, {} media pageids",
+    trope_pageids.len(), media_pageids.len()
+  );
+  println!(
     "{} mentioned tropes, {} mentioned media",
-    medias.len(), tropes.len()
+    mentioned_tropes.len(), mentioned_media.len()
   );
 
   Ok(())
 
 }
+
+
+fn path_to_records<Record>(p: &Path) -> Result<Vec<Record>, csv::Error>
+where Record: DeserializeOwned {
+  println!("{}", p.display());
+  csv::Reader::from_path(p)?.into_deserialize().collect::<Result<Vec<_>, _>>()
+}
+
 
 fn _do_tensor_propagation() {
 
