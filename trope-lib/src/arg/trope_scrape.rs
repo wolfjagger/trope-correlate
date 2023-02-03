@@ -25,6 +25,7 @@ pub enum TropeScrapeMethod {
   Pagelist(TropeScrapePagelist),
   AllPages(TropeScrapeAllPages),
   PagelistLen(TropeScrapePagelistLen),
+  GenPageIds(TropeScrapeGeneratePageIds),
 }
 
 
@@ -149,26 +150,6 @@ impl From<TropeScrapePagelist> for TropeScrapeArgs {
 }
 
 
-/// Scrapes downloaded pagelist and reports number of records/pages
-#[derive(Debug, ClapArgs)]
-pub struct TropeScrapePagelistLen {
-
-  /// Namespace for pagelist search
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
-  /// If enabled, assume an unencrypted version of the html (default: false)
-  #[clap(long, value_parser, default_value_t = false)]
-  pub unencrypted: bool,
-
-}
-impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapePagelistLen) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::PagelistLen(method_args) }
-  }
-}
-
-
 /// Scrapes downloaded pages that exist in the given namespace directory
 #[derive(Debug, ClapArgs)]
 pub struct TropeScrapeAllPages {
@@ -193,5 +174,35 @@ pub struct TropeScrapeAllPages {
 impl From<TropeScrapeAllPages> for TropeScrapeArgs {
   fn from(method_args: TropeScrapeAllPages) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::AllPages(method_args) }
+  }
+}
+
+
+/// Scrapes downloaded pagelist and reports number of records/pages
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapePagelistLen {
+
+  /// Namespace for pagelist search
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// If enabled, assume an unencrypted version of the html (default: false)
+  #[clap(long, value_parser, default_value_t = false)]
+  pub unencrypted: bool,
+
+}
+impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapePagelistLen) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::PagelistLen(method_args) }
+  }
+}
+
+
+/// Generates pageids for all pages of the different entity types
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeGeneratePageIds { }
+impl From<TropeScrapeGeneratePageIds> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeGeneratePageIds) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::GenPageIds(method_args) }
   }
 }

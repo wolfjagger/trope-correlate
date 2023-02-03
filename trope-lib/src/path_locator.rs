@@ -41,3 +41,7 @@ pub fn sc_pagelist_dir(ns: &Namespace) -> path::PathBuf {
   scrape_dir().join("pagelist")
     .join(ns.entity_type().to_string()).join(ns.to_string())
 }
+
+pub fn sc_pageid_dir() -> path::PathBuf {
+  scrape_dir().join("pageid")
+}

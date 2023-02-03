@@ -20,5 +20,6 @@ pub use trope_pipeline::{
 pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
   TropeScrapeNamespace, TropeScrapeNamespaceTotPages,
-  TropeScrapePage, TropeScrapePagelist, TropeScrapePagelistLen, TropeScrapeAllPages,
+  TropeScrapePage, TropeScrapePagelist, TropeScrapeAllPages,
+  TropeScrapePagelistLen, TropeScrapeGeneratePageIds,
 };
