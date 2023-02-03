@@ -1,14 +1,7 @@
 use std::fs::{create_dir_all, read_dir};
 
-use serde::{Deserialize, Serialize};
-use trope_lib::{self, EntityType};
+use trope_lib::{EntityType, PageId};
 
-
-#[derive(Serialize, Deserialize)]
-struct PageId {
-  id: u32,
-  page: String,
-}
 
 /// Loop through pages to generate ids for each
 pub fn generate_page_ids(_: trope_lib::TropeScrapeGeneratePageIds) -> Result<(), Box<dyn std::error::Error>> {

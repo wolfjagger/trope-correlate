@@ -2720,6 +2720,7 @@ dependencies = [
  "dfdx",
  "log",
  "rand 0.8.5",
+ "serde",
  "simple_logger",
  "trope-lib",
 ]

@@ -14,5 +14,6 @@ derive_more = { workspace = true }
 dfdx = { workspace = true }
 log = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
+serde = { workspace = true }
 simple_logger = { workspace = true, features = ["stderr"] }
 trope-lib = { path = "../trope-lib" }

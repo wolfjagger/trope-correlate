@@ -93,3 +93,10 @@ impl Default for TropeGeneralJson {
     }
   }
 }
+
+
+#[derive(Serialize, Deserialize)]
+pub struct PageId {
+  pub id: u32,
+  pub page: String,
+}
