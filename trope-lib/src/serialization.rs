@@ -101,8 +101,25 @@ impl Default for TropeGeneralJson {
 }
 
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PageId {
   pub id: u32,
   pub page: String,
+}
+
+impl fmt::Display for PageId {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "[{}, {}]", self.id, self.page)
+  }
+}
+
+impl From<(u32, String)> for PageId {
+  fn from(f: (u32, String)) -> Self {
+    PageId{ id: f.0, page: f.1 }
+  }
+}
+impl Into<(u32, String)> for PageId {
+  fn into(self) -> (u32, String) {
+    (self.id, self.page)
+  }
 }
