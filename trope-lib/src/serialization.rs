@@ -19,18 +19,19 @@ pub struct NamedLink {
   pub name: String,
   pub url: String,
   link_type: EntityType,
+  url_page_name: String,
 }
 
 impl NamedLink {
 
   pub fn new(name: String, mut url: String) -> Self {
-    let link_type = Self::calc_link_type(&url);
     // If an internal link, prepend the site
     if url.starts_with("/pmwiki") {
       url.insert_str(0, "https://tvtropes.org");
     }
+    let (link_type, url_page_name) = Self::calc_url_byproducts(&url);
     NamedLink{
-      name, url, link_type
+      name, url, link_type, url_page_name
     }
   }
 
@@ -38,23 +39,28 @@ impl NamedLink {
     self.link_type
   }
 
-  fn calc_link_type(url: &str) -> EntityType {
+  pub fn url_page_name(&self) -> &str {
+    &self.url_page_name
+  }
+
+  fn calc_url_byproducts(url: &str) -> (EntityType, String) {
 
     static NAMESPACE_LINK_RE: Lazy<Regex> = Lazy::new(||
       Regex::new(
         "/pmwiki/pmwiki.php/([^/]*)/(.*)"
-      ).expect("Error creating namespace regex")
+      ).expect("Error creating url regex")
     );
 
     NAMESPACE_LINK_RE.captures(url).and_then(|cap| {
 
       let ns = cap.get(1).map(|m| m.as_str()).and_then(|ns| Namespace::from_str(ns).ok());
       let link_name = cap.get(2).map(|m| m.as_str());
-      ns.zip(link_name).map(|(ns, _ln)| ns.entity_type())
+      ns.zip(link_name).map(|(ns, ln)| (ns.entity_type(), ln.to_owned()))
 
-    }).unwrap_or(EntityType::Other)
+    }).expect(&format!("Could not parse url {}", url))
 
   }
+
 }
 
 impl From<SerdeNamedLink> for NamedLink {
