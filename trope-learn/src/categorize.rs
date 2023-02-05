@@ -2,7 +2,7 @@ use std::{path::Path, str::FromStr};
 use dfdx::{prelude::*, gradients::Gradients};
 use serde::de::DeserializeOwned;
 
-use trope_lib::{EntityType, NamedLink, PageId, TropeLearnCategorize};
+use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeLearnCategorize};
 
 use crate::LearnError;
 
@@ -21,30 +21,73 @@ pub fn categorize(args: TropeLearnCategorize) -> Result<(), LearnError> {
   let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
 
   let trope_pageids = path_to_records::<PageId>(&trope_pageid_path)?;
+  let trope_lookup = PageIdLookup::new(trope_pageids);
   let media_pageids = path_to_records::<PageId>(&media_pageid_path)?;
-  let mentioned_tropes = path_to_records::<NamedLink>(&mentioned_tropes_path)?;
-  let mentioned_media = path_to_records::<NamedLink>(&mentioned_media_path)?;
+  let media_lookup = PageIdLookup::new(media_pageids);
+
+  let mentioned_tropes = path_to_page_names(&mentioned_tropes_path)?;
+  let mentioned_media = path_to_page_names(&mentioned_media_path)?;
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
 
-  println!(
+  log::trace!(
     "{} trope pageids, {} media pageids",
-    trope_pageids.len(), media_pageids.len()
+    trope_lookup.len(), media_lookup.len()
   );
-  println!(
+  log::trace!(
     "{} mentioned tropes, {} mentioned media",
     mentioned_tropes.len(), mentioned_media.len()
   );
+
+  let (found_tropes, missing_tropes): (Vec<_>, Vec<_>) = mentioned_tropes.into_iter().partition(
+    |name| trope_lookup.contains_page(&name)
+  );
+  let ment_trope_pageids: Vec<_> = found_tropes.into_iter().map(
+    |name| trope_lookup.pageid_from_page(&name).unwrap()
+  ).collect();
+
+  log::info!("Found tropes:");
+  for t_id in ment_trope_pageids {
+    log::info!("{}", t_id);
+  }
+
+  log::info!("Missing tropes:");
+  for missing_trope in missing_tropes {
+    log::info!("{}", missing_trope);
+  }
+
+  let (found_media, missing_media): (Vec<_>, Vec<_>) = mentioned_media.into_iter().partition(
+    |name| media_lookup.contains_page(&name)
+  );
+  let ment_media_pageids: Vec<_> = found_media.into_iter().map(
+    |name| media_lookup.pageid_from_page(&name).unwrap()
+  ).collect();
+
+  log::info!("Found media:");
+  for t_id in ment_media_pageids {
+    log::info!("{}", t_id);
+  }
+
+  log::info!("Missing media:");
+  for missing_media in missing_media {
+    log::info!("{}", missing_media);
+  }
 
   Ok(())
 
 }
 
 
+fn path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
+  // Note: url is the source of truth in these mentions; short name is different page-to-page
+  let mentions = csv::Reader::from_path(p)?.into_deserialize::<NamedLink>();
+  mentions.map(|m_result| m_result.map(|m| m.url_page_name().to_string())).collect()
+}
+
 fn path_to_records<Record>(p: &Path) -> Result<Vec<Record>, csv::Error>
 where Record: DeserializeOwned {
-  println!("{}", p.display());
+  println!("Turning {} to records", p.display());
   csv::Reader::from_path(p)?.into_deserialize().collect::<Result<Vec<_>, _>>()
 }
 

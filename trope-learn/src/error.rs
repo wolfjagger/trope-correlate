@@ -1,5 +1,5 @@
 use std::io::{Error as IOError, IntoInnerError};
-use csv::{Error as CSVError};
+use csv::Error as CSVError;
 use derive_more::Display;
 
 use trope_lib::NamespaceParseError;
