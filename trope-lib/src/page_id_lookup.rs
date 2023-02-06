@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use bimap::BiMap;
 
 use crate::PageId;
@@ -14,6 +16,11 @@ impl PageIdLookup {
     Self{
       bimap: BiMap::from_iter(page_ids.into_iter().map(|pi| pi.into()))
     }
+  }
+
+  pub fn from_path(p: &Path) -> Result<Self, csv::Error> {
+    let pageids: Result<Vec<PageId>, _> = csv::Reader::from_path(p)?.into_deserialize().collect();
+    Ok(Self::new(pageids?.into_iter()))
   }
 
   pub fn contains_page(&self, page: &str) -> bool {
