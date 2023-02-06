@@ -51,13 +51,21 @@ impl NamedLink {
       ).expect("Error creating url regex")
     );
 
-    NAMESPACE_LINK_RE.captures(url).and_then(|cap| {
+    let et_ln_res = NAMESPACE_LINK_RE.captures(url).and_then(|cap| {
 
       let ns = cap.get(1).map(|m| m.as_str()).and_then(|ns| Namespace::from_str(ns).ok());
       let link_name = cap.get(2).map(|m| m.as_str());
       ns.zip(link_name).map(|(ns, ln)| (ns.entity_type(), ln.to_owned()))
 
-    }).expect(&format!("Could not parse url {}", url))
+    });
+
+    match et_ln_res {
+      Some(et_ln) => et_ln,
+      None => {
+        log::debug!("Could not parse url for byproducts: {}", url);
+        (EntityType::Unknown, String::new())
+      }
+    }
 
   }
 
