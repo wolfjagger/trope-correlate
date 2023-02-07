@@ -1,7 +1,7 @@
 use std::io::{Error as IOError, IntoInnerError};
 use csv::Error as CSVError;
 use derive_more::Display;
-use dfdx::numpy::NpyError;
+use dfdx::nn::NpzError;
 use serde_json::Error as SerdeJsonError;
 
 use trope_lib::NamespaceParseError;
@@ -12,7 +12,7 @@ pub enum TeachError {
   CSV(CSVError),
   IO(IOError),
   Parse(NamespaceParseError),
-  Npy(NpyError),
+  Npz(NpzError),
 }
 
 impl std::error::Error for TeachError { }
@@ -47,8 +47,8 @@ impl From<NamespaceParseError> for TeachError {
   }
 }
 
-impl From<NpyError> for TeachError {
-  fn from(err: NpyError) -> Self {
-    TeachError::Npy(err)
+impl From<NpzError> for TeachError {
+  fn from(err: NpzError) -> Self {
+    TeachError::Npz(err)
   }
 }

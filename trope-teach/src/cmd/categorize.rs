@@ -2,7 +2,7 @@ use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{EntityType, PageIdLookup, TropeTeachCategorize};
 
-use crate::{InModel, OutModel, TeachError, TrainParams};
+use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
 
 
 pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
@@ -47,7 +47,8 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   // Input to ML is the list of tropes and/or media
   // Output is namespace
 
-  out_model.save(&out_model_file)?;
+  let res: Result<(), NpzError> = out_model.save(&out_model_file).map_err(NpzError::from);
+  res?;
 
   Ok(())
 
