@@ -20,7 +20,6 @@ impl TropeLensArgs {
 #[derive(Debug, Subcommand)]
 pub enum TropeLensMethod {
   Categorize(TropeLensCategorize),
-  Tutorial(TropeLensTutorial),
 }
 
 
@@ -44,16 +43,5 @@ pub struct TropeLensCategorize {
 impl From<TropeLensCategorize> for TropeLensArgs {
   fn from(method_args: TropeLensCategorize) -> Self {
     TropeLensArgs { method: TropeLensMethod::Categorize(method_args) }
-  }
-}
-
-/// Runs dfdx tutorials
-#[derive(Debug, ClapArgs)]
-pub struct TropeLensTutorial {
-
-}
-impl From<TropeLensTutorial> for TropeLensArgs {
-  fn from(method_args: TropeLensTutorial) -> Self {
-    TropeLensArgs { method: TropeLensMethod::Tutorial(method_args) }
   }
 }

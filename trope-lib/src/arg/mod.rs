@@ -11,7 +11,7 @@ pub use trope_download::{
 };
 pub use trope_lens::{
   TropeLensArgs, TropeLensMethod,
-  TropeLensCategorize, TropeLensTutorial,
+  TropeLensCategorize,
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,
