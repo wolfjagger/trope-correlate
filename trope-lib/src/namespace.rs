@@ -57,6 +57,7 @@ pub enum EntityType {
   Trope,
   Media,
   Other,
+  Unknown,
 }
 
 #[derive(Debug, derive_more::Display, derive_more::Error, PartialEq, Eq)]
@@ -198,6 +199,7 @@ impl Display for EntityType {
       Self::Trope => "trope",
       Self::Media => "media",
       Self::Other => "other",
+      Self::Unknown => "unknown",
     })
   }
 }

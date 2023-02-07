@@ -61,12 +61,12 @@ pub fn scrape_page(
 
   // Write all mentioned tropes
   for trope_link in mentioned_tropes.iter() {
-    mentioned_tropes_csv.write_record(&[trope_link.name.clone(), trope_link.url.clone()])?;
+    mentioned_tropes_csv.serialize(trope_link)?;
   }
 
   // Write all mentioned media
   for media_link in mentioned_media.iter() {
-    mentioned_media_csv.write_record(&[media_link.name.clone(), media_link.url.clone()])?;
+    mentioned_media_csv.serialize(media_link)?;
   }
 
   Ok(())
@@ -136,12 +136,15 @@ fn scrape_doc(doc: &Html) -> (
     !(link.name.contains("<") || link.name.contains(">"))
   });
 
-  let (mut trope_links, mut media_links, mut other_links): (Vec<_>, Vec<_>, Vec<_>) = (vec![], vec![], vec![]);
+  let (
+    mut trope_links, mut media_links, mut other_links, mut unknown_links
+  ): (Vec<_>, Vec<_>, Vec<_>, Vec<_>) = (vec![], vec![], vec![], vec![]);
   for link in nonhtml_wiki_links {
     match link.link_type() {
       trope_lib::EntityType::Trope => trope_links.push(link),
       trope_lib::EntityType::Media => media_links.push(link),
       trope_lib::EntityType::Other => other_links.push(link),
+      trope_lib::EntityType::Unknown => unknown_links.push(link),
     }
   }
 
@@ -155,6 +158,8 @@ fn scrape_doc(doc: &Html) -> (
   log::trace!("{:?}", media_links);
   log::trace!("=================");
   log::trace!("{:?}", other_links);
+  log::trace!("=================");
+  log::trace!("{:?}", unknown_links);
   log::trace!("=================");
 
   (general_page_json, trope_links, media_links)

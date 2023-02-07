@@ -2,7 +2,7 @@ use std::{env, path};
 
 use once_cell::sync::Lazy;
 
-use crate::Namespace;
+use crate::{Namespace, EntityType};
 
 
 static LAZY_WORKSPACE_DIR: Lazy<path::PathBuf> = Lazy::new(|| {
@@ -40,4 +40,11 @@ pub fn dl_namespace_dir(ns: &Namespace) -> path::PathBuf {
 pub fn sc_pagelist_dir(ns: &Namespace) -> path::PathBuf {
   scrape_dir().join("pagelist")
     .join(ns.entity_type().to_string()).join(ns.to_string())
+}
+
+pub fn sc_pageid_dir() -> path::PathBuf {
+  scrape_dir().join("pageid")
+}
+pub fn sc_pageid_path(et: &EntityType) -> path::PathBuf {
+  sc_pageid_dir().join(format!("{}.csv", et))
 }
