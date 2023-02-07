@@ -1,12 +1,13 @@
-mod categorize;
+mod cmd;
 mod error;
-mod tutorial;
 
 use trope_lib::{TropeTeachArgs, TropeTeachMethod};
 
-use categorize::categorize;
+use cmd::{
+  categorize::categorize,
+  tutorial::tutorial
+};
 use error::TeachError;
-use tutorial::tutorial;
 
 pub fn run(args: TropeTeachArgs) {
   match args.method {

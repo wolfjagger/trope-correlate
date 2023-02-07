@@ -1,9 +1,11 @@
-mod categorize;
+mod cmd;
 mod error;
 
 use trope_lib::{TropeLensArgs, TropeLensMethod};
 
-use categorize::categorize;
+use cmd::{
+  categorize::categorize
+};
 use error::LensError;
 
 pub fn run(args: TropeLensArgs) {
