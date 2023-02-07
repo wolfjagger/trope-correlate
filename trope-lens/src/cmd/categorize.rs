@@ -1,5 +1,4 @@
 use std::{path::Path, str::FromStr};
-use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeLensCategorize};
 

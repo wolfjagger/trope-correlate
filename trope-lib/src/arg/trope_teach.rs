@@ -1,7 +1,5 @@
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
-use crate::Namespace;
-
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]

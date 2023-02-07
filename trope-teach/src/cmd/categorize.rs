@@ -6,7 +6,7 @@ use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeTeachCategoriz
 use crate::TeachError;
 
 
-pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
+pub fn categorize(_args: TropeTeachCategorize) -> Result<(), TeachError> {
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
@@ -40,10 +40,10 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 }
 
 
-fn assemble_pageids(p: &Path, page_lookup: &PageIdLookup)
+fn _assemble_pageids(p: &Path, page_lookup: &PageIdLookup)
 -> Result<(Vec<PageId>, Vec<String>), csv::Error> {
 
-  let mentioned_pages = path_to_page_names(&p)?;
+  let mentioned_pages = _path_to_page_names(&p)?;
 
   let (found_pages, missing_pages): (Vec<_>, Vec<_>) = mentioned_pages.into_iter().partition(
     |name| page_lookup.contains_page(&name)
@@ -67,7 +67,7 @@ fn assemble_pageids(p: &Path, page_lookup: &PageIdLookup)
 }
 
 
-fn path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
+fn _path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
   // Note: url is the source of truth in these mentions; short name is different page-to-page
   let mentions = csv::Reader::from_path(p)?.into_deserialize::<NamedLink>();
   mentions.map(|m_result| m_result.map(|m| m.url_page_name().to_string())).collect()
