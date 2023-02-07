@@ -1,18 +1,32 @@
+// Allow dead code so we can try different compiled model structures easily
 use std::path::Path;
-use dfdx::numpy;
+use dfdx::{nn, numpy};
 
 
 // See https://github.com/coreylowman/dfdx/blob/main/examples/07-custom-module.rs
 
 
 // TODO: Figure out how to handle these types (probably should be the same)
-type InModelSize = [f64; 3];
-type OutModelSize = [f64; 3];
-
-pub type InModel = WrapperModel::<InModelSize>;
-pub type OutModel = WrapperModel::<OutModelSize>;
+pub type InModel = WrapperModel::<InArray>;
+pub type OutModel = WrapperModel::<OutArray>;
 
 
+const L0_SIZE: usize = 10;
+const L1_SIZE: usize = 10000;
+const L2_SIZE: usize = 30;
+
+#[allow(dead_code)]
+pub type TwoLayerReLU = (
+  nn::Linear<L0_SIZE, L1_SIZE>,
+  nn::ReLU,
+  nn::Linear<L1_SIZE, L2_SIZE>,
+);
+
+
+type InArray = [f64; 3];
+type OutArray = [f64; 3];
+
+#[allow(dead_code)]
 #[derive(Default)]
 pub struct WrapperModel<T> {
   pub inner: T
