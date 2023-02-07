@@ -1,5 +1,5 @@
 mod trope_download;
-mod trope_learn;
+mod trope_lens;
 mod trope_pipeline;
 mod trope_scrape;
 
@@ -8,9 +8,9 @@ pub use trope_download::{
   TropeDownloadArgs, TropeDownloadMethod,
   TropeDownloadNamespace, TropeDownloadPage, TropeDownloadPagelist,
 };
-pub use trope_learn::{
-  TropeLearnArgs, TropeLearnMethod,
-  TropeLearnCategorize, TropeLearnTutorial,
+pub use trope_lens::{
+  TropeLensArgs, TropeLensMethod,
+  TropeLensCategorize, TropeLensTutorial,
 };
 pub use trope_pipeline::{
   TropePipelineArgs, TropePipelineMethod,

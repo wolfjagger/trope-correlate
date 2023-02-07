@@ -2,18 +2,18 @@ mod categorize;
 mod error;
 mod tutorial;
 
-use trope_lib::{TropeLearnArgs, TropeLearnMethod};
+use trope_lib::{TropeLensArgs, TropeLensMethod};
 
 use categorize::categorize;
-use error::LearnError;
+use error::LensError;
 use tutorial::tutorial;
 
-pub fn run(args: TropeLearnArgs) {
+pub fn run(args: TropeLensArgs) {
   match args.method {
-    TropeLearnMethod::Categorize(method_args) => {
+    TropeLensMethod::Categorize(method_args) => {
       categorize(method_args).expect("Unhandled categorize error");
     },
-    TropeLearnMethod::Tutorial(method_args) => {
+    TropeLensMethod::Tutorial(method_args) => {
       tutorial(method_args).expect("Unhandled tutorial error");
     },
   }

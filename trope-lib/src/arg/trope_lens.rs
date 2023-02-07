@@ -5,28 +5,28 @@ use crate::Namespace;
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about, long_about = None)]
-pub struct TropeLearnArgs {
+pub struct TropeLensArgs {
   #[command(subcommand)]
-  pub method: TropeLearnMethod
+  pub method: TropeLensMethod
 }
 
-impl TropeLearnArgs {
+impl TropeLensArgs {
   pub fn parse_args() -> Self {
-    log::info!("Parse trope-learn args");
+    log::info!("Parse trope-lens args");
     Self::parse()
   }
 }
 
 #[derive(Debug, Subcommand)]
-pub enum TropeLearnMethod {
-  Categorize(TropeLearnCategorize),
-  Tutorial(TropeLearnTutorial),
+pub enum TropeLensMethod {
+  Categorize(TropeLensCategorize),
+  Tutorial(TropeLensTutorial),
 }
 
 
 /// Categorize media based on mentioned tropes
 #[derive(Debug, ClapArgs)]
-pub struct TropeLearnCategorize {
+pub struct TropeLensCategorize {
 
   /// Name
   #[clap(short, long, value_parser,)]
@@ -41,19 +41,19 @@ pub struct TropeLearnCategorize {
   pub force: bool,
 
 }
-impl From<TropeLearnCategorize> for TropeLearnArgs {
-  fn from(method_args: TropeLearnCategorize) -> Self {
-    TropeLearnArgs { method: TropeLearnMethod::Categorize(method_args) }
+impl From<TropeLensCategorize> for TropeLensArgs {
+  fn from(method_args: TropeLensCategorize) -> Self {
+    TropeLensArgs { method: TropeLensMethod::Categorize(method_args) }
   }
 }
 
 /// Runs dfdx tutorials
 #[derive(Debug, ClapArgs)]
-pub struct TropeLearnTutorial {
+pub struct TropeLensTutorial {
 
 }
-impl From<TropeLearnTutorial> for TropeLearnArgs {
-  fn from(method_args: TropeLearnTutorial) -> Self {
-    TropeLearnArgs { method: TropeLearnMethod::Tutorial(method_args) }
+impl From<TropeLensTutorial> for TropeLensArgs {
+  fn from(method_args: TropeLensTutorial) -> Self {
+    TropeLensArgs { method: TropeLensMethod::Tutorial(method_args) }
   }
 }

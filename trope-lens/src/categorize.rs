@@ -1,12 +1,12 @@
 use std::{path::Path, str::FromStr};
 use dfdx::{prelude::*, gradients::Gradients};
 
-use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeLearnCategorize};
+use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeLensCategorize};
 
-use crate::LearnError;
+use crate::LensError;
 
 
-pub fn categorize(args: TropeLearnCategorize) -> Result<(), LearnError> {
+pub fn categorize(args: TropeLensCategorize) -> Result<(), LensError> {
 
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
 

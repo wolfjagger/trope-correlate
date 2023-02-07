@@ -6,34 +6,34 @@ use trope_lib::NamespaceParseError;
 
 
 #[derive(Debug, Display)]
-pub enum LearnError {
+pub enum LensError {
   CSV(CSVError),
   IO(IOError),
   Parse(NamespaceParseError),
 }
 
-impl std::error::Error for LearnError { }
+impl std::error::Error for LensError { }
 
-impl From<CSVError> for LearnError {
+impl From<CSVError> for LensError {
   fn from(err: CSVError) -> Self {
-    LearnError::CSV(err)
+    LensError::CSV(err)
   }
 }
 
-impl From<IOError> for LearnError {
+impl From<IOError> for LensError {
   fn from(err: IOError) -> Self {
-    LearnError::IO(err)
+    LensError::IO(err)
   }
 }
 
-impl<T> From<IntoInnerError<T>> for LearnError {
+impl<T> From<IntoInnerError<T>> for LensError {
   fn from(err: IntoInnerError<T>) -> Self {
-    LearnError::IO(err.into_error())
+    LensError::IO(err.into_error())
   }
 }
 
-impl From<NamespaceParseError> for LearnError {
+impl From<NamespaceParseError> for LensError {
   fn from(err: NamespaceParseError) -> Self {
-    LearnError::Parse(err)
+    LensError::Parse(err)
   }
 }

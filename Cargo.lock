@@ -2718,7 +2718,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "trope-learn"
+name = "trope-lens"
 version = "0.1.0"
 dependencies = [
  "csv",
