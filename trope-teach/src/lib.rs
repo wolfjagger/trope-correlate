@@ -10,7 +10,7 @@ use cmd::{
   tutorial::tutorial
 };
 use error::TeachError;
-use model::Model;
+use model::{InModel, OutModel};
 use train_params::TrainParams;
 
 pub fn run(args: TropeTeachArgs) {

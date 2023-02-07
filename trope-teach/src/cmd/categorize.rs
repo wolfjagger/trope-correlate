@@ -2,14 +2,10 @@ use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{EntityType, PageIdLookup, TropeTeachCategorize};
 
-use crate::{Model, TeachError, TrainParams};
+use crate::{InModel, OutModel, TeachError, TrainParams};
 
 
 pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
-
-  // TODO: Figure out how to handle these types (probably should be the same)
-  type InModelSize = [f64; 3];
-  type OutModelSize = [f64; 3];
 
   let TropeTeachCategorize {
     in_model: in_model_file,
@@ -19,9 +15,9 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   } = args;
 
   let _in_model = in_model_file.as_ref().map(
-    |f| Model::<InModelSize>::from_path(f)
+    |f| InModel::from_path(f)
   ).transpose()?;
-  let out_model = Model::<OutModelSize>::init_random();
+  let out_model = OutModel::init_random();
   let _train_params = TrainParams::from_path(&train_params_file)?;
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);

@@ -5,7 +5,12 @@ use dfdx::numpy;
 // See https://github.com/coreylowman/dfdx/blob/main/examples/07-custom-module.rs
 
 
-pub type Model<T> = WrapperModel<T>;
+// TODO: Figure out how to handle these types (probably should be the same)
+type InModelSize = [f64; 3];
+type OutModelSize = [f64; 3];
+
+pub type InModel = WrapperModel::<InModelSize>;
+pub type OutModel = WrapperModel::<OutModelSize>;
 
 
 #[derive(Default)]
