@@ -1,5 +1,6 @@
 mod cmd;
 mod error;
+mod model;
 
 use trope_lib::{TropeTeachArgs, TropeTeachMethod};
 
@@ -8,6 +9,7 @@ use cmd::{
   tutorial::tutorial
 };
 use error::TeachError;
+use model::Model;
 
 pub fn run(args: TropeTeachArgs) {
   match args.method {

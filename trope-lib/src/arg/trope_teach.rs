@@ -28,19 +28,19 @@ pub enum TropeTeachMethod {
 pub struct TropeTeachCategorize {
 
   /// File for input model
-  #[clap(short, long, value_parser, required = false)]
+  #[clap(short, long)]
   pub in_model: Option<PathBuf>,
 
   /// File for output model
-  #[clap(short, long, value_parser, required = true)]
-  pub out_model: Option<PathBuf>,
+  #[clap(short, long)]
+  pub out_model: PathBuf,
 
   /// Training parameters
-  #[clap(short, long, value_parser, required = true)]
-  pub training_params: Option<PathBuf>,
+  #[clap(short, long)]
+  pub training_params: PathBuf,
 
   /// Overwrite existing model if enabled (default: false)
-  #[clap(short, long, value_parser, default_value_t = false)]
+  #[clap(short, long, default_value_t = false)]
   pub force: bool,
 
 }
