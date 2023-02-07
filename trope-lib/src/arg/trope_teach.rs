@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use clap::{Args as ClapArgs, Parser, Subcommand};
 
 
@@ -26,7 +27,19 @@ pub enum TropeTeachMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeTeachCategorize {
 
-  /// Overwrite existing trope directory if enabled (default: false)
+  /// File for input model
+  #[clap(short, long, value_parser, required = false)]
+  pub in_model: Option<PathBuf>,
+
+  /// File for output model
+  #[clap(short, long, value_parser, required = true)]
+  pub out_model: Option<PathBuf>,
+
+  /// Training parameters
+  #[clap(short, long, value_parser, required = true)]
+  pub training_params: Option<PathBuf>,
+
+  /// Overwrite existing model if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
 
