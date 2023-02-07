@@ -2776,6 +2776,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "trope-teach"
+version = "0.1.0"
+dependencies = [
+ "csv",
+ "derive_more",
+ "dfdx",
+ "log",
+ "rand 0.8.5",
+ "serde",
+ "simple_logger",
+ "trope-lib",
+]
+
+[[package]]
 name = "trope-web"
 version = "0.1.0"
 dependencies = [

@@ -2,6 +2,7 @@ mod trope_download;
 mod trope_lens;
 mod trope_pipeline;
 mod trope_scrape;
+mod trope_teach;
 
 
 pub use trope_download::{
@@ -22,4 +23,8 @@ pub use trope_scrape::{
   TropeScrapeNamespace, TropeScrapeNamespaceTotPages,
   TropeScrapePage, TropeScrapePagelist, TropeScrapeAllPages,
   TropeScrapePagelistLen, TropeScrapeGeneratePageIds,
+};
+pub use trope_teach::{
+  TropeTeachArgs, TropeTeachMethod,
+  TropeTeachCategorize, TropeTeachTutorial,
 };

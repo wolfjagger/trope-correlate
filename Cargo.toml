@@ -6,6 +6,7 @@ members = [
   "trope-lib",
   "trope-scrape",
   "trope-pipeline",
+  "trope-teach",
   "trope-web",
 ]
 
