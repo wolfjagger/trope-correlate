@@ -1,6 +1,6 @@
-use std::{path::Path, str::FromStr};
+use std::str::FromStr;
 
-use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeLensCategorize};
+use trope_lib::{EntityType, PageIdLookup, TropeLensCategorize};
 
 use crate::LensError;
 
@@ -27,13 +27,13 @@ pub fn categorize(args: TropeLensCategorize) -> Result<(), LensError> {
   let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
   let (
     mentioned_trope_pageids, _missing_tropes
-  ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
+  ) = trope_lookup.pageids_from_path(&mentioned_tropes_path)?;
 
   log::info!("Assembling media...");
   let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
   let (
     mentioned_media_pageids, _missing_media
-  ) = assemble_pageids(&mentioned_media_path, &media_lookup)?;
+  ) = media_lookup.pageids_from_path(&mentioned_media_path)?;
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
@@ -47,40 +47,6 @@ pub fn categorize(args: TropeLensCategorize) -> Result<(), LensError> {
 
   Ok(())
 
-}
-
-
-fn assemble_pageids(p: &Path, page_lookup: &PageIdLookup)
--> Result<(Vec<PageId>, Vec<String>), csv::Error> {
-
-  let mentioned_pages = path_to_page_names(&p)?;
-
-  let (found_pages, missing_pages): (Vec<_>, Vec<_>) = mentioned_pages.into_iter().partition(
-    |name| page_lookup.contains_page(&name)
-  );
-  let ment_page_pageids: Vec<_> = found_pages.into_iter().map(
-    |name| page_lookup.pageid_from_page(&name).unwrap()
-  ).collect();
-
-  log::trace!("Found pageids:");
-  for t_id in &ment_page_pageids {
-    log::trace!("{}", t_id);
-  }
-
-  log::trace!("Missing pages:");
-  for missing_page in &missing_pages {
-    log::trace!("{}", missing_page);
-  }
-
-  Ok((ment_page_pageids, missing_pages))
-
-}
-
-
-fn path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
-  // Note: url is the source of truth in these mentions; short name is different page-to-page
-  let mentions = csv::Reader::from_path(p)?.into_deserialize::<NamedLink>();
-  mentions.map(|m_result| m_result.map(|m| m.url_page_name().to_string())).collect()
 }
 
 
