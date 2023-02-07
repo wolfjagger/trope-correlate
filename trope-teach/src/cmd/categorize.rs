@@ -21,7 +21,7 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   let _in_model = in_model_file.as_ref().map(
     |f| Model::<InModelSize>::from_path(f)
   ).transpose()?;
-  let _out_model = Model::<OutModelSize>::from_path(&out_model_file)?;
+  let out_model = Model::<OutModelSize>::init_random();
   let _train_params = TrainParams::from_path(&train_params_file)?;
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
@@ -50,6 +50,8 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
+
+  out_model.save(&out_model_file)?;
 
   Ok(())
 
