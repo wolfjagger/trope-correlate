@@ -1,4 +1,4 @@
-use std::{path::Path, str::FromStr};
+use std::path::Path;
 use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{EntityType, NamedLink, PageId, PageIdLookup, TropeTeachCategorize};
@@ -8,40 +8,32 @@ use crate::TeachError;
 
 pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 
-  let ns = trope_lib::Namespace::from_str(&args.namespace)?;
-
-  let page = args.pagename;
-  log::info!("Categorizing page {}...", page);
-  let sc_page_dir = trope_lib::sc_page_dir(&ns).join(&page);
-
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
   let trope_lookup = PageIdLookup::from_path(&trope_pageid_path)?;
   let media_lookup = PageIdLookup::from_path(&media_pageid_path)?;
 
-  log::info!("Assembling tropes...");
-  let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
-  let (
-    mentioned_trope_pageids, _missing_tropes
-  ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
-
-  log::info!("Assembling media...");
-  let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
-  let (
-    mentioned_media_pageids, _missing_media
-  ) = assemble_pageids(&mentioned_media_path, &media_lookup)?;
-
-  // Input to ML is the list of tropes and/or media
-  // Output is namespace
-
   log::trace!(
     "{} total trope pageids, {} total media pageids",
     trope_lookup.len(), media_lookup.len()
   );
-  log::trace!(
-    "{} mentioned tropes, {} mentioned media",
-    mentioned_trope_pageids.len(), mentioned_media_pageids.len()
-  );
+
+  log::info!("Assembling tropes...");
+  // TODO: Assemble global trope pageid list AND mentions lists from tropes and media
+  // let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
+  // let (
+  //   mentioned_trope_pageids, _missing_tropes
+  // ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
+
+  log::info!("Assembling media...");
+  // TODO: Assemble global media pageid list AND mentions lists from tropes and media
+  // let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
+  // let (
+  //   mentioned_media_pageids, _missing_media
+  // ) = assemble_pageids(&mentioned_media_path, &media_lookup)?;
+
+  // Input to ML is the list of tropes and/or media
+  // Output is namespace
 
   Ok(())
 
@@ -83,6 +75,12 @@ fn path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
 
 
 fn _do_tensor_propagation() {
+
+  // Look in tutorial.rs for how to do model & tensor stuff, patchy example below.
+  // Assemble data files, pageid lists here and do optimization update loop.
+  // Input is input data selected to train and ml training params.
+  // Output is a model, in some state of training.
+  // Allow feeding in new or existing models
 
   type MLP = (
     (Linear<10, 32>, ReLU),

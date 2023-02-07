@@ -19,6 +19,11 @@ pub fn categorize(args: TropeLensCategorize) -> Result<(), LensError> {
   let trope_lookup = PageIdLookup::from_path(&trope_pageid_path)?;
   let media_lookup = PageIdLookup::from_path(&media_pageid_path)?;
 
+  log::trace!(
+    "{} total trope pageids, {} total media pageids",
+    trope_lookup.len(), media_lookup.len()
+  );
+
   log::info!("Assembling tropes...");
   let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
   let (
@@ -35,13 +40,11 @@ pub fn categorize(args: TropeLensCategorize) -> Result<(), LensError> {
   // Output is namespace
 
   log::trace!(
-    "{} total trope pageids, {} total media pageids",
-    trope_lookup.len(), media_lookup.len()
-  );
-  log::trace!(
     "{} mentioned tropes, {} mentioned media",
     mentioned_trope_pageids.len(), mentioned_media_pageids.len()
   );
+
+  log::warn!("TODO: Feed info into model and get output namespace guess");
 
   Ok(())
 
@@ -84,44 +87,7 @@ fn path_to_page_names(p: &Path) -> Result<Vec<String>, csv::Error> {
 
 fn _do_tensor_propagation() {
 
-  type MLP = (
-    (Linear<10, 32>, ReLU),
-    (Linear<32, 32>, ReLU),
-    (Linear<32, 5>, Tanh),
-  );
-
-  // 7. Use an optimizer from crate::optim to optimize your network!
-
-  let mut mlp: MLP = Default::default();
-
-  // tensors default to not having a tape
-  let x: Tensor1D<10, NoneTape> = TensorCreator::zeros();
-  let x = x.traced();
-  log::info!("x: {:?}", x);
-
-  // The tape from the input is moved through the network during .forward().
-  let y: Tensor1D<5, OwnedTape> = mlp.forward(x);
-  log::info!("y: {:?}", y);
-  let y_true = tensor([1.0, 2.0, 3.0, 4.0, 5.0]);
-  log::info!("y: {:?}", y_true);
-
-  // compute cross entropy loss
-  let loss: Tensor0D<OwnedTape> = cross_entropy_with_logits_loss(y, y_true);
-  log::info!("loss: {:?}", loss);
-
-  // call `backward()` to compute gradients. The tensor *must* have `OwnedTape`!
-  let gradients: Gradients = loss.backward();
-  log::info!("gradients: {:?}", gradients);
-
-  // Use stochastic gradient descent (Sgd), with a learning rate of 1e-2, and 0.9 momentum.
-  let mut opt = Sgd::new(SgdConfig {
-    lr: 1e-2,
-    momentum: Some(Momentum::Classic(0.9)),
-    weight_decay: None,
-  });
-
-  // pass the gradients & the model into the optimizer's update method
-  opt.update(&mut mlp, gradients).unwrap();
-  log::info!("opt: {:?}", opt);
+  // Look in trope-teach e.g. tutorial.rs for how to feed the input through
+  //  the model to get output guess
 
 }

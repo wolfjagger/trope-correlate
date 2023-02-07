@@ -28,14 +28,6 @@ pub enum TropeTeachMethod {
 #[derive(Debug, ClapArgs)]
 pub struct TropeTeachCategorize {
 
-  /// Name
-  #[clap(short, long, value_parser,)]
-  pub pagename: String,
-
-  /// Namespace of page
-  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
-  pub namespace: String,
-
   /// Overwrite existing trope directory if enabled (default: false)
   #[clap(short, long, value_parser, default_value_t = false)]
   pub force: bool,
