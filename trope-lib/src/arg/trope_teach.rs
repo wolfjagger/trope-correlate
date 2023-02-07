@@ -37,7 +37,7 @@ pub struct TropeTeachCategorize {
 
   /// Training parameters
   #[clap(short, long)]
-  pub training_params: PathBuf,
+  pub train_params: PathBuf,
 
   /// Overwrite existing model if enabled (default: false)
   #[clap(short, long, default_value_t = false)]
