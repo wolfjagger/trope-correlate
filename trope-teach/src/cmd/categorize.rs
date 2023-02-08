@@ -1,6 +1,9 @@
 use dfdx::{prelude::*, gradients::Gradients};
 
-use trope_lib::{EntityType, PageIdLookup, TropeTeachCategorize};
+use trope_lib::{
+  EntityType, PageIdLookup, TropeTeachCategorize,
+  sc_pagelist_dir, ALL_NAMESPACES
+};
 
 use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
 
@@ -30,15 +33,36 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
     trope_lookup.len(), media_lookup.len()
   );
 
+  log::info!("Assembling global trope and media pagelists...");
+  let mut global_trope_pageids = vec![];
+  let mut global_media_pageids = vec![];
+  for ns in ALL_NAMESPACES {
+    let pagelist_path = sc_pagelist_dir(&ns).join("links.csv");
+    match ns.entity_type() {
+      EntityType::Trope => {
+        let (found_pageids, _missing) = trope_lookup.pageids_from_path(&pagelist_path)?;
+        global_trope_pageids.push((ns.clone(), found_pageids));
+      },
+      EntityType::Media => {
+        let (found_pageids, _missing) = media_lookup.pageids_from_path(&pagelist_path)?;
+        global_media_pageids.push((ns.clone(), found_pageids));
+      },
+      _ => {}
+    }
+  }
+
+  log::trace!("{:?}", global_trope_pageids);
+  log::trace!("{:?}", global_media_pageids);
+
   log::info!("Assembling tropes...");
-  // TODO: Assemble global trope pageid list AND mentions lists from tropes and media
+  // TODO: Assemble trope pageid mentions lists from tropes and media
   // let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
   // let (
   //   mentioned_trope_pageids, _missing_tropes
   // ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
 
   log::info!("Assembling media...");
-  // TODO: Assemble global media pageid list AND mentions lists from tropes and media
+  // TODO: Assemble media pageid mentions lists from tropes and media
   // let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
   // let (
   //   mentioned_media_pageids, _missing_media
