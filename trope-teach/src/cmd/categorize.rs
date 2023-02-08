@@ -1,8 +1,9 @@
+use std::mem::size_of_val;
 use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{
   EntityType, PageIdLookup, TropeTeachCategorize,
-  sc_pagelist_dir, ALL_NAMESPACES
+  sc_pagelist_dir, ALL_NAMESPACES, Namespace, PageId
 };
 
 use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
@@ -32,7 +33,10 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
     "{} total trope pageids, {} total media pageids",
     trope_lookup.len(), media_lookup.len()
   );
+  log::debug!("Size of trope_lookup: {}", trope_lookup.byte_size());
+  log::debug!("Size of media_lookup: {}", media_lookup.byte_size());
 
+  // NOTE: We might not even want these! Maybe just rely on lookups for global info?
   log::info!("Assembling global trope and media pagelists...");
   let mut global_trope_pageids = vec![];
   let mut global_media_pageids = vec![];
@@ -53,6 +57,15 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 
   log::trace!("{:?}", global_trope_pageids);
   log::trace!("{:?}", global_media_pageids);
+
+  log::debug!(
+    "Size of global_trope_pageids: {}",
+    pageids_collection_byte_size(global_trope_pageids)
+  );
+  log::debug!(
+    "Size of global_media_pageids: {}",
+    pageids_collection_byte_size(global_media_pageids)
+  );
 
   log::info!("Assembling tropes...");
   // TODO: Assemble trope pageid mentions lists from tropes and media
@@ -127,4 +140,12 @@ fn _do_tensor_propagation() {
   opt.update(&mut mlp, gradients).unwrap();
   log::info!("opt: {:?}", opt);
 
+}
+
+fn pageids_collection_byte_size(collection: Vec<(Namespace, Vec<PageId>)>) -> usize {
+  collection.iter().map(
+    |(ns, pid_list)| size_of_val(&ns) + pid_list.iter().map(
+      |pid| size_of_val(&pid.id) + size_of_val(&*pid.page)
+    ).sum::<usize>()
+  ).sum::<usize>()
 }

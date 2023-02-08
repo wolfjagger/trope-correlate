@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{mem::size_of_val, path::Path};
 
 use bimap::BiMap;
 
@@ -46,6 +46,11 @@ impl PageIdLookup {
 
   pub fn len(&self) -> usize {
     self.bimap.len()
+  }
+
+  pub fn byte_size(&self) -> usize {
+    self.bimap.left_values().map(|s| size_of_val(&*s)).sum::<usize>() +
+      self.bimap.right_values().map(|s| size_of_val(&*s)).sum::<usize>()
   }
 
   pub fn pageids_from_path(&self, p: &Path)
