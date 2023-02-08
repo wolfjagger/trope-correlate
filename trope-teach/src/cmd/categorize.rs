@@ -1,9 +1,9 @@
-use std::mem::size_of_val;
+use std::{fs::read_dir, mem::size_of_val};
 use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{
   EntityType, PageIdLookup, TropeTeachCategorize,
-  sc_pagelist_dir, ALL_NAMESPACES, Namespace, PageId
+  sc_pagelist_dir, ALL_NAMESPACES, Namespace, PageId, sc_page_dir
 };
 
 use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
@@ -24,6 +24,7 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   let out_model = OutModel::init_random();
   let _train_params = TrainParams::from_path(&train_params_file)?;
 
+
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
   let trope_lookup = PageIdLookup::from_path(&trope_pageid_path)?;
@@ -35,6 +36,7 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   );
   log::debug!("Size of trope_lookup: {}", trope_lookup.byte_size());
   log::debug!("Size of media_lookup: {}", media_lookup.byte_size());
+
 
   // NOTE: We might not even want these! Maybe just rely on lookups for global info?
   log::info!("Assembling global trope and media pagelists...");
@@ -67,19 +69,31 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
     pageids_collection_byte_size(global_media_pageids)
   );
 
-  log::info!("Assembling tropes...");
-  // TODO: Assemble trope pageid mentions lists from tropes and media
+
+  let sc_page_dirs: Result<Vec<_>, _> = ALL_NAMESPACES.iter().filter(
+    |ns| [EntityType::Trope, EntityType::Media].contains(&ns.entity_type())
+  ).map(
+    |ns| read_dir(sc_page_dir(&ns)).map(|dirs| (ns.clone(), dirs))
+  ).collect();
+  let sc_page_dirs = sc_page_dirs.expect("Error reading some directory of page dirs");
+
+  log::info!("Assembling tropes and media mention paths...");
+
+  let trope_mention_paths = sc_page_dirs.into_iter().map(
+    |(ns, page_dirs)| (ns.clone(), page_dirs.into_iter().filter_map(
+      |dir| dir.map(|d| d.path()).ok()
+    ).map(
+      |page_dir| (
+        page_dir.join("mentioned_tropes.csv"),
+        page_dir.join("mentioned_media.csv")
+      )
+    ).collect::<Vec<_>>())
+  ).collect::<Vec<_>>();
+
   // let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
   // let (
   //   mentioned_trope_pageids, _missing_tropes
   // ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
-
-  log::info!("Assembling media...");
-  // TODO: Assemble media pageid mentions lists from tropes and media
-  // let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
-  // let (
-  //   mentioned_media_pageids, _missing_media
-  // ) = assemble_pageids(&mentioned_media_path, &media_lookup)?;
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
