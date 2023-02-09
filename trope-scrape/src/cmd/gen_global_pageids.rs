@@ -4,7 +4,7 @@ use trope_lib::{EntityType, PageId};
 
 
 /// Loop through pages to generate ids for each
-pub fn gen_global_page_ids(_: trope_lib::TropeScrapeGlobalPageIds) -> Result<(), Box<dyn std::error::Error>> {
+pub fn gen_global_pageids(_: trope_lib::TropeScrapeGlobalPageIds) -> Result<(), Box<dyn std::error::Error>> {
 
   let sc_page_dir = trope_lib::scrape_dir().join("page");
   let sc_pageid_dir = trope_lib::sc_pageid_dir();

@@ -6,7 +6,7 @@ use crate::gen_pageid::translate_links_to_pageids;
 
 
 /// Generate page ids for a page's mentions using the global list
-pub fn gen_mention_page_ids(args: trope_lib::TropeScrapeMentionPageIds) -> Result<(), Box<dyn std::error::Error>> {
+pub fn gen_mention_pageids(args: trope_lib::TropeScrapeMentionPageIds) -> Result<(), Box<dyn std::error::Error>> {
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);

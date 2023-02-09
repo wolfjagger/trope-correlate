@@ -11,10 +11,10 @@ pub struct PageIdLookup {
 
 impl PageIdLookup {
 
-  pub fn new<I>(page_ids: I) -> Self
+  pub fn new<I>(pageids: I) -> Self
   where I: IntoIterator<Item=PageId> {
     Self{
-      bimap: BiMap::from_iter(page_ids.into_iter().map(|pi| pi.into()))
+      bimap: BiMap::from_iter(pageids.into_iter().map(|pi| pi.into()))
     }
   }
 
