@@ -3,7 +3,7 @@ use dfdx::{prelude::*, gradients::Gradients};
 
 use trope_lib::{
   EntityType, PageIdLookup, TropeTeachCategorize,
-  sc_pagelist_dir, ALL_NAMESPACES, Namespace, PageId, sc_page_dir
+  ALL_NAMESPACES, Namespace, PageId, sc_page_dir
 };
 
 use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
@@ -18,10 +18,13 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
     force: _force
   } = args;
 
-  let _in_model = in_model_file.as_ref().map(
+  let in_model = in_model_file.as_ref().map(
     |f| InModel::from_path(f)
   ).transpose()?;
-  let out_model = OutModel::init_random();
+  let out_model = match in_model {
+    Some(model) => model,
+    None => OutModel::init_random()
+  };
   let _train_params = TrainParams::from_path(&train_params_file)?;
 
 
@@ -38,36 +41,36 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   log::debug!("Size of media_lookup: {}", media_lookup.byte_size());
 
 
-  // NOTE: We might not even want these! Maybe just rely on lookups for global info?
-  log::info!("Assembling global trope and media pagelists...");
-  let mut global_trope_pageids = vec![];
-  let mut global_media_pageids = vec![];
-  for ns in ALL_NAMESPACES {
-    let pagelist_path = sc_pagelist_dir(&ns).join("links.csv");
-    match ns.entity_type() {
-      EntityType::Trope => {
-        let (found_pageids, _missing) = trope_lookup.pageids_from_path(&pagelist_path)?;
-        global_trope_pageids.push((ns.clone(), found_pageids));
-      },
-      EntityType::Media => {
-        let (found_pageids, _missing) = media_lookup.pageids_from_path(&pagelist_path)?;
-        global_media_pageids.push((ns.clone(), found_pageids));
-      },
-      _ => {}
-    }
-  }
+  // // NOTE: We might not even want these! Maybe just rely on lookups for global info?
+  // log::info!("Assembling global trope and media pagelists...");
+  // let mut global_trope_pageids = vec![];
+  // let mut global_media_pageids = vec![];
+  // for ns in ALL_NAMESPACES {
+  //   let pagelist_path = sc_pagelist_dir(&ns).join("links.csv");
+  //   match ns.entity_type() {
+  //     EntityType::Trope => {
+  //       let (found_pageids, _missing) = trope_lookup.pageids_from_path(&pagelist_path)?;
+  //       global_trope_pageids.push((ns.clone(), found_pageids));
+  //     },
+  //     EntityType::Media => {
+  //       let (found_pageids, _missing) = media_lookup.pageids_from_path(&pagelist_path)?;
+  //       global_media_pageids.push((ns.clone(), found_pageids));
+  //     },
+  //     _ => {}
+  //   }
+  // }
 
-  log::trace!("{:?}", global_trope_pageids);
-  log::trace!("{:?}", global_media_pageids);
+  // log::trace!("{:?}", global_trope_pageids);
+  // log::trace!("{:?}", global_media_pageids);
 
-  log::debug!(
-    "Size of global_trope_pageids: {}",
-    pageids_collection_byte_size(global_trope_pageids)
-  );
-  log::debug!(
-    "Size of global_media_pageids: {}",
-    pageids_collection_byte_size(global_media_pageids)
-  );
+  // log::debug!(
+  //   "Size of global_trope_pageids: {}",
+  //   pageids_collection_byte_size(global_trope_pageids)
+  // );
+  // log::debug!(
+  //   "Size of global_media_pageids: {}",
+  //   pageids_collection_byte_size(global_media_pageids)
+  // );
 
 
   let sc_page_dirs: Result<Vec<_>, _> = ALL_NAMESPACES.iter().filter(
@@ -84,19 +87,20 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
       |dir| dir.map(|d| d.path()).ok()
     ).map(
       |page_dir| (
-        page_dir.join("mentioned_tropes.csv"),
-        page_dir.join("mentioned_media.csv")
+        page_dir.join("mentioned_trope_pageid.csv"),
+        page_dir.join("mentioned_media_pageid.csv")
       )
     ).collect::<Vec<_>>())
   ).collect::<Vec<_>>();
 
-  // let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
-  // let (
-  //   mentioned_trope_pageids, _missing_tropes
-  // ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
+
+  for train_time in 0..100 {
+    println!("Train time {}", train_time);
+  }
+
 
   let res: Result<(), NpzError> = out_model.save(&out_model_file).map_err(NpzError::from);
   res?;
@@ -156,6 +160,8 @@ fn _do_tensor_propagation() {
 
 }
 
+
+#[allow(dead_code)]
 fn pageids_collection_byte_size(collection: Vec<(Namespace, Vec<PageId>)>) -> usize {
   collection.iter().map(
     |(ns, pid_list)| size_of_val(&ns) + pid_list.iter().map(
