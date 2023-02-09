@@ -11,6 +11,8 @@ pub fn translate_links_to_pageids(
   force: bool
 ) -> Result<(), ScrapeError> {
 
+  // NOTE: Consider saving JUST the ids, to make the files faster to read in trope-teach
+
   if pageid_csv_path.try_exists()? {
     if force {
       log::debug!("Pageid file exists, overwriting {}...", pagename);
