@@ -13,21 +13,15 @@ pub fn translate_links_to_pageids(
 
   if pageid_csv_path.try_exists()? {
     if force {
-      log::info!("Pageid file exists, overwriting {}...", pagename);
+      log::debug!("Pageid file exists, overwriting {}...", pagename);
     } else {
-      log::info!("Pageid file exists, skipping {}...", pagename);
+      log::debug!("Pageid file exists, skipping {}...", pagename);
       return Ok(());
     }
   }
 
-  let link_csv = match csv::Reader::from_path(&link_csv_path) {
-    Ok(r) => r,
-    Err(why) => panic!("Couldn't read from {}: {}", link_csv_path.display(), why),
-  };
-  let mut pageid_csv = match csv::Writer::from_path(&pageid_csv_path) {
-    Ok(w) => w,
-    Err(why) => panic!("Couldn't write to {}: {}", pageid_csv_path.display(), why),
-  };
+  let link_csv = csv::Reader::from_path(&link_csv_path)?;
+  let mut pageid_csv = csv::Writer::from_path(&pageid_csv_path)?;
 
   for mention in link_csv.into_deserialize::<NamedLink>() {
     match mention {

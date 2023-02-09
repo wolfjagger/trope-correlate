@@ -1,3 +1,4 @@
+pub mod gen_all_mention_pageids;
 pub mod gen_global_pageids;
 pub mod gen_mention_pageids;
 pub mod get_namespace_tot_pages;

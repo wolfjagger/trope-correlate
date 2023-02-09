@@ -15,12 +15,12 @@ pub fn gen_mention_pageids(args: trope_lib::TropeScrapeMentionPageIds) -> Result
 
   let pagename = args.pagename;
   let ns = trope_lib::Namespace::from_str(&args.namespace)?;
-  let sc_page_dir = trope_lib::sc_page_dir(&ns).join(&pagename);
+  let page_dir = trope_lib::sc_page_dir(&ns).join(&pagename);
 
-  let trope_mention_raw_path = sc_page_dir.join("mentioned_tropes.csv");
-  let media_mention_raw_path = sc_page_dir.join("mentioned_media.csv");
-  let trope_mention_pageid_path = sc_page_dir.join("mentioned_trope_pageid.csv");
-  let media_mention_pageid_path = sc_page_dir.join("mentioned_media_pageid.csv");
+  let trope_mention_raw_path = page_dir.join("mentioned_tropes.csv");
+  let media_mention_raw_path = page_dir.join("mentioned_media.csv");
+  let trope_mention_pageid_path = page_dir.join("mentioned_trope_pageid.csv");
+  let media_mention_pageid_path = page_dir.join("mentioned_media_pageid.csv");
 
   translate_links_to_pageids(
     &trope_lookup, &pagename, &trope_mention_raw_path, &trope_mention_pageid_path, args.force

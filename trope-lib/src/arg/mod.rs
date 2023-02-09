@@ -22,7 +22,8 @@ pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
   TropeScrapeNamespace, TropeScrapeNamespaceTotPages,
   TropeScrapePage, TropeScrapePagelist, TropeScrapeAllPages,
-  TropeScrapePagelistLen, TropeScrapeGlobalPageIds, TropeScrapeMentionPageIds,
+  TropeScrapePagelistLen,
+  TropeScrapeGlobalPageIds, TropeScrapeMentionPageIds, TropeScrapeAllMentionPageIds,
 };
 pub use trope_teach::{
   TropeTeachArgs, TropeTeachMethod,
