@@ -1,5 +1,6 @@
 mod cmd;
 mod error;
+mod gen_pageid;
 mod read_html;
 mod scrape;
 
