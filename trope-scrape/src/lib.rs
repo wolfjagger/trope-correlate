@@ -6,6 +6,7 @@ mod scrape;
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
 pub use cmd::{
   gen_global_page_ids::gen_global_page_ids,
+  gen_mention_page_ids::gen_mention_page_ids,
   get_namespace_tot_pages::get_namespace_tot_pages,
   get_pagelist_len::get_pagelist_len,
   scrape_namespace::scrape_namespace,
@@ -35,7 +36,10 @@ pub fn run(args: TropeScrapeArgs) {
       get_pagelist_len(method_args).expect("Unhandled get_pagelist_len error");
     },
     TropeScrapeMethod::GlobalPageIds(method_args) => {
-      gen_global_page_ids(method_args).expect("Unhandled generate_page_ids error");
+      gen_global_page_ids(method_args).expect("Unhandled global_page_ids error");
+    },
+    TropeScrapeMethod::MentionPageIds(method_args) => {
+      gen_mention_page_ids(method_args).expect("Unhandled mention_page_ids error");
     },
   }
 }

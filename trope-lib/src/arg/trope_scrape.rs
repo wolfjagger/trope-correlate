@@ -26,6 +26,7 @@ pub enum TropeScrapeMethod {
   AllPages(TropeScrapeAllPages),
   PagelistLen(TropeScrapePagelistLen),
   GlobalPageIds(TropeScrapeGlobalPageIds),
+  MentionPageIds(TropeScrapeMentionPageIds),
 }
 
 
@@ -204,5 +205,29 @@ pub struct TropeScrapeGlobalPageIds { }
 impl From<TropeScrapeGlobalPageIds> for TropeScrapeArgs {
   fn from(method_args: TropeScrapeGlobalPageIds) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::GlobalPageIds(method_args) }
+  }
+}
+
+
+/// Generates pageids for all pages of the different entity types
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeMentionPageIds {
+
+  /// Page name
+  #[clap(short, long, value_parser,)]
+  pub pagename: String,
+
+  /// Namespace for page
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropeScrapeMentionPageIds> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeMentionPageIds) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::MentionPageIds(method_args) }
   }
 }

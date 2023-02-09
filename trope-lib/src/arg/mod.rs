@@ -22,7 +22,7 @@ pub use trope_scrape::{
   TropeScrapeArgs, TropeScrapeMethod,
   TropeScrapeNamespace, TropeScrapeNamespaceTotPages,
   TropeScrapePage, TropeScrapePagelist, TropeScrapeAllPages,
-  TropeScrapePagelistLen, TropeScrapeGlobalPageIds,
+  TropeScrapePagelistLen, TropeScrapeGlobalPageIds, TropeScrapeMentionPageIds,
 };
 pub use trope_teach::{
   TropeTeachArgs, TropeTeachMethod,
