@@ -1,4 +1,5 @@
 mod arg;
+mod blacklist;
 mod namespace;
 mod pageid_lookup;
 mod path_locator;
@@ -7,6 +8,7 @@ mod util;
 
 
 pub use arg::*;
+pub use blacklist::PAGE_BLACKLIST;
 pub use namespace::{Namespace, NamespaceParseError, EntityType, ALL_NAMESPACES};
 pub use pageid_lookup::PageIdLookup;
 pub use path_locator::{
