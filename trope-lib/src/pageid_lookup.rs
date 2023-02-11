@@ -9,6 +9,9 @@ pub struct PageIdLookup {
   bimap: BiMap<u32, String>
 }
 
+
+// NOTE: Case insensitive!
+
 impl PageIdLookup {
 
   pub fn new<I>(pageids: I) -> Self
@@ -34,7 +37,7 @@ impl PageIdLookup {
     self.bimap.get_by_left(id)
   }
   pub fn get_id(&self, page: &str) -> Option<&u32> {
-    self.bimap.get_by_right(page)
+    self.bimap.get_by_right(&page.to_lowercase())
   }
 
   pub fn pageid_from_page(&self, page: &str) -> Option<PageId> {

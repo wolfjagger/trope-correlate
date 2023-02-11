@@ -37,7 +37,7 @@ pub fn gen_entity_type_pageids(et: EntityType, force: bool) -> Result<(), Scrape
   for ns_dir in read_dir(et_page_dir)? {
     for page_path in read_dir(ns_dir?.path())? {
       // Lossy conversion should be fine
-      let page_str = page_path?.file_name().to_string_lossy().into_owned();
+      let page_str = page_path?.file_name().to_string_lossy().to_lowercase();
       et_pageid_lookup.push(PageId{ id: idx, page: page_str });
       idx += 1;
     }
@@ -63,9 +63,9 @@ pub fn translate_links_to_pageids(
 
   if pageid_csv_path.try_exists()? {
     if force {
-      log::debug!("Pageid file exists, overwriting {}...", pagename);
+      log::debug!("Pageid file exists, overwriting {}...", pageid_csv_path.display());
     } else {
-      log::debug!("Pageid file exists, skipping {}...", pagename);
+      log::debug!("Pageid file exists, skipping {}...", pageid_csv_path.display());
       return Ok(());
     }
   }
@@ -83,7 +83,7 @@ pub fn translate_links_to_pageids(
             pageid_csv.serialize(id)?;
           },
           None => {
-            log::debug!("Could not find pageid for page {}", pagename)
+            log::debug!("Could not find pageid for page {}", true_name)
           }
         }
       },
