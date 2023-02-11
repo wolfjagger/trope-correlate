@@ -14,6 +14,11 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
 
   let pagelist_path = trope_lib::sc_pagelist_dir(&ns).join("links.csv");
   let page_dir = trope_lib::dl_page_dir(&ns);
+  let ns_blacklist: Vec<&str> = trope_lib::PAGE_BLACKLIST.into_iter().filter(
+    |(b_ns, _)| *b_ns == ns
+  ).map(
+    |(_, b_pagename)| b_pagename
+  ).collect();
 
   // Inclusive
   let beg_record = 0.max(args.beg_record) as usize;
@@ -77,6 +82,11 @@ pub fn save_pagelist(args: trope_lib::TropeDownloadPagelist) -> Result<(), Box<d
       Ok(rec) => (rec[0].to_owned(), rec[1].to_owned()),
       Err(why) => panic!("Problem reading csv record {}", &why),
     };
+
+    if ns_blacklist.iter().any(|b_name| b_name == &name) {
+      log::error!("Page on the blacklist; not downloading: {}", name);
+      continue;
+    }
 
     // Set up url
     let url = reqwest::Url::parse(&url_str)?;
