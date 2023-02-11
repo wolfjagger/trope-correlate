@@ -202,7 +202,13 @@ impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
 
 /// Generates pageids for all pages of the different entity types
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeGlobalPageIds { }
+pub struct TropeScrapeGlobalPageIds {
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
 impl From<TropeScrapeGlobalPageIds> for TropeScrapeArgs {
   fn from(method_args: TropeScrapeGlobalPageIds) -> Self {
     TropeScrapeArgs { method: TropeScrapeMethod::GlobalPageIds(method_args) }
