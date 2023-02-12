@@ -30,7 +30,8 @@ pub enum Namespace {
   UsefulNotes,
 }
 use Namespace::*;
-pub static ALL_NAMESPACES: [Namespace; 44] = [
+const NUM_NAMESPACES: usize = 44;
+pub const ALL_NAMESPACES: [Namespace; NUM_NAMESPACES] = [
   // Trope
   Main,
   // Media
