@@ -43,6 +43,10 @@ pub struct TropeTeachCategorize {
   #[clap(short, long, default_value_t = false)]
   pub force: bool,
 
+  /// Seed for random re-ordering page ids & general for training (default: 0)
+  #[clap(short, long, value_parser, default_value_t = 0)]
+  pub random_seed: u64,
+
 }
 impl From<TropeTeachCategorize> for TropeTeachArgs {
   fn from(method_args: TropeTeachCategorize) -> Self {
