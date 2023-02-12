@@ -1,5 +1,6 @@
 use std::{fs::read_dir, mem::size_of_val};
 use dfdx::{prelude::*, gradients::Gradients};
+use rand::{rngs::StdRng, SeedableRng, seq::SliceRandom};
 
 use trope_lib::{
   EntityType, PageIdLookup, TropeTeachCategorize,
@@ -15,7 +16,8 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
     in_model: in_model_file,
     out_model: out_model_file,
     train_params: train_params_file,
-    force: _force
+    force: _force,
+    random_seed,
   } = args;
 
   let in_model = in_model_file.as_ref().map(
@@ -27,6 +29,7 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   };
   let _train_params = TrainParams::from_path(&train_params_file)?;
 
+  let mut rng = StdRng::seed_from_u64(random_seed);
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
@@ -73,6 +76,8 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   // );
 
 
+  log::info!("Assembling tropes and media mention paths...");
+
   let sc_page_dirs: Result<Vec<_>, _> = ALL_NAMESPACES.iter().filter(
     |ns| [EntityType::Trope, EntityType::Media].contains(&ns.entity_type())
   ).map(
@@ -80,18 +85,33 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   ).collect();
   let sc_page_dirs = sc_page_dirs.expect("Error reading some directory of page dirs");
 
-  log::info!("Assembling tropes and media mention paths...");
-
-  let trope_mention_paths = sc_page_dirs.into_iter().map(
-    |(ns, page_dirs)| (ns.clone(), page_dirs.into_iter().filter_map(
-      |dir| dir.map(|d| d.path()).ok()
-    ).map(
-      |page_dir| (
-        page_dir.join("mentioned_trope_pageid.csv"),
-        page_dir.join("mentioned_media_pageid.csv")
-      )
-    ).collect::<Vec<_>>())
+  let mut trope_mentions = sc_page_dirs.into_iter().map(|(ns, page_dirs)|
+    (
+      ns,
+      page_dirs.into_iter().filter_map(
+        |dir| dir.map(|d| d.path()).ok()
+      ).map(
+        |page_dir| {
+          let name = page_dir.file_name().map(
+            |n| n.to_string_lossy().to_string()
+          ).unwrap_or(String::new());
+          (
+            name,
+            page_dir.join("mentioned_trope_pageid.csv"),
+            page_dir.join("mentioned_media_pageid.csv")
+          )
+        }
+      ).collect::<Vec<_>>()
+    )
   ).collect::<Vec<_>>();
+  trope_mentions.shuffle(&mut rng);
+
+
+  let num_trope_mentions = trope_mentions.len();
+  let mut train_mentions = trope_mentions;
+  let test_mentions = train_mentions.split_off(
+    (0.8 * num_trope_mentions as f32).floor() as usize
+  );
 
 
   // Input to ML is the list of tropes and/or media
@@ -99,6 +119,43 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 
   for train_time in 0..100 {
     println!("Train time {}", train_time);
+
+    for (ns, ns_train_mentions) in train_mentions.iter() {
+      for train_mention in ns_train_mentions {
+
+        let (name, m_trope_path, m_media_path) = train_mention;
+        log::trace!("Feeding {} into model", name);
+
+        let mut reader = csv::Reader::from_path(m_trope_path)?;
+        let mentioned_tropes: Result<Vec<trope_lib::PageId>, _> = reader.deserialize::<trope_lib::PageId>().collect();
+        let mentioned_tropes = match mentioned_tropes {
+          Ok(mt) => mt,
+          Err(err) => {
+            log::error!("Error while parsing mentioned tropes: {}", err);
+            continue
+          }
+        };
+        let mut reader = csv::Reader::from_path(m_media_path)?;
+        let mentioned_media: Result<Vec<trope_lib::PageId>, _> = reader.deserialize::<trope_lib::PageId>().collect();
+        let mentioned_media = match mentioned_media {
+          Ok(mm) => mm,
+          Err(err) => {
+            log::error!("Error while parsing mentioned media: {}", err);
+            continue
+          }
+        };
+
+        let ml_input = (
+          mentioned_tropes.iter().map(|pageid| pageid.id),
+          mentioned_media.iter().map(|pageid| pageid.id)
+        );
+
+      }
+    }
+
+    // How to input the variable-length arrays to the model?
+    // Sparse tensor of size 100K?
+
   }
 
 
