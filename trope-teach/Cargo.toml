@@ -15,5 +15,6 @@ dfdx = { workspace = true }
 log = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 serde = { workspace = true }
+serde_json = { workspace = true }
 simple_logger = { workspace = true, features = ["stderr"] }
 trope-lib = { path = "../trope-lib" }

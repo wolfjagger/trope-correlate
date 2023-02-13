@@ -25,7 +25,9 @@ pub enum TropeScrapeMethod {
   Pagelist(TropeScrapePagelist),
   AllPages(TropeScrapeAllPages),
   PagelistLen(TropeScrapePagelistLen),
-  GenPageIds(TropeScrapeGeneratePageIds),
+  GlobalPageIds(TropeScrapeGlobalPageIds),
+  MentionPageIds(TropeScrapeMentionPageIds),
+  AllMentionPageIds(TropeScrapeAllMentionPageIds),
 }
 
 
@@ -200,9 +202,55 @@ impl From<TropeScrapePagelistLen> for TropeScrapeArgs {
 
 /// Generates pageids for all pages of the different entity types
 #[derive(Debug, ClapArgs)]
-pub struct TropeScrapeGeneratePageIds { }
-impl From<TropeScrapeGeneratePageIds> for TropeScrapeArgs {
-  fn from(method_args: TropeScrapeGeneratePageIds) -> Self {
-    TropeScrapeArgs { method: TropeScrapeMethod::GenPageIds(method_args) }
+pub struct TropeScrapeGlobalPageIds {
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropeScrapeGlobalPageIds> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeGlobalPageIds) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::GlobalPageIds(method_args) }
+  }
+}
+
+
+/// Generates pageids for mentioned tropes and media using global pageid lookup
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeMentionPageIds {
+
+  /// Page name
+  #[clap(short, long, value_parser,)]
+  pub pagename: String,
+
+  /// Namespace for page
+  #[clap(short, long, value_parser, default_value_t = Namespace::Main.to_string())]
+  pub namespace: String,
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropeScrapeMentionPageIds> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeMentionPageIds) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::MentionPageIds(method_args) }
+  }
+}
+
+
+/// Generates all pages' pageids for mentioned tropes and media using global pageid lookup
+#[derive(Debug, ClapArgs)]
+pub struct TropeScrapeAllMentionPageIds {
+
+  /// Overwrite existing trope directory if enabled (default: false)
+  #[clap(short, long, value_parser, default_value_t = false)]
+  pub force: bool,
+
+}
+impl From<TropeScrapeAllMentionPageIds> for TropeScrapeArgs {
+  fn from(method_args: TropeScrapeAllMentionPageIds) -> Self {
+    TropeScrapeArgs { method: TropeScrapeMethod::AllMentionPageIds(method_args) }
   }
 }

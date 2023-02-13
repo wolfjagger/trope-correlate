@@ -1,11 +1,14 @@
 mod cmd;
 mod error;
+mod gen_pageid;
 mod read_html;
 mod scrape;
 
 use trope_lib::{TropeScrapeArgs, TropeScrapeMethod};
 pub use cmd::{
-  generate_page_ids::generate_page_ids,
+  gen_all_mention_pageids::gen_all_mention_pageids,
+  gen_global_pageids::gen_global_pageids,
+  gen_mention_pageids::gen_mention_pageids,
   get_namespace_tot_pages::get_namespace_tot_pages,
   get_pagelist_len::get_pagelist_len,
   scrape_namespace::scrape_namespace,
@@ -34,8 +37,14 @@ pub fn run(args: TropeScrapeArgs) {
     TropeScrapeMethod::PagelistLen(method_args) => {
       get_pagelist_len(method_args).expect("Unhandled get_pagelist_len error");
     },
-    TropeScrapeMethod::GenPageIds(method_args) => {
-      generate_page_ids(method_args).expect("Unhandled generate_page_ids error");
+    TropeScrapeMethod::GlobalPageIds(method_args) => {
+      gen_global_pageids(method_args).expect("Unhandled global_pageids error");
+    },
+    TropeScrapeMethod::MentionPageIds(method_args) => {
+      gen_mention_pageids(method_args).expect("Unhandled mention_pageids error");
+    },
+    TropeScrapeMethod::AllMentionPageIds(method_args) => {
+      gen_all_mention_pageids(method_args).expect("Unhandled all_mention_pageids error");
     },
   }
 }

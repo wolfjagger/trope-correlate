@@ -1,11 +1,39 @@
+use std::{fs::read_dir, mem::size_of_val};
 use dfdx::{prelude::*, gradients::Gradients};
+use rand::{rngs::StdRng, SeedableRng, seq::SliceRandom};
 
-use trope_lib::{EntityType, PageIdLookup, TropeTeachCategorize};
+use trope_lib::{
+  EntityType, PageIdLookup, TropeTeachCategorize,
+  ALL_NAMESPACES, Namespace, PageId, sc_page_dir
+};
 
-use crate::TeachError;
+use crate::{TeachError, TrainParams};
+use crate::model::{
+  InModel, OutModel, TeachModel,
+  MODEL_INPUT_SIZE, MAX_NUM_TROPE,
+};
 
 
-pub fn categorize(_args: TropeTeachCategorize) -> Result<(), TeachError> {
+pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
+
+  let TropeTeachCategorize {
+    in_model: in_model_file,
+    out_model: out_model_file,
+    train_params: train_params_file,
+    force: _force,
+    random_seed,
+  } = args;
+
+  let in_model = in_model_file.as_ref().map(
+    |f| InModel::from_path(f)
+  ).transpose()?;
+  let out_model = match in_model {
+    Some(model) => model,
+    None => OutModel::init_random()
+  };
+  let _train_params = TrainParams::from_path(&train_params_file)?;
+
+  let mut rng = StdRng::seed_from_u64(random_seed);
 
   let trope_pageid_path = trope_lib::sc_pageid_path(&EntityType::Trope);
   let media_pageid_path = trope_lib::sc_pageid_path(&EntityType::Media);
@@ -16,23 +44,142 @@ pub fn categorize(_args: TropeTeachCategorize) -> Result<(), TeachError> {
     "{} total trope pageids, {} total media pageids",
     trope_lookup.len(), media_lookup.len()
   );
+  log::debug!("Size of trope_lookup: {}", trope_lookup.byte_size());
+  log::debug!("Size of media_lookup: {}", media_lookup.byte_size());
 
-  log::info!("Assembling tropes...");
-  // TODO: Assemble global trope pageid list AND mentions lists from tropes and media
-  // let mentioned_tropes_path = sc_page_dir.join("mentioned_tropes.csv");
-  // let (
-  //   mentioned_trope_pageids, _missing_tropes
-  // ) = assemble_pageids(&mentioned_tropes_path, &trope_lookup)?;
 
-  log::info!("Assembling media...");
-  // TODO: Assemble global media pageid list AND mentions lists from tropes and media
-  // let mentioned_media_path = sc_page_dir.join("mentioned_media.csv");
-  // let (
-  //   mentioned_media_pageids, _missing_media
-  // ) = assemble_pageids(&mentioned_media_path, &media_lookup)?;
+  // // NOTE: We might not even want these! Maybe just rely on lookups for global info?
+  // log::info!("Assembling global trope and media pagelists...");
+  // let mut global_trope_pageids = vec![];
+  // let mut global_media_pageids = vec![];
+  // for ns in ALL_NAMESPACES {
+  //   let pagelist_path = sc_pagelist_dir(&ns).join("links.csv");
+  //   match ns.entity_type() {
+  //     EntityType::Trope => {
+  //       let (found_pageids, _missing) = trope_lookup.pageids_from_path(&pagelist_path)?;
+  //       global_trope_pageids.push((ns.clone(), found_pageids));
+  //     },
+  //     EntityType::Media => {
+  //       let (found_pageids, _missing) = media_lookup.pageids_from_path(&pagelist_path)?;
+  //       global_media_pageids.push((ns.clone(), found_pageids));
+  //     },
+  //     _ => {}
+  //   }
+  // }
+
+  // log::trace!("{:?}", global_trope_pageids);
+  // log::trace!("{:?}", global_media_pageids);
+
+  // log::debug!(
+  //   "Size of global_trope_pageids: {}",
+  //   pageids_collection_byte_size(global_trope_pageids)
+  // );
+  // log::debug!(
+  //   "Size of global_media_pageids: {}",
+  //   pageids_collection_byte_size(global_media_pageids)
+  // );
+
+
+  log::info!("Assembling tropes and media mention paths...");
+
+  let sc_page_dirs: Result<Vec<_>, _> = ALL_NAMESPACES.iter().filter(
+    |ns| [EntityType::Trope, EntityType::Media].contains(&ns.entity_type())
+  ).map(
+    |ns| read_dir(sc_page_dir(&ns)).map(|dirs| (ns.clone(), dirs))
+  ).collect();
+  let sc_page_dirs = sc_page_dirs.expect("Error reading some directory of page dirs");
+
+  let mut trope_mentions = sc_page_dirs.into_iter().map(|(ns, page_dirs)|
+    (
+      ns,
+      page_dirs.into_iter().filter_map(
+        |dir| dir.map(|d| d.path()).ok()
+      ).map(
+        |page_dir| {
+          let name = page_dir.file_name().map(
+            |n| n.to_string_lossy().to_string()
+          ).unwrap_or(String::new());
+          (
+            name,
+            page_dir.join("mentioned_trope_pageid.csv"),
+            page_dir.join("mentioned_media_pageid.csv")
+          )
+        }
+      ).collect::<Vec<_>>()
+    )
+  ).collect::<Vec<_>>();
+  trope_mentions.shuffle(&mut rng);
+
+
+  let num_trope_mentions = trope_mentions.len();
+  let mut train_mentions = trope_mentions;
+  let _test_mentions = train_mentions.split_off(
+    (0.8 * num_trope_mentions as f32).floor() as usize
+  );
+
 
   // Input to ML is the list of tropes and/or media
   // Output is namespace
+
+  for train_time in 0..100 {
+    log::trace!("Train time {}", train_time);
+
+    for (_ns, ns_train_mentions) in train_mentions.iter() {
+      for train_mention in ns_train_mentions {
+
+        let (name, m_trope_path, m_media_path) = train_mention;
+        log::trace!("Feeding {} into model", name);
+
+        let mut reader = csv::Reader::from_path(m_trope_path)?;
+        let mentioned_tropes: Result<Vec<trope_lib::PageId>, _> = reader.deserialize::<trope_lib::PageId>().collect();
+        let mentioned_tropes = match mentioned_tropes {
+          Ok(mt) => mt,
+          Err(err) => {
+            log::error!("Error while parsing mentioned tropes: {}", err);
+            continue
+          }
+        };
+        let mut reader = csv::Reader::from_path(m_media_path)?;
+        let mentioned_media: Result<Vec<trope_lib::PageId>, _> = reader.deserialize::<trope_lib::PageId>().collect();
+        let mentioned_media = match mentioned_media {
+          Ok(mm) => mm,
+          Err(err) => {
+            log::error!("Error while parsing mentioned media: {}", err);
+            continue
+          }
+        };
+
+        let mut in_tensor: Tensor1D<MODEL_INPUT_SIZE> = TensorCreator::zeros();
+        mentioned_tropes.into_iter().for_each(|pageid| {
+          // Would prefer integer or bool type, but maybe not possible
+          in_tensor.mut_data()[pageid.id as usize] += 1.0;
+        });
+        mentioned_media.into_iter().for_each(|pageid| {
+          in_tensor.mut_data()[MAX_NUM_TROPE + pageid.id as usize] += 1.0;
+        });
+
+        let out_tensor = out_model.forward(in_tensor);
+
+        println!("{:?}", out_tensor);
+
+        // Note: This model is too big! The program crashes as soon as out_model is initialized.
+        //  We should do preprocessing, specifically dimensionality reduction.
+        //  The two possiblities I can find are Principal Component Analysis and Feature Hashing.
+        //  We might try boolean matrix factorization (https://arxiv.org/pdf/2012.03138.pdf).
+
+        panic!("Agh!");
+
+      }
+    }
+
+    // How to input the variable-length arrays to the model?
+    // Sparse tensor of size 100K?
+
+  }
+
+
+  let res: Result<(), NpzError> = out_model.save(&out_model_file).map_err(NpzError::from);
+  res?;
 
   Ok(())
 
@@ -87,4 +234,14 @@ fn _do_tensor_propagation() {
   opt.update(&mut mlp, gradients).unwrap();
   log::info!("opt: {:?}", opt);
 
+}
+
+
+#[allow(dead_code)]
+fn pageids_collection_byte_size(collection: Vec<(Namespace, Vec<PageId>)>) -> usize {
+  collection.iter().map(
+    |(ns, pid_list)| size_of_val(&ns) + pid_list.iter().map(
+      |pid| size_of_val(&pid.id) + size_of_val(&*pid.page)
+    ).sum::<usize>()
+  ).sum::<usize>()
 }

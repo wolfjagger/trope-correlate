@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{mem::size_of_val, path::Path};
 
 use bimap::BiMap;
 
@@ -9,12 +9,15 @@ pub struct PageIdLookup {
   bimap: BiMap<u32, String>
 }
 
+
+// NOTE: Case insensitive!
+
 impl PageIdLookup {
 
-  pub fn new<I>(page_ids: I) -> Self
+  pub fn new<I>(pageids: I) -> Self
   where I: IntoIterator<Item=PageId> {
     Self{
-      bimap: BiMap::from_iter(page_ids.into_iter().map(|pi| pi.into()))
+      bimap: BiMap::from_iter(pageids.into_iter().map(|pi| pi.into()))
     }
   }
 
@@ -34,7 +37,7 @@ impl PageIdLookup {
     self.bimap.get_by_left(id)
   }
   pub fn get_id(&self, page: &str) -> Option<&u32> {
-    self.bimap.get_by_right(page)
+    self.bimap.get_by_right(&page.to_lowercase())
   }
 
   pub fn pageid_from_page(&self, page: &str) -> Option<PageId> {
@@ -46,6 +49,11 @@ impl PageIdLookup {
 
   pub fn len(&self) -> usize {
     self.bimap.len()
+  }
+
+  pub fn byte_size(&self) -> usize {
+    self.bimap.left_values().map(|s| size_of_val(&*s)).sum::<usize>() +
+      self.bimap.right_values().map(|s| size_of_val(&*s)).sum::<usize>()
   }
 
   pub fn pageids_from_path(&self, p: &Path)

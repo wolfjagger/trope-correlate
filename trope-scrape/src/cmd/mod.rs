@@ -1,4 +1,6 @@
-pub mod generate_page_ids;
+pub mod gen_all_mention_pageids;
+pub mod gen_global_pageids;
+pub mod gen_mention_pageids;
 pub mod get_namespace_tot_pages;
 pub mod get_pagelist_len;
 pub mod scrape_all_pages;
