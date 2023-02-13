@@ -3,6 +3,7 @@
 
 use std::path::Path;
 use dfdx::{nn, nn::LoadFromNpz, numpy};
+use trope_lib::ALL_NAMESPACES;
 
 use crate::TeachError;
 
@@ -20,9 +21,17 @@ pub type InModel = TwoLayerReLU;
 pub type OutModel = TwoLayerReLU;
 
 
-const L0_SIZE: usize = 10;
+pub const MAX_NUM_TROPE: usize = 100000;
+pub const MAX_NUM_MEDIA: usize = 200000;
+pub const MAX_NUM_OTHER: usize = 100000;
+
+pub const MODEL_INPUT_SIZE: usize = MAX_NUM_TROPE + MAX_NUM_MEDIA + MAX_NUM_OTHER;
+pub const MODEL_OUTPUT_SIZE: usize = ALL_NAMESPACES.len();
+
+
+const L0_SIZE: usize = MODEL_INPUT_SIZE;
 const L1_SIZE: usize = 10000;
-const L2_SIZE: usize = 30;
+const L2_SIZE: usize = MODEL_OUTPUT_SIZE;
 
 pub type TwoLayerReLU = (
   nn::Linear<L0_SIZE, L1_SIZE>,

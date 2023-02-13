@@ -7,7 +7,11 @@ use trope_lib::{
   ALL_NAMESPACES, Namespace, PageId, sc_page_dir
 };
 
-use crate::{InModel, OutModel, TeachError, TeachModel, TrainParams};
+use crate::{TeachError, TrainParams};
+use crate::model::{
+  InModel, OutModel, TeachModel,
+  MODEL_INPUT_SIZE, MAX_NUM_TROPE,
+};
 
 
 pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
@@ -109,7 +113,7 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
 
   let num_trope_mentions = trope_mentions.len();
   let mut train_mentions = trope_mentions;
-  let test_mentions = train_mentions.split_off(
+  let _test_mentions = train_mentions.split_off(
     (0.8 * num_trope_mentions as f32).floor() as usize
   );
 
@@ -118,9 +122,9 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
   // Output is namespace
 
   for train_time in 0..100 {
-    println!("Train time {}", train_time);
+    log::trace!("Train time {}", train_time);
 
-    for (ns, ns_train_mentions) in train_mentions.iter() {
+    for (_ns, ns_train_mentions) in train_mentions.iter() {
       for train_mention in ns_train_mentions {
 
         let (name, m_trope_path, m_media_path) = train_mention;
@@ -145,10 +149,25 @@ pub fn categorize(args: TropeTeachCategorize) -> Result<(), TeachError> {
           }
         };
 
-        let ml_input = (
-          mentioned_tropes.iter().map(|pageid| pageid.id),
-          mentioned_media.iter().map(|pageid| pageid.id)
-        );
+        let mut in_tensor: Tensor1D<MODEL_INPUT_SIZE> = TensorCreator::zeros();
+        mentioned_tropes.into_iter().for_each(|pageid| {
+          // Would prefer integer or bool type, but maybe not possible
+          in_tensor.mut_data()[pageid.id as usize] += 1.0;
+        });
+        mentioned_media.into_iter().for_each(|pageid| {
+          in_tensor.mut_data()[MAX_NUM_TROPE + pageid.id as usize] += 1.0;
+        });
+
+        let out_tensor = out_model.forward(in_tensor);
+
+        println!("{:?}", out_tensor);
+
+        // Note: This model is too big! The program crashes as soon as out_model is initialized.
+        //  We should do preprocessing, specifically dimensionality reduction.
+        //  The two possiblities I can find are Principal Component Analysis and Feature Hashing.
+        //  We might try boolean matrix factorization (https://arxiv.org/pdf/2012.03138.pdf).
+
+        panic!("Agh!");
 
       }
     }
